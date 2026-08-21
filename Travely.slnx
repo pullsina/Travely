@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="Travely.Api/Travely.Api.csproj" />
+  <Project Path="Travely.Application/Travely.Application.csproj" />
+  <Project Path="Travely.Infrastructure/Travely.Infrastructure.csproj" />
+  <Project Path="Travely.Shared/Travely.Shared.csproj" />
 </Solution>

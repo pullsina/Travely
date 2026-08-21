@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="TestMapp\" />
     <Folder Include="Repositories\" />
   </ItemGroup>
 
