@@ -11,4 +11,9 @@
     <Folder Include="Repositories\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Travely.Application\Travely.Application.csproj" />
+    <ProjectReference Include="..\Travely.Shared\Travely.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
