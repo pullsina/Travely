@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Travely.Infrastructure.Data;
 using Travely.Shared.Entities;
@@ -20,6 +20,7 @@ builder.Services.AddDbContext<TravelyDbContext>(options =>
 //builder.Services.AddAuthentication();
 //builder.Services.AddAuthorization();
 
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
