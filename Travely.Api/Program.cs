@@ -1,8 +1,27 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Travely.Infrastructure.Data;
+using Travely.Shared.Entities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+// Add connection to sql server 
+builder.Services.AddDbContext<TravelyDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//// configurations for db context - to be implemented
+//builder.Services
+//    .AddIdentityCore<ApplicationUser>()
+//    .AddRoles<IdentityRole>()
+//    .AddEntityFrameworkStores<TravelyDbContext>();
+//// authentication/authorization - to be implemented 
+//builder.Services.AddAuthentication();
+//builder.Services.AddAuthorization();
+
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
