@@ -17,5 +17,13 @@ namespace Travely.Infrastructure.Data
         }
         public DbSet<Country> Countries { get; set; }
         public DbSet<UserResult> UserResults { get; set; }
+
+        // Seed data for the database
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            SeedData.Seed(builder);
+        }
     }
 }
