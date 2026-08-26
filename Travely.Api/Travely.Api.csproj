@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Travely.Application\Travely.Application.csproj" />
     <ProjectReference Include="..\Travely.Infrastructure\Travely.Infrastructure.csproj" />
+    <ProjectReference Include="..\Travely.Shared\Travely.Shared.csproj" />
   </ItemGroup>
 
 </Project>
