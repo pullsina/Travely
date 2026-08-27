@@ -9,9 +9,9 @@ namespace Travely.Shared.Entities
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string CountryName { get; set; } = string.Empty;
 
-        public string Capital { get; set; } = string.Empty;
+        public string CapitalName { get; set; } = string.Empty;
 
         public Continent Continent { get; set; }
 
