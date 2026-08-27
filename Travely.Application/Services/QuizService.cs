@@ -1,65 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Travely.Infrastructure.Interfaces;
-using Travely.Application.Interfaces;
-using Travely.Shared.DTOs;
+﻿using Travely.Application.Interfaces; // Uses abstractions in interfaces
+using Travely.Shared.DTOs; // Uses DTOs for data transfer between layers
 
 namespace Travely.Application.Services
 {
+    // Service class implementing the IQuizService interface
     public class QuizService : IQuizService
     {
+        // Dependency injection of the quiz repository
         private readonly IQuizRepository _quizRepo;
 
+        // Constructor to initialize the service with the quiz repository
         public QuizService(IQuizRepository quizRepo)
         {
             _quizRepo = quizRepo;
         }
-        
+
+        // Method to retrieve a quiz question by its ID and answer options
         public async Task<QuizQuestionDto?> GetQuestionAsync(int questionId)
         {
-            var question = await _quizRepo.GetQuestionAsync(questionId);
+            // Fetch the question and 8 answer options from the repository 
+            var question = await _quizRepo.GetQuestionAsync(questionId, 8);
 
+            // Return null if the question does not exist
             if (question == null)
                 return null;
 
-            // Mapping the question entity to the QuizQuestionDto
-            return new QuizQuestionDto
-            {
-                QuestionId = question.Id,
-                Capital = question.Capital,
-                Countries = question.Name
-                .Select(a => new QuizAnswerDto
-                {
-                    Id = a.Id,
-                    Answer = a.CountryName
-                })
-                    .ToList()
-            };
+            // Return the question with its answer options
+            return question;
         }
+
+        // Method to submit an answer for a quiz question
         public async Task<SubmitAnswerResultDto?> SubmitAnswerAsync(
             SubmitAnswerDto dto)
         {
-            var question = await _quizRepo.GetQuestionAsync(dto.QuestionId);
+            var question = await _quizRepo.GetQuestionAsync(dto.QuestionId, 8);
 
             if (question == null)
                 return null;
 
-            var selectedAnswer = question.Answers
-                .FirstOrDefault(a => a.Id == dto.AnswerId);
-
-            if (selectedAnswer == null)
-                return null;
+            var isCorrect = await _quizRepo.IsCorrectAnswerAsync(dto.QuestionId, dto.AnswerId);
 
             return new SubmitAnswerResultDto
             {
-                QuestionId = question.Id,
-                IsCorrect = selectedAnswer.IsCorrect,
-                CorrectAnswerId = question.Answers
-                    .First(a => a.IsCorrect)
-                    .Id
+                QuestionId = question.QuestionId,
+                IsCorrect = isCorrect,
+                CorrectAnswerId = question.QuestionId
             };
         }
     }
