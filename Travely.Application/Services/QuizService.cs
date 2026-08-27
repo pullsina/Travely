@@ -15,43 +15,30 @@ namespace Travely.Application.Services
             _quizRepo = quizRepo;
         }
 
-        // Method to retrieve a quiz question by its ID
+        // Method to retrieve a quiz question by its ID and answer options
         public async Task<QuizQuestionDto?> GetQuestionAsync(int questionId)
         {
-            // Fetch the question from the repository
-            var question = await _quizRepo.GetQuestionAsync(questionId);
+            // Fetch the question and 8 answer options from the repository 
+            var question = await _quizRepo.GetQuestionAsync(questionId, 8);
 
             // Return null if the question does not exist
             if (question == null)
                 return null;
 
-            // Fetch answer options for the question, limiting to 8 options
-            var answerOptions = await _quizRepo.GetAnswerOptionsAsync(question.QuestionId, 8);
-
-            // Add the correct answer to the list of answer options
-            answerOptions.Add(new QuizAnswerDto
-            { 
-                Id = question.QuestionId,
-                // Logic for correct answer should be implemented here
-            });
-
-            // Shuffle the answer options to randomize their order
-            question.Countries = answerOptions.OrderBy(_ => Guid.NewGuid()).ToList();
-
             // Return the question with its answer options
             return question;
         }
-        // Method to submit an answer for a quiz question
 
+        // Method to submit an answer for a quiz question
         public async Task<SubmitAnswerResultDto?> SubmitAnswerAsync(
             SubmitAnswerDto dto)
         {
-            var question = await _quizRepo.GetQuestionAsync(dto.QuestionId);
+            var question = await _quizRepo.GetQuestionAsync(dto.QuestionId, 8);
 
             if (question == null)
                 return null;
 
-            bool isCorrect = dto.AnswerId == question.QuestionId;
+            var isCorrect = await _quizRepo.IsCorrectAnswerAsync(dto.QuestionId, dto.AnswerId);
 
             return new SubmitAnswerResultDto
             {
