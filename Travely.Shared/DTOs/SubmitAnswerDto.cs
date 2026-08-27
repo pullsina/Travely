@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Travely.Shared.DTOs
+﻿namespace Travely.Shared.DTOs
 {
     public class SubmitAnswerDto
     {
-        // Skickar in fråge-id och svarsalternativets id för att kunna spara användarens svar i databasen
+        // Send in the question ID and the answer option ID to be able to save the user's answer in the database
         public int QuestionId { get; set; }
         public int AnswerId { get; set; } // Selected Country
     }

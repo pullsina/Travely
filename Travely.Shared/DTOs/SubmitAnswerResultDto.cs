@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Travely.Shared.DTOs
+﻿namespace Travely.Shared.DTOs
 {
     public class SubmitAnswerResultDto
     {
@@ -12,6 +8,6 @@ namespace Travely.Shared.DTOs
 
         public int CorrectAnswerId { get; set; }
 
-        public int? Score { get; set; }
+        public int Score { get; set; }
     }
 }
