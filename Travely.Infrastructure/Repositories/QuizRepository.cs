@@ -62,8 +62,8 @@ namespace Travely.Infrastructure.Repositories
             return new QuizQuestionDto
             {
                 QuestionId = question.Id, // UI needs the country ID to identify the question without showing it to the user
-                Capital = question.Capital,
-                Countries = answers
+                Question = question.Name,
+                Answers = answers
             };
         }
 

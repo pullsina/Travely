@@ -2,8 +2,10 @@
 {
     public class SubmitAnswerDto
     {
-        // Send in the question ID and the answer option ID to be able to save the user's answer in the database
+        // The question ID responded 
         public int QuestionId { get; set; }
+
+        // The answer ID selected
         public int AnswerId { get; set; } // Selected Country
     }
 }

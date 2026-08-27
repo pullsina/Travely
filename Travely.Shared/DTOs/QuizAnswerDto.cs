@@ -2,8 +2,10 @@
 {
     public class QuizAnswerDto
     {
-        // Show the answer option with the country's name
+        // The answer ID
         public int AnswerId { get; set; }
+        
+        // Show the answer option with the country's name
         public string Country { get; set; } = string.Empty;
     }
 }
