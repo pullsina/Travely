@@ -37,7 +37,7 @@ namespace Travely.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var result = await _authService.LoginAsync(dto);
-            if (!result.Success) return Unauthorized();
+            if (!result.Success) return Unauthorized(result);
 
             return Ok(result);
         }

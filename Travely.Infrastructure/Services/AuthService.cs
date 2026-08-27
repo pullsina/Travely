@@ -76,17 +76,50 @@ namespace Travely.Infrastructure.Services
                 Username = user.UserName
             };
         }
-        public Task<bool> DeleteAsync(string userId)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<AuthResultDto> LoginAsync(LoginDto dto)
+        public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
-            throw new NotImplementedException();
+            var user = await _userManager.FindByNameAsync(dto.Username);
+
+            //if user is null return error
+            if (user == null)
+            {
+                return new AuthResultDto
+                {
+                    Success = false,
+                    Error = "Invalid username or password."
+                };
+            }
+
+            //if user exists, check password
+            var passwordValid = await _userManager.CheckPasswordAsync(user, dto.Password);
+
+            if (!passwordValid)
+            {
+                return new AuthResultDto
+                {
+                    Success = false,
+                    Error = "Invalid username or password."
+                };
+            }
+
+            //if ok, create cookie and login user
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return new AuthResultDto
+            {
+                Success = true,
+                UserId = user.Id,
+                Username = user.UserName
+            };
         }
 
         public Task LogoutAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteAsync(string userId)
         {
             throw new NotImplementedException();
         }
