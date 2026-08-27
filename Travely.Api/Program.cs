@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
+using Travely.Infrastructure.Services;
 using Travely.Shared.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +23,30 @@ builder.Services.AddDbContext<TravelyDbContext>(options =>
 //builder.Services.AddAuthentication();
 //builder.Services.AddAuthorization();
 
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
+//Need this for identity-------------:
+builder.Services
+    .AddIdentityCore<ApplicationUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<TravelyDbContext>()
+    .AddSignInManager();
+                                 //namn på cookie som ska användas
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddIdentityCookies();
 
+builder.Services.AddAuthorization();
+//------------------------------------
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+//not needed since we use our own auth controller and service for register/login/logout
+//builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
+
+//not needed, using swagger for testing endpoints instead of openapi
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+//builder.Services.AddOpenApi();
+
+//for testing endpoints in swagger
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 
@@ -52,10 +75,14 @@ app.UseCors("ReactApp");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    //app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
