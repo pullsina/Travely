@@ -42,7 +42,7 @@ namespace Travely.Infrastructure.Repositories
                 .Select(c => new QuizAnswerDto
                 {
                     AnswerId = c.Id,
-                    Country = c.CountryName
+                    Country = c.Name
                 })
                 .ToList();
 
@@ -51,7 +51,7 @@ namespace Travely.Infrastructure.Repositories
             answers.Add(new QuizAnswerDto
             {
                 AnswerId = question.Id,
-                Country = question.CountryName
+                Country = question.Name
             });
 
             // Shuffle the answer options 
@@ -62,7 +62,7 @@ namespace Travely.Infrastructure.Repositories
             return new QuizQuestionDto
             {
                 QuestionId = question.Id, // UI needs the country ID to identify the question without showing it to the user
-                Question = question.CapitalName,
+                Question = question.Name,
                 Answers = answers
             };
         }
