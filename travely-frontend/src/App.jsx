@@ -1,36 +1,15 @@
-import { useEffect, useState } from 'react'
+import StartPage from './pages/StartPage'
+import RegisterPage from './pages/RegisterPage'
+import { useState } from 'react'
 
 function App() {
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [page, setPage] = useState('start')
 
-  useEffect(() => {
-    async function loadMessage() {
-      try {
-        const response = await fetch('https://localhost:7009/api/test')
+  if (page === 'register') {
+    return <RegisterPage onBack={() => setPage('start')} />
+  }
 
-        if (!response.ok) {
-          throw new Error('API request failed')
-        }
-
-        const data = await response.json()
-        setMessage(data.message)
-      } catch (err) {
-        setError(err.message)
-      }
-    }
-
-    loadMessage()
-  }, [])
-
-  return (
-    <main>
-      <h1>Travely</h1>
-
-      {message && <p>{message}</p>}
-      {error && <p>Error: {error}</p>}
-    </main>
-  )
+  return <StartPage onRegister={() => setPage('register')} />
 }
 
 export default App
