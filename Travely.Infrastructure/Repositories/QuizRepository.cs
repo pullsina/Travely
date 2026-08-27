@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
-using Travely.Infrastructure.Entities;
 using Travely.Shared.DTOs;
 
 namespace Travely.Infrastructure.Repositories
