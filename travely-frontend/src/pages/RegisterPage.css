@@ -1,0 +1,129 @@
+.register-page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  position: relative;
+}
+
+.register-page__back {
+  position: absolute;
+  top: 32px;
+  left: 36px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--color-warning);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.register-page__back:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 3px;
+}
+
+.register-page__panel {
+  width: min(100%, 430px);
+  border: 1px solid rgba(105, 224, 0, 0.75);
+  border-radius: 8px;
+  background: rgba(23, 58, 138, 0.92);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  padding: 36px;
+  text-align: center;
+}
+
+.register-page__logo {
+  margin: 0 0 18px;
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.register-page__title {
+  margin: 0 0 28px;
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.register-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.register-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.register-page__field span {
+  color: var(--color-text-muted);
+  font-size: 17px;
+}
+
+.register-page__field input {
+  width: 100%;
+  height: 48px;
+  border: 1px solid rgba(184, 199, 232, 0.55);
+  border-radius: 8px;
+  background: rgba(6, 22, 74, 0.72);
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 18px;
+  outline: none;
+  padding: 0 14px;
+}
+
+.register-page__field input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(105, 224, 0, 0.2);
+}
+
+.register-page__submit {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.register-page__login-link {
+  margin-top: 20px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 18px;
+}
+
+.register-page__login-link:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 640px) {
+  .register-page {
+    align-items: flex-start;
+    padding: 88px 20px 28px;
+  }
+
+  .register-page__back {
+    top: 24px;
+    left: 20px;
+  }
+
+  .register-page__panel {
+    padding: 28px 22px;
+  }
+}

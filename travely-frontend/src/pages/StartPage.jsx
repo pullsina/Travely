@@ -1,7 +1,7 @@
 import backgroundMap from '../assets/background_map.png'
 import './StartPage.css'
 
-function StartPage() {
+function StartPage({ onRegister }) {
   return (
     <main
       className="start-page"
@@ -14,7 +14,9 @@ function StartPage() {
         </p>
 
         <div className="start-page__actions">
-          <button className="primary-button start-page__button">Register</button>
+          <button className="primary-button start-page__button" onClick={onRegister}>
+            Register
+          </button>
           <button className="primary-button start-page__button">Log in</button>
         </div>
       </section>
