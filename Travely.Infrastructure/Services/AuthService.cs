@@ -114,9 +114,9 @@ namespace Travely.Infrastructure.Services
             };
         }
 
-        public Task LogoutAsync()
+        public async Task LogoutAsync()
         {
-            throw new NotImplementedException();
+            await _signInManager.SignOutAsync();
         }
 
         public Task<bool> DeleteAsync(string userId)

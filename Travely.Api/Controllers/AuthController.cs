@@ -47,7 +47,7 @@ namespace Travely.Api.Controllers
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
-            return Ok();
+            return Ok("You have been logged out.");
         }
 
         [Authorize]
