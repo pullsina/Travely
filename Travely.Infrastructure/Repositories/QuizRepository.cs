@@ -18,41 +18,59 @@ namespace Travely.Infrastructure.Repositories
 
         // Method to retrieve a quiz question by its ID
         public async Task<QuizQuestionDto?> GetQuestionAsync(
-            int questionId)
+            int questionId,
+            int numberOfOptions)
         {
-            var country = await _context.Countries
+            // Retrieve a question (Capital?) by its ID
+            var question = await _context.Countries
                 .FirstOrDefaultAsync(c => c.Id == questionId);
 
-            if (country == null)
+            if (question == null)
             {
                 return null;
             }
 
-            return new QuizQuestionDto
-            {
-                QuestionId = country.Id, // UI needs the country ID to identify the question without showing it to the user
-                Capital = country.Capital
-            };
-        }
-
-        // Method to retrieve answer options for a quiz question
-        public async Task<List<QuizAnswerDto>> GetAnswerOptionsAsync(
-            int correctAnswerId,
-            int numberOfOptions)
-        {
-            var countries = await _context.Countries
-                .Where(c => c.Id != correctAnswerId)
+            // Retrieve answer options (Countries) excluding the correct answer
+            var otherCountries = await _context.Countries
+                .Where(c => c.Id != questionId)
                 .OrderBy(c => Guid.NewGuid())
                 .Take(numberOfOptions - 1)
                 .ToListAsync();
 
-            return countries
+            // Create a list of answer options 
+            var answers = otherCountries
                 .Select(c => new QuizAnswerDto
                 {
                     Id = c.Id,
                     Answer = c.Name
                 })
                 .ToList();
+
+            // Add the correct answer to the list of answer options 
+            // Could this method flow risk presenting same country more than once?
+            answers.Add(new QuizAnswerDto
+            {
+                Id = question.Id,
+                Answer = question.Name
+            });
+
+            // Shuffle the answer options 
+            answers = answers.OrderBy(_ => Guid.NewGuid()).ToList();
+
+
+            // Return the quiz question DTO with the question ID, capital, and shuffled answer options
+            return new QuizQuestionDto
+            {
+                QuestionId = question.Id, // UI needs the country ID to identify the question without showing it to the user
+                Capital = question.Capital,
+                Countries = answers
+            };
         }
+
+        // Method to check if the provided answer ID is correct for a quiz question
+        public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
+        {
+              return questionId == answerId;
+        }  
     }
-}
+} 
