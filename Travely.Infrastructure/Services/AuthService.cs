@@ -119,9 +119,24 @@ namespace Travely.Infrastructure.Services
             await _signInManager.SignOutAsync();
         }
 
-        public Task<bool> DeleteAsync(string userId)
+        public async Task<bool> DeleteAsync(string userId)
         {
-            throw new NotImplementedException();
+            //find user to delete by id
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+                return false;
+
+            await _signInManager.SignOutAsync();
+
+            return true;
         }
 
     }
