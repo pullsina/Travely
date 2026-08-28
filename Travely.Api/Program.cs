@@ -5,6 +5,7 @@ using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
 using Travely.Infrastructure.Services;
 using Travely.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,13 @@ builder.Services
                                  //namn på cookie som ska användas
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies();
+builder.Services.Configure<CookieAuthenticationOptions>(
+    IdentityConstants.ApplicationScheme,
+    options =>
+    {
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
 builder.Services.AddAuthorization();
 //------------------------------------

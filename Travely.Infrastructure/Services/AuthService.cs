@@ -88,7 +88,7 @@ namespace Travely.Infrastructure.Services
                 return new AuthResultDto
                 {
                     Success = false,
-                    Error = $"USER NOT FOUND. Email received: '{dto.Email}'"
+                    Error = "User not found."
                 };
             }
 
