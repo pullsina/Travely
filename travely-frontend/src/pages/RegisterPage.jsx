@@ -2,7 +2,7 @@ import { useState } from 'react'
 import backgroundMap from '../assets/background_map.png'
 import './RegisterPage.css'
 
-function RegisterPage({ onBack, onLogin }) {
+function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
@@ -29,7 +29,10 @@ function RegisterPage({ onBack, onLogin }) {
 
     if (formValues.password !== formValues.confirmPassword) {
       setFormError('Passwords do not match.')
+      return
     }
+
+    onRegisterSuccess()
   }
 
   return (

@@ -1,0 +1,148 @@
+.continent-page {
+  min-height: 100vh;
+  background: #173a8a;
+  background: radial-gradient(
+    circle,
+    rgba(23, 58, 138, 1) 0%,
+    rgba(11, 35, 112, 1) 48%,
+    rgba(6, 22, 74, 1) 100%
+  );
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 40px 76px;
+  position: relative;
+}
+
+.continent-page__back {
+  position: absolute;
+  top: 32px;
+  left: 36px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--color-warning);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.continent-page__back:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 3px;
+}
+
+.continent-page__header {
+  width: min(100%, 900px);
+  text-align: center;
+}
+
+.continent-page__logo {
+  margin: 50px 0 0;
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.continent-page__subtitle {
+  margin: clamp(50px, 5vw, 50px) 0 clamp(48px, 6vw, 76px);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.2;
+}
+
+.continent-page__grid {
+  width: min(100%, 830px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 108px;
+}
+
+.continent-page__card {
+  min-height: 128px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background-color: var(--color-card);
+  background-position: center;
+  background-size: cover;
+  color: var(--color-primary);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 16px;
+  position: relative;
+  text-align: center;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.continent-page__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 22, 74, 0.25);
+}
+
+.continent-page__card span {
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: clamp(34px, 4vw, 50px);
+  font-weight: 700;
+  line-height: 1;
+  position: relative;
+}
+
+.continent-page__card:hover {
+  border-color: var(--color-primary-hover);
+  box-shadow: 0 0 18px rgba(105, 224, 0, 0.45);
+  transform: translateY(-3px);
+}
+
+.continent-page__card:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 4px;
+}
+
+.continent-page__points {
+  position: fixed;
+  right: 56px;
+  bottom: 46px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-warning);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  color: var(--color-bg);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+}
+
+@media (max-width: 760px) {
+  .continent-page {
+    padding: 88px 20px 84px;
+  }
+
+  .continent-page__back {
+    top: 24px;
+    left: 20px;
+  }
+
+  .continent-page__subtitle {
+    margin: 56px 0 32px;
+  }
+
+  .continent-page__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .continent-page__card {
+    min-height: 112px;
+  }
+}
