@@ -2,7 +2,7 @@ import { useState } from 'react'
 import backgroundMap from '../assets/background_map.png'
 import './LoginPage.css'
 
-function LoginPage({ onBack, onRegister }) {
+function LoginPage({ onBack, onRegister, onLoginSuccess }) {
   const [isResetOpen, setIsResetOpen] = useState(false)
   const [loginValues, setLoginValues] = useState({
     email: '',
@@ -27,11 +27,15 @@ function LoginPage({ onBack, onRegister }) {
 
     if (!loginValues.email || !loginValues.password) {
       setLoginError('Please enter both email and password.')
+      return
     }
+
+    onLoginSuccess()
   }
 
   function handleResetSubmit(event) {
     event.preventDefault()
+
     if (!resetEmail) {
       setResetError('Please enter your email address.')
       return

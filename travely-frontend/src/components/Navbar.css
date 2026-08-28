@@ -47,6 +47,26 @@
   outline: 3px solid var(--color-warning);
   outline-offset: 4px;
 }
+.navbar__link--primary {
+  color: var(--color-primary);
+}
+
+.navbar__link--primary:hover {
+  color: var(--color-primary-hover);
+}
+
+.navbar__points {
+  min-width: 56px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--color-warning);
+  color: var(--color-bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  font-size: 15px;
+}
 
 @media (max-width: 640px) {
   .navbar {
