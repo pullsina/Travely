@@ -52,6 +52,7 @@ namespace Travely.Infrastructure.Services
             var user = new ApplicationUser
             {
                 UserName = dto.Username,
+                Email = dto.Email,
                 Points = 0
             };
 
@@ -79,7 +80,7 @@ namespace Travely.Infrastructure.Services
 
         public async Task<AuthResultDto> LoginAsync(LoginDto dto)
         {
-            var user = await _userManager.FindByNameAsync(dto.Username);
+            var user = await _userManager.FindByEmailAsync(dto.Email);
 
             //if user is null return error
             if (user == null)
@@ -87,7 +88,7 @@ namespace Travely.Infrastructure.Services
                 return new AuthResultDto
                 {
                     Success = false,
-                    Error = "Invalid username or password."
+                    Error = $"USER NOT FOUND. Email received: '{dto.Email}'"
                 };
             }
 
