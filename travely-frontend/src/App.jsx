@@ -1,42 +1,48 @@
-import StartPage from './pages/StartPage'
-import RegisterPage from './pages/RegisterPage'
-import LoginPage from './pages/LoginPage'
-import ContinentPage from './pages/ContinentPage'
-import { useState } from 'react'
+import StartPage from "./pages/StartPage";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
+import ContinentPage from "./pages/ContinentPage";
+import { useState } from "react";
+import Footer from "./components/Footer";
 
 function App() {
-  const [page, setPage] = useState('start')
+  const [page, setPage] = useState("start");
 
-  if (page === 'register') {
-    return (
+  let currentPage;
+
+  if (page === "register") {
+    currentPage = (
       <RegisterPage
-        onBack={() => setPage('start')}
-        onLogin={() => setPage('login')}
-        onRegisterSuccess={() => setPage('continents')}
+        onBack={() => setPage("start")}
+        onLogin={() => setPage("login")}
+        onRegisterSuccess={() => setPage("continents")}
       />
-    )
-  }
-
-  if (page === 'login') {
-    return (
+    );
+  } else if (page === "login") {
+    currentPage = (
       <LoginPage
-        onBack={() => setPage('start')}
-        onRegister={() => setPage('register')}
-        onLoginSuccess={() => setPage('continents')}
+        onBack={() => setPage("start")}
+        onRegister={() => setPage("register")}
+        onLoginSuccess={() => setPage("continents")}
       />
-    )
-  }
-
-  if (page === 'continents') {
-    return <ContinentPage onBack={() => setPage('start')} />
+    );
+  } else if (page === "continents") {
+    currentPage = <ContinentPage onBack={() => setPage("start")} />;
+  } else {
+    currentPage = (
+      <StartPage
+        onRegister={() => setPage("register")}
+        onLogin={() => setPage("login")}
+      />
+    );
   }
 
   return (
-    <StartPage
-      onRegister={() => setPage('register')}
-      onLogin={() => setPage('login')}
-    />
-  )
+    <>
+      {currentPage}
+      <Footer />
+    </>
+  );
 }
 
-export default App
+export default App;
