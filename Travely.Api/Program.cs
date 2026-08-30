@@ -58,13 +58,6 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 //------------------------------------
 
-//not needed since we use our own auth controller and service for register/login/logout
-//builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
-
-//not needed, using swagger for testing endpoints instead of openapi
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
-
 //------------------------------------
 //for testing endpoints in swagger
 //------------------------------------
@@ -96,7 +89,6 @@ app.UseCors("ReactApp");
 //------------------------------------
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
