@@ -1,55 +1,75 @@
-import { useState } from 'react'
-import backgroundMap from '../assets/background_map.png'
-import './LoginPage.css'
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import backgroundMap from "../assets/background_map.png";
+import "./LoginPage.css";
 
-function LoginPage({ onBack, onRegister, onLoginSuccess }) {
-  const [isResetOpen, setIsResetOpen] = useState(false)
+function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [isResetOpen, setIsResetOpen] = useState(false);
   const [loginValues, setLoginValues] = useState({
-    email: '',
-    password: '',
-  })
-  const [loginError, setLoginError] = useState('')
-  const [resetEmail, setResetEmail] = useState('')
-  const [resetMessage, setResetMessage] = useState('')
-  const [resetError, setResetError] = useState('')
+    email: "",
+    password: "",
+  });
+  const [loginError, setLoginError] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMessage, setResetMessage] = useState("");
+  const [resetError, setResetError] = useState("");
 
   function handleLoginChange(event) {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setLoginValues((currentValues) => ({
       ...currentValues,
       [name]: value,
-    }))
-    setLoginError('')
+    }));
+    setLoginError("");
   }
 
-  function handleLoginSubmit(event) {
-    event.preventDefault()
+  async function handleLoginSubmit(event) {
+    event.preventDefault();
 
     if (!loginValues.email || !loginValues.password) {
-      setLoginError('Please enter both email and password.')
-      return
+      setLoginError("Please enter both email and password.");
+      return;
     }
 
-    onLoginSuccess()
+    try {
+      const result = await login({
+        email: loginValues.email,
+        password: loginValues.password,
+      });
+
+      console.log("Login result:", result);
+
+      if (result.success) {
+        navigate("/continents");
+      } else {
+        setLoginError(result.error || "Login failed.");
+      }
+    } catch (error) {
+      setLoginError(error.message);
+    }
   }
 
   function handleResetSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     if (!resetEmail) {
-      setResetError('Please enter your email address.')
-      return
+      setResetError("Please enter your email address.");
+      return;
     }
 
-    setResetError('')
-    setResetMessage('If an account exists, a reset link will be sent.')
+    setResetError("");
+    setResetMessage("If an account exists, a reset link will be sent.");
   }
 
   function closeResetPanel() {
-    setIsResetOpen(false)
-    setResetEmail('')
-    setResetMessage('')
-    setResetError('')
+    setIsResetOpen(false);
+    setResetEmail("");
+    setResetMessage("");
+    setResetError("");
   }
 
   return (
@@ -57,7 +77,11 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
       className="login-page"
       style={{ backgroundImage: `url(${backgroundMap})` }}
     >
-      <button className="login-page__back" onClick={onBack} aria-label="Go back">
+      <button
+        className="login-page__back"
+        onClick={() => navigate("/")}
+        aria-label="Go back"
+      >
         ←
       </button>
 
@@ -70,7 +94,11 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
               Reset password
             </h2>
 
-            <form className="login-page__form" onSubmit={handleResetSubmit} noValidate>
+            <form
+              className="login-page__form"
+              onSubmit={handleResetSubmit}
+              noValidate
+            >
               <label className="login-page__field">
                 <span>Email</span>
                 <input
@@ -79,9 +107,9 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
                   autoComplete="email"
                   value={resetEmail}
                   onChange={(event) => {
-                    setResetEmail(event.target.value)
-                    setResetError('')
-                    setResetMessage('')
+                    setResetEmail(event.target.value);
+                    setResetError("");
+                    setResetMessage("");
                   }}
                   aria-invalid={Boolean(resetError)}
                 />
@@ -97,7 +125,10 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
                 <p className="login-page__reset-message">{resetMessage}</p>
               )}
 
-              <button className="primary-button login-page__submit" type="submit">
+              <button
+                className="primary-button login-page__submit"
+                type="submit"
+              >
                 Send reset link
               </button>
             </form>
@@ -116,7 +147,11 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
               Welcome back
             </h2>
 
-            <form className="login-page__form" onSubmit={handleLoginSubmit} noValidate>
+            <form
+              className="login-page__form"
+              onSubmit={handleLoginSubmit}
+              noValidate
+            >
               <label className="login-page__field">
                 <span>Email</span>
                 <input
@@ -147,7 +182,10 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
                 </p>
               )}
 
-              <button className="primary-button login-page__submit" type="submit">
+              <button
+                className="primary-button login-page__submit"
+                type="submit"
+              >
                 Log in
               </button>
             </form>
@@ -163,7 +201,7 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
             <button
               className="login-page__register-link"
               type="button"
-              onClick={onRegister}
+              onClick={() => navigate("/register")}
             >
               Create account
             </button>
@@ -171,7 +209,7 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
         )}
       </section>
     </main>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;

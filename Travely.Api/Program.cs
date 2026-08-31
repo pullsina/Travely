@@ -7,6 +7,7 @@ using Travely.Infrastructure.Data;
 using Travely.Infrastructure.Repositories;
 using Travely.Infrastructure.Services;
 using Travely.Shared.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,13 @@ builder.Services
 //namn på cookie som ska användas
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies();
-builder.Services.AddAuthorization();
+builder.Services.Configure<CookieAuthenticationOptions>(
+    IdentityConstants.ApplicationScheme,
+    options =>
+    {
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
 //------------------------------------
 // Application services
@@ -50,13 +57,6 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 //------------------------------------
 builder.Services.AddScoped<IQuizRepository, QuizRepository>();
 //------------------------------------
-
-//not needed since we use our own auth controller and service for register/login/logout
-//builder.Services.AddIdentityApiEndpoints<ApplicationUser>().AddEntityFrameworkStores<TravelyDbContext>();
-
-//not needed, using swagger for testing endpoints instead of openapi
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
 
 //------------------------------------
 //for testing endpoints in swagger
@@ -73,7 +73,10 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+
+            .AllowAnyMethod()
+            .AllowCredentials();
+
     });
 });
 
@@ -86,7 +89,6 @@ app.UseCors("ReactApp");
 //------------------------------------
 if (app.Environment.IsDevelopment())
 {
-    //app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }

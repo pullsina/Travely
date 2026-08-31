@@ -16,10 +16,10 @@ const continents = [
   { name: "Oceania", image: oceaniaImage },
 ];
 
-function ContinentPage({ onBack, onStartGame }) {
+function ContinentPage() {
   return (
     <main className="continent-page">
-      <Navbar variant="app" points={100} onHome={onBack} onLogout={onBack} />
+      <Navbar variant="app" points={100} />
 
       <header className="continent-page__header">
         <h1 className="continent-page__logo">TRAVELY</h1>

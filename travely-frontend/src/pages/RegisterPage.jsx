@@ -1,27 +1,32 @@
-import { useState } from 'react'
-import backgroundMap from '../assets/background_map.png'
-import './RegisterPage.css'
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import backgroundMap from "../assets/background_map.png";
+import "./RegisterPage.css";
 
-function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
+function RegisterPage() {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
   const [formValues, setFormValues] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [formError, setFormError] = useState('')
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [formError, setFormError] = useState("");
 
   function handleChange(event) {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setFormValues((currentValues) => ({
       ...currentValues,
       [name]: value,
-    }))
-    setFormError('')
+    }));
+    setFormError("");
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
+  async function handleSubmit(event) {
+    event.preventDefault();
 
     if (
       !formValues.username ||
@@ -29,16 +34,33 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
       !formValues.password ||
       !formValues.confirmPassword
     ) {
-      setFormError('Please fill in all fields.')
-      return
+      setFormError("Please fill in all fields.");
+      return;
     }
 
     if (formValues.password !== formValues.confirmPassword) {
-      setFormError('Passwords do not match.')
-      return
+      setFormError("Passwords do not match.");
+      return;
     }
 
-    onRegisterSuccess()
+    try {
+      const result = await register({
+        username: formValues.username,
+        email: formValues.email,
+        password: formValues.password,
+        confirmPassword: formValues.confirmPassword,
+      });
+
+      console.log(result);
+
+      if (result.success) {
+        navigate("/continents");
+      } else {
+        setFormError(result.error || "Registration failed.");
+      }
+    } catch (error) {
+      setFormError(error.message);
+    }
   }
 
   return (
@@ -46,17 +68,28 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
       className="register-page"
       style={{ backgroundImage: `url(${backgroundMap})` }}
     >
-      <button className="register-page__back" onClick={onBack} aria-label="Go back">
+      <button
+        className="register-page__back"
+        onClick={() => navigate("/")}
+        aria-label="Go back"
+      >
         ←
       </button>
 
-      <section className="register-page__panel" aria-labelledby="register-title">
+      <section
+        className="register-page__panel"
+        aria-labelledby="register-title"
+      >
         <h1 className="register-page__logo">TRAVELY</h1>
         <h2 id="register-title" className="register-page__title">
           Create account
         </h2>
 
-        <form className="register-page__form" onSubmit={handleSubmit} noValidate>
+        <form
+          className="register-page__form"
+          onSubmit={handleSubmit}
+          noValidate
+        >
           <label className="register-page__field">
             <span>Username</span>
             <input
@@ -111,17 +144,24 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
             </p>
           )}
 
-          <button className="primary-button register-page__submit" type="submit">
+          <button
+            className="primary-button register-page__submit"
+            type="submit"
+          >
             Register
           </button>
         </form>
 
-        <button className="register-page__login-link" type="button" onClick={onLogin}>
+        <button
+          className="register-page__login-link"
+          type="button"
+          onClick={() => navigate("/login")}
+        >
           Log in
         </button>
       </section>
     </main>
-  )
+  );
 }
 
-export default RegisterPage
+export default RegisterPage;
