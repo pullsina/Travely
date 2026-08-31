@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import CountryInfoCard from "../components/CountryInfoCard";
 import QuestionCard from "../components/QuestionCard";
 import europeOutline from "../assets/continent-outlines/europe.png";
+import { useNavigate } from "react-router-dom";
 import "./GamePage.css";
 
 const demoQuestion = {
@@ -13,7 +14,7 @@ const demoQuestion = {
   correctAnswerId: 1,
   mapImage: europeOutline,
   flagUrl: "/images/countries/flags/france.svg",
-  factImageUrl: "/images/countries/hints/fallback.png",
+  factImageUrl: "/images/countries/hints/france.jpg",
   factText: "The Eiffel Tower is located in this country.",
   countryInfo: {
     name: "France",
@@ -21,7 +22,7 @@ const demoQuestion = {
     funFact:
       "France is known for art, food, fashion, and landmarks like the Eiffel Tower.",
     flagUrl: "/images/countries/flags/france.svg",
-    factImageUrl: "/images/countries/hints/fallback.png",
+    factImageUrl: "/images/countries/hints/france.jpg",
     mapOutlineUrl: europeOutline,
   },
   answers: [
@@ -36,7 +37,8 @@ const demoQuestion = {
   ],
 };
 
-function GamePage({ onBack }) {
+function GamePage() {
+  const navigate = useNavigate();
   const [points, setPoints] = useState(100);
   const [hintType, setHintType] = useState("map");
   const [usedHints, setUsedHints] = useState([]);
@@ -99,7 +101,16 @@ function GamePage({ onBack }) {
 
   return (
     <main className="game-page">
-      <Navbar variant="app" points={points} onHome={onBack} onLogout={onBack} />
+      <Navbar variant="app" points={points} />
+
+      <button
+        className="game-page__back"
+        type="button"
+        onClick={() => navigate("/continents")}
+        aria-label="Go back to continents"
+      >
+        ←
+      </button>
 
       {showCountryInfo ? (
         <CountryInfoCard

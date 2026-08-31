@@ -10,10 +10,35 @@
   display: flex;
   justify-content: center;
   padding: 86px 40px 0;
+  position: relative;
+}
+
+.game-page__back {
+  position: absolute;
+  top: 92px;
+  left: 36px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--color-warning);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.game-page__back:focus-visible {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 3px;
 }
 
 @media (max-width: 760px) {
   .game-page {
     padding: 88px 20px 0;
+  }
+
+  .game-page__back {
+    top: 78px;
+    left: 20px;
   }
 }
