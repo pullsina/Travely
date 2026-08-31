@@ -1,28 +1,32 @@
-import { useState } from 'react'
-import { register } from '../api/authApi'
-import backgroundMap from '../assets/background_map.png'
-import './RegisterPage.css'
+import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import backgroundMap from "../assets/background_map.png";
+import "./RegisterPage.css";
 
-function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
+function RegisterPage() {
+  const navigate = useNavigate();
+  const { register } = useAuth();
+
   const [formValues, setFormValues] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [formError, setFormError] = useState('')
+  const [formError, setFormError] = useState("");
 
   function handleChange(event) {
-    const { name, value } = event.target
+    const { name, value } = event.target;
     setFormValues((currentValues) => ({
       ...currentValues,
       [name]: value,
-    }))
-    setFormError('')
+    }));
+    setFormError("");
   }
 
   async function handleSubmit(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     if (
       !formValues.username ||
@@ -35,28 +39,28 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
     }
 
     if (formValues.password !== formValues.confirmPassword) {
-      setFormError('Passwords do not match.')
-      return
+      setFormError("Passwords do not match.");
+      return;
     }
 
-     try {
-       const result = await register({
-         username: formValues.username,
-         email: formValues.email,
-         password: formValues.password,
-         confirmPassword: formValues.confirmPassword,
-       });
+    try {
+      const result = await register({
+        username: formValues.username,
+        email: formValues.email,
+        password: formValues.password,
+        confirmPassword: formValues.confirmPassword,
+      });
 
-       console.log(result);
+      console.log(result);
 
-       if (result.success) {
-         onRegisterSuccess();
-       } else {
-         setFormError(result.error || "Registration failed.");
-       }
-     } catch (error) {
-       setFormError(error.message);
-     }
+      if (result.success) {
+        navigate("/continents");
+      } else {
+        setFormError(result.error || "Registration failed.");
+      }
+    } catch (error) {
+      setFormError(error.message);
+    }
   }
 
   return (
@@ -66,7 +70,7 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
     >
       <button
         className="register-page__back"
-        onClick={onBack}
+        onClick={() => navigate("/")}
         aria-label="Go back"
       >
         ←
@@ -151,7 +155,7 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
         <button
           className="register-page__login-link"
           type="button"
-          onClick={onLogin}
+          onClick={() => navigate("/login")}
         >
           Log in
         </button>
@@ -160,4 +164,4 @@ function RegisterPage({ onBack, onLogin, onRegisterSuccess }) {
   );
 }
 
-export default RegisterPage
+export default RegisterPage;

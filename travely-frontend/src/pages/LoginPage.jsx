@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { login } from "../api/authApi";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import backgroundMap from "../assets/background_map.png";
 import "./LoginPage.css";
 
-function LoginPage({ onBack, onRegister, onLoginSuccess }) {
+function LoginPage() {
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [isResetOpen, setIsResetOpen] = useState(false);
   const [loginValues, setLoginValues] = useState({
     email: "",
@@ -40,7 +44,7 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
       console.log("Login result:", result);
 
       if (result.success) {
-        onLoginSuccess();
+        navigate("/continents");
       } else {
         setLoginError(result.error || "Login failed.");
       }
@@ -75,7 +79,7 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
     >
       <button
         className="login-page__back"
-        onClick={onBack}
+        onClick={() => navigate("/")}
         aria-label="Go back"
       >
         ←
@@ -197,7 +201,7 @@ function LoginPage({ onBack, onRegister, onLoginSuccess }) {
             <button
               className="login-page__register-link"
               type="button"
-              onClick={onRegister}
+              onClick={() => navigate("/register")}
             >
               Create account
             </button>

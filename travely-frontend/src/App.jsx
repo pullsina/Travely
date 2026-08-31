@@ -2,44 +2,38 @@ import StartPage from "./pages/StartPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ContinentPage from "./pages/ContinentPage";
-import { useState } from "react";
+import { useAuth } from "./contexts/AuthContext";
+import { Routes, Route } from "react-router-dom";
 import Footer from "./components/Footer";
 
 function App() {
-  const [page, setPage] = useState("start");
+  const { user, loading, isAuthenticated } = useAuth();
 
-  let currentPage;
+  console.log("Auth:", {
+    user,
+    loading,
+    isAuthenticated,
+  });
 
-  if (page === "register") {
-    currentPage = (
-      <RegisterPage
-        onBack={() => setPage("start")}
-        onLogin={() => setPage("login")}
-        onRegisterSuccess={() => setPage("continents")}
-      />
-    );
-  } else if (page === "login") {
-    currentPage = (
-      <LoginPage
-        onBack={() => setPage("start")}
-        onRegister={() => setPage("register")}
-        onLoginSuccess={() => setPage("continents")}
-      />
-    );
-  } else if (page === "continents") {
-    currentPage = <ContinentPage onBack={() => setPage("start")} />;
-  } else {
-    currentPage = (
-      <StartPage
-        onRegister={() => setPage("register")}
-        onLogin={() => setPage("login")}
-      />
-    );
+  //Make sure pages are not visible while AuthContext checks /me
+  if (loading) {
+    return null;
   }
 
   return (
     <>
-      {currentPage}
+      <Routes>
+        <Route
+          path="/"
+          element={<StartPage onRegister={() => {}} onLogin={() => {}} />}
+        />
+
+        <Route path="/register" element={<RegisterPage />} />
+
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route path="/continents" element={<ContinentPage />} />
+      </Routes>
       <Footer />
     </>
   );

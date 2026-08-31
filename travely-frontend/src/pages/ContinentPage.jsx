@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar";
-import { logout } from "../api/authApi";
 import europeImage from "../assets/continents/europe.png";
 import africaImage from "../assets/continents/africa.png";
 import northAmericaImage from "../assets/continents/north-america.png";
@@ -17,25 +16,10 @@ const continents = [
   { name: "Oceania", image: oceaniaImage },
 ];
 
-function ContinentPage({ onBack }) {
-  async function handleLogout() {
-    try {
-      const result = await logout();
-      console.log("Logout response", result);
-      onBack();
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  }
-
+function ContinentPage() {
   return (
     <main className="continent-page">
-      <Navbar
-        variant="app"
-        points={100}
-        onHome={onBack}
-        onLogout={handleLogout}
-      />
+      <Navbar variant="app" points={100} />
 
       <header className="continent-page__header">
         <h1 className="continent-page__logo">TRAVELY</h1>
