@@ -13,7 +13,7 @@ const demoQuestion = {
   correctAnswerId: 1,
   mapImage: europeOutline,
   flagUrl: "/images/countries/flags/france.svg",
-  factImageUrl: "/images/countries/hints/fallback.png",
+  factImageUrl: "/images/countries/hints/france.jpg",
   factText: "The Eiffel Tower is located in this country.",
   countryInfo: {
     name: "France",
@@ -21,7 +21,7 @@ const demoQuestion = {
     funFact:
       "France is known for art, food, fashion, and landmarks like the Eiffel Tower.",
     flagUrl: "/images/countries/flags/france.svg",
-    factImageUrl: "/images/countries/hints/fallback.png",
+    factImageUrl: "/images/countries/hints/france.jpg",
     mapOutlineUrl: europeOutline,
   },
   answers: [
