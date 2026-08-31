@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Travely.Shared.DTOs
+﻿namespace Travely.Shared.DTOs
 {
     public class QuizAnswerDto
     {
-        // Visa upp svarsalternativ med landets namn
-        public int Id { get; set; }
-        public string Answer { get; set; } 
+        // The answer ID
+        public int AnswerId { get; set; }
+        
+        // Show the answer option with the country's name
+        public string Country { get; set; } = string.Empty;
     }
 }

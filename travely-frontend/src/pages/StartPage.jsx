@@ -1,14 +1,18 @@
 import Navbar from "../components/Navbar";
 import backgroundMap from "../assets/background_map.png";
 import "./StartPage.css";
+import { useNavigate } from "react-router-dom";
 
-function StartPage({ onRegister, onLogin }) {
+function StartPage() {
+
+  const navigate = useNavigate();
+
   return (
     <main
       className="start-page"
       style={{ backgroundImage: `url(${backgroundMap})` }}
     >
-      <Navbar variant="guest" onHome={() => {}} />
+      <Navbar variant="guest" showAuthLinks />
 
       <section className="start-page__content">
         <h1 className="start-page__logo">TRAVELY</h1>
@@ -19,13 +23,13 @@ function StartPage({ onRegister, onLogin }) {
         <div className="start-page__actions">
           <button
             className="primary-button start-page__button"
-            onClick={onRegister}
+            onClick={() => navigate("/register")}
           >
             Register
           </button>
           <button
             className="primary-button start-page__button"
-            onClick={onLogin}
+            onClick={() => navigate("/login")}
           >
             Log in
           </button>
