@@ -41,8 +41,8 @@ namespace Travely.Infrastructure.Repositories
             var answers = otherCountries
                 .Select(c => new QuizAnswerDto
                 {
-                    Id = c.Id,
-                    Answer = c.Name
+                    AnswerId = c.Id,
+                    Country = c.Name
                 })
                 .ToList();
 
@@ -50,8 +50,8 @@ namespace Travely.Infrastructure.Repositories
             // Could this method flow risk presenting same country more than once?
             answers.Add(new QuizAnswerDto
             {
-                Id = question.Id,
-                Answer = question.Name
+                AnswerId = question.Id,
+                Country = question.Name
             });
 
             // Shuffle the answer options 
@@ -62,8 +62,8 @@ namespace Travely.Infrastructure.Repositories
             return new QuizQuestionDto
             {
                 QuestionId = question.Id, // UI needs the country ID to identify the question without showing it to the user
-                Capital = question.Capital,
-                Countries = answers
+                Question = question.Name,
+                Answers = answers
             };
         }
 
