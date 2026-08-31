@@ -16,7 +16,7 @@ const continents = [
   { name: "Oceania", image: oceaniaImage },
 ];
 
-function ContinentPage({ onBack }) {
+function ContinentPage({ onBack, onStartGame }) {
   return (
     <main className="continent-page">
       <Navbar variant="app" points={100} onHome={onBack} onLogout={onBack} />
@@ -34,6 +34,7 @@ function ContinentPage({ onBack }) {
             className="continent-page__card"
             key={continent.name}
             type="button"
+            onClick={() => onStartGame(continent.name)}
             style={{ backgroundImage: `url(${continent.image})` }}
           >
             <span>{continent.name}</span>

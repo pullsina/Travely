@@ -2,6 +2,7 @@ import StartPage from "./pages/StartPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ContinentPage from "./pages/ContinentPage";
+import GamePage from "./pages/GamePage";
 import { useState } from "react";
 import Footer from "./components/Footer";
 
@@ -27,7 +28,14 @@ function App() {
       />
     );
   } else if (page === "continents") {
-    currentPage = <ContinentPage onBack={() => setPage("start")} />;
+    currentPage = (
+      <ContinentPage
+        onBack={() => setPage("start")}
+        onStartGame={() => setPage("game")}
+      />
+    );
+  } else if (page === "game") {
+    currentPage = <GamePage onBack={() => setPage("continents")} />;
   } else {
     currentPage = (
       <StartPage
