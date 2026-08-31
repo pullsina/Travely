@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import ContinentPage from "./pages/ContinentPage";
 import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 
 function App() {
@@ -23,16 +24,20 @@ function App() {
   return (
     <>
       <Routes>
+        {/* public routes-------------------- */}
         <Route
           path="/"
           element={<StartPage onRegister={() => {}} onLogin={() => {}} />}
         />
-
         <Route path="/register" element={<RegisterPage />} />
-
         <Route path="/login" element={<LoginPage />} />
+        {/* --------------------------------- */}
 
-        <Route path="/continents" element={<ContinentPage />} />
+        {/* protected routes----------------- */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/continents" element={<ContinentPage />} />
+        </Route>
+        {/* --------------------------------- */}
       </Routes>
       <Footer />
     </>
