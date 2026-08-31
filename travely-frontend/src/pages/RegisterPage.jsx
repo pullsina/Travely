@@ -103,6 +103,18 @@ function RegisterPage() {
           </label>
 
           <label className="register-page__field">
+            <span>Username</span>
+            <input
+              type="text"
+              name="username"
+              autoComplete="username"
+              value={formValues.username}
+              onChange={handleChange}
+              aria-invalid={Boolean(formError && !formValues.username)}
+            />
+          </label>
+
+          <label className="register-page__field">
             <span>Email</span>
             <input
               type="email"

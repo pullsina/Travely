@@ -34,6 +34,7 @@ function ContinentPage() {
             className="continent-page__card"
             key={continent.name}
             type="button"
+            onClick={() => onStartGame(continent.name)}
             style={{ backgroundImage: `url(${continent.image})` }}
           >
             <span>{continent.name}</span>
