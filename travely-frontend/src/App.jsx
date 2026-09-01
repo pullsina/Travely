@@ -2,6 +2,7 @@ import StartPage from "./pages/StartPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ContinentPage from "./pages/ContinentPage";
+import GamePage from "./pages/GamePage";
 import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -35,9 +36,12 @@ function App() {
 
         {/* protected routes----------------- */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/continents" element={<ContinentPage />} />
+                  <Route path="/continents" element={<ContinentPage />} />
+                  <Route path="/game" element={<GamePage />} />
         </Route>
         {/* --------------------------------- */}
+
+        
       </Routes>
       <Footer />
     </>

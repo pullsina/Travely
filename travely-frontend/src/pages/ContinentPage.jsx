@@ -5,6 +5,7 @@ import northAmericaImage from "../assets/continents/north-america.png";
 import southAmericaImage from "../assets/continents/south-america.png";
 import asiaImage from "../assets/continents/asia.png";
 import oceaniaImage from "../assets/continents/oceania.png";
+import { useNavigate } from "react-router-dom";
 import "./ContinentPage.css";
 
 const continents = [
@@ -17,6 +18,8 @@ const continents = [
 ];
 
 function ContinentPage() {
+  const navigate = useNavigate();
+
   return (
     <main className="continent-page">
       <Navbar variant="app" points={100} />
@@ -34,7 +37,7 @@ function ContinentPage() {
             className="continent-page__card"
             key={continent.name}
             type="button"
-            onClick={() => onStartGame(continent.name)}
+            onClick={() => navigate("/game")}
             style={{ backgroundImage: `url(${continent.image})` }}
           >
             <span>{continent.name}</span>

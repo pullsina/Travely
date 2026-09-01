@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Travely.Shared.DTOs
+﻿namespace Travely.Shared.DTOs
 {
     public class QuizQuestionDto
     {
-        // Visa upp fråga med en huvudstad
+        // The question ID
         public int QuestionId { get; set; }
-        public string Capital { get; set; } = string.Empty;
 
-        // Definiera en lista för svarsalternativ av typen QuizAnswerDto
-        public List<QuizAnswerDto> Countries { get; set; }
+        // Show the question with a capital
+        public string Question { get; set; } = string.Empty;
+
+        // Show the answer options with countries
+        public List<QuizAnswerDto> Answers { get; set; } = new();
     }
 }

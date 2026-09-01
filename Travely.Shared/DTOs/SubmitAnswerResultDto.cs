@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Travely.Shared.DTOs
+﻿namespace Travely.Shared.DTOs
 {
     public class SubmitAnswerResultDto
     {
+        // Indicate correct or incorrect answer
         public bool IsCorrect { get; set; }
-
+        
+        // The question ID responded
         public int QuestionId { get; set; }
 
+        // The correct answer ID
         public int CorrectAnswerId { get; set; }
 
-        public int? Score { get; set; }
+        // The score for the answered question
+        public int Score { get; set; }
     }
 }
