@@ -1,0 +1,201 @@
+.user-info-card {
+  width: min(100%, 1240px);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 96px;
+}
+
+.user-info-card__title {
+  margin: 0;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+ 
+.user-info-card__text {
+  margin: 34px 0 0;
+  font-size: clamp(22px, 2.5vw, 28px);
+} 
+
+.user-info-card__body {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.user-info-card__media-panel {
+  min-height: 360px;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  background: rgba(6, 22, 74, 0.62);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.user-info-card__media-panel[data-hint-type="fact"] {
+  align-items: center;
+  gap: 20px;
+  padding: 36px 48px;
+}
+
+.user-info-card__image-frame {
+  min-height: 356px;
+  background: rgba(11, 35, 112, 0.76);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.user-info-card__media-panel[data-hint-type="fact"]
+  .user-info-card__image-frame {
+  width: 100%;
+  min-height: 230px;
+  border: 2px solid var(--color-primary);
+  border-radius: 6px;
+}
+
+.user-info-card__image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.user-info-card__media-panel[data-hint-type="fact"]
+  .user-info-card__image-frame
+  img {
+  object-fit: cover;
+}
+
+.user-info-card__image-frame span {
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
+.user-info-card__fact {
+  width: 100%;
+  margin: 0;
+  border: 2px solid var(--color-primary);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.25;
+  padding: 8px 14px 12px;
+  text-align: center;
+}
+
+.user-info-card__answers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 224px));
+  gap: 22px 116px;
+  justify-content: center;
+}
+
+.user-info-card__answer {
+  height: 70px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background: rgba(6, 22, 74, 0.62);
+  color: var(--color-primary);
+  cursor: pointer;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.user-info-card__answer:hover,
+.user-info-card__answer[data-selected="true"] {
+  border-width: 4px;
+  box-shadow: 0 0 18px rgba(105, 224, 0, 0.45);
+}
+
+.user-info-card__answer[data-selected="true"] {
+  background: rgba(3, 12, 42, 0.82);
+}
+
+.user-info-card__answer[data-correct="true"] {
+  border-color: var(--color-primary);
+  background: rgba(105, 224, 0, 0.18);
+  box-shadow: 0 0 20px rgba(105, 224, 0, 0.58);
+  color: var(--color-primary);
+}
+
+.user-info-card__answer[data-incorrect="true"] {
+  border-color: var(--color-error);
+  background: rgba(255, 92, 104, 0.18);
+  box-shadow: 0 0 20px rgba(255, 92, 104, 0.46);
+  color: var(--color-error);
+}
+.user-info-card__change-info-button:disabled,
+.user-info-card__delete-profile-button:disabled {
+  cursor: default;
+}
+
+.user-info-card__answer:hover {
+  transform: translateY(-2px);
+}
+
+.user-info-card__answer:disabled:hover {
+  transform: none;
+}
+
+.user-info-card__actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+  margin-top: 56px;
+}
+
+@media (max-width: 1020px) {
+  .user-info-card {
+    padding-bottom: 112px;
+  }
+
+  .user-info-card__prompt {
+    margin: 54px 0 36px;
+  }
+
+  .user-info-card__body,
+  .user-info-card__actions {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .user-info-card__media-panel {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .user-info-card {
+    padding: 0 0 104px;
+  }
+
+  .user-info-card__prompt {
+    margin: 42px 0 28px;
+  }
+
+  .user-info-card__media-panel {
+    min-height: auto;
+  }
+
+  .user-info-card__media-panel[data-hint-type="fact"] {
+    padding: 18px;
+  }
+}

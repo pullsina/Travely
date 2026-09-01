@@ -8,7 +8,7 @@ import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 
 function ProfilePage() {
-    const { user } = useAuth();
+  const { user } = useAuth();
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const navigate = useNavigate();
@@ -34,18 +34,21 @@ function ProfilePage() {
       <section className="profile-page__content">
         <h1 className="profile-page__logo">TRAVELY</h1>
         <p className="profile-page__tagline">
-          Manage your profile and view your game summary
+          Hi {user.name}! Welcome to your profile page.
+        </p>
+        <p className="profile-page__tagline">
+          Make your choice below to see your user details or your game summary.
         </p>
         {/*  DIV for action buttons */}
         <div className="profile-page__actions">
           <button
-            className="primary-button profile-page__button"
+            className="primary-button profile-page__show-info-button"
             onClick={() => setShowUserInfoCard(true)}
           >
             Show user details
           </button>
           <button
-            className="primary-button profile-page__button"
+            className="primary-button profile-page__show-results-button"
             onClick={() => setShowUserResultsCard(true)}
           >
             Show user game summary
@@ -59,7 +62,10 @@ function ProfilePage() {
           />
         ) : null}
         {showUserResultsCard ? (
-          <UserResultsCard onClose={() => setShowUserResultsCard(false)} />
+          <UserResultsCard
+            user={user}
+            onClose={() => setShowUserResultsCard(false)}
+          />
         ) : null}
       </section>
     </main>
