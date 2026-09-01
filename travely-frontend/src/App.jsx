@@ -37,13 +37,13 @@ function App() {
 
         {/* protected routes----------------- */}
         <Route element={<ProtectedRoute />}>
-                  <Route path="/continents" element={<ContinentPage />} />
-                  <Route path="/game" element={<GamePage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/continents" element={<ContinentPage />} />
+          // This route is for the game page, which takes a continent as a URL
+          parameter.
+          <Route path="/game/:continent" element={<GamePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
         {/* --------------------------------- */}
-
-        
       </Routes>
       <Footer />
     </>

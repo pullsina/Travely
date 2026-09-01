@@ -37,15 +37,41 @@ async function request(path, options = {}) {
 // GET questions
 // ---------------------------------------------
 export async function getQuestion(questionId) {
-  return request(`/quiz/question/${questionId}`, {
+  return request(`/api/quiz/question/${questionId}`, {
     method: "GET",
   });
 }
+
+// ---------------------------------------------
+// GET random question
+// ---------------------------------------------
+
+// This function retrieves a random question based on the specified continent and difficulty level.
+export async function getRandomQuestion(
+  continent,
+  difficulty,
+  excludedQuestionIds = [],
+) {
+  const params = new URLSearchParams({
+    continent,
+    difficulty,
+  });
+
+  // Append excluded question IDs to the query parameters
+  excludedQuestionIds.forEach((questionId) => {
+    params.append("excludedQuestionIds", questionId);
+  });
+
+  return request(`/api/quiz/question/random?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
 // ---------------------------------------------
 // POST answers
 // ---------------------------------------------
 export async function submitAnswers(questionId, answerId) {
-  return request("/quiz/answer", {
+  return request("/api/quiz/answer", {
     method: "POST",
     body: JSON.stringify({ questionId, answerId }),
   });
@@ -61,6 +87,7 @@ export async function getResults() {
 // ---------------------------------------------
 export default {
   getQuestion,
+  getRandomQuestion,
   submitAnswers,
   getResults,
 };

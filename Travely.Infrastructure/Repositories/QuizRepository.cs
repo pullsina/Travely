@@ -68,6 +68,10 @@ namespace Travely.Infrastructure.Repositories
                 //Question = question.Name,
                 Question = question.Capital, // Show the capital to the user instead of the country name
                 Answers = answers,
+                Country = question.Name,
+                Fact = question.Fact,
+                FlagUrl = question.FlagUrl,
+                FactUrl = question.FactUrl,
                 Difficulty = question.Difficulty,
                 // Assign points based on the difficulty level of the question
                 Points = question.Difficulty switch
@@ -137,6 +141,10 @@ namespace Travely.Infrastructure.Repositories
                 QuestionId = question.Id,
                 Question = question.Capital,
                 Answers = answers,
+                Country = question.Name,
+                Fact = question.Fact,
+                FlagUrl = question.FlagUrl,
+                FactUrl = question.FactUrl,
                 Difficulty = question.Difficulty,
                 Points = question.Difficulty switch
                 {
