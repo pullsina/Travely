@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Travely.Application.Interfaces;
 using Travely.Shared.DTOs;
+using Travely.Shared.Enums;
 
 namespace Travely.Api.Controllers
 {
@@ -47,6 +48,26 @@ namespace Travely.Api.Controllers
             }
 
             return Ok(result);
+        }
+
+        // Endpoint to retrieve a random quiz question by continent and difficulty
+        [HttpGet("question/random")]
+        public async Task<ActionResult<QuizQuestionDto>> GetRandomQuestion(
+            [FromQuery] Continent continent,
+            [FromQuery] Difficulty difficulty,
+            [FromQuery] List<int> excludedQuestionIds)
+        {
+            var question = await _quizService.GetRandomQuestionAsync(
+                continent,
+                difficulty,
+                excludedQuestionIds);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(question);
         }
     }
 }

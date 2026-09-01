@@ -18,5 +18,7 @@ namespace Travely.Shared.DTOs
 
         // Show points for the question
         public int Points { get; set; }
+
+        public Continent Continent { get; set; }
     }
 }
