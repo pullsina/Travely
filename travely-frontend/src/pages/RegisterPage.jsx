@@ -14,6 +14,7 @@ function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+  const [formErrors, setFormErrors] = useState({});
   const [formError, setFormError] = useState("");
 
   function handleChange(event) {
@@ -22,26 +23,59 @@ function RegisterPage() {
       ...currentValues,
       [name]: value,
     }));
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      [name]: "",
+    }));
     setFormError("");
   }
 
   async function handleSubmit(event) {
     event.preventDefault();
+    const errors = {};
+
+    if (!formValues.username) {
+      errors.username = "Username is required.";
+    }
+
+    if (!formValues.email) {
+      errors.email = "Email is required.";
+    } else if (!formValues.email.includes("@")) {
+      errors.email = "Email must contain @.";
+    }
+
+    if (!formValues.password) {
+      errors.password = "Password is required.";
+    } else if (
+      formValues.password.length < 6 ||
+      !/[A-Z]/.test(formValues.password) ||
+      !/[a-z]/.test(formValues.password) ||
+      !/[0-9]/.test(formValues.password) ||
+      !/[^A-Za-z0-9]/.test(formValues.password)
+    ) {
+      errors.password =
+        "Password must be at least 6 characters and include uppercase, lowercase, number and special character.";
+    }
+
+    if (!formValues.confirmPassword) {
+      errors.confirmPassword = "Confirm password is required.";
+    }
 
     if (
-      !formValues.username ||
-      !formValues.email ||
-      !formValues.password ||
-      !formValues.confirmPassword
+      formValues.password &&
+      formValues.confirmPassword &&
+      formValues.password !== formValues.confirmPassword
     ) {
-      setFormError("Please fill in all fields.");
+      errors.confirmPassword = "Passwords do not match.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      setFormError("");
       return;
     }
 
-    if (formValues.password !== formValues.confirmPassword) {
-      setFormError("Passwords do not match.");
-      return;
-    }
+    setFormErrors({});
 
     try {
       const result = await register({
@@ -56,7 +90,7 @@ function RegisterPage() {
       if (result.success) {
         navigate("/continents");
       } else {
-        setFormError(result.error || "Registration failed.");
+        setFormError(result.message || result.error || "Registration failed.");
       }
     } catch (error) {
       setFormError(error.message);
@@ -98,8 +132,13 @@ function RegisterPage() {
               autoComplete="username"
               value={formValues.username}
               onChange={handleChange}
-              aria-invalid={Boolean(formError && !formValues.username)}
+              aria-invalid={Boolean(formErrors.username)}
             />
+            {formErrors.username && (
+              <p className="register-page__message register-page__message--error">
+                {formErrors.username}
+              </p>
+            )}
           </label>
 
           <label className="register-page__field">
@@ -110,8 +149,13 @@ function RegisterPage() {
               autoComplete="email"
               value={formValues.email}
               onChange={handleChange}
-              aria-invalid={Boolean(formError && !formValues.email)}
+              aria-invalid={Boolean(formErrors.email)}
             />
+            {formErrors.email && (
+              <p className="register-page__message register-page__message--error">
+                {formErrors.email}
+              </p>
+            )}
           </label>
 
           <label className="register-page__field">
@@ -122,8 +166,13 @@ function RegisterPage() {
               autoComplete="new-password"
               value={formValues.password}
               onChange={handleChange}
-              aria-invalid={Boolean(formError && !formValues.password)}
+              aria-invalid={Boolean(formErrors.password)}
             />
+            {formErrors.password && (
+              <p className="register-page__message register-page__message--error">
+                {formErrors.password}
+              </p>
+            )}
           </label>
 
           <label className="register-page__field">
@@ -134,8 +183,13 @@ function RegisterPage() {
               autoComplete="new-password"
               value={formValues.confirmPassword}
               onChange={handleChange}
-              aria-invalid={Boolean(formError && !formValues.confirmPassword)}
+              aria-invalid={Boolean(formErrors.confirmPassword)}
             />
+            {formErrors.confirmPassword && (
+              <p className="register-page__message register-page__message--error">
+                {formErrors.confirmPassword}
+              </p>
+            )}
           </label>
 
           {formError && (

@@ -8,6 +8,7 @@ using Travely.Infrastructure.Repositories;
 using Travely.Infrastructure.Services;
 using Travely.Shared.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Travely.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +82,10 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+//------------------------------------
+// Middleware
+//------------------------------------
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseCors("ReactApp");
 
