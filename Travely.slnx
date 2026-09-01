@@ -3,4 +3,5 @@
   <Project Path="Travely.Application/Travely.Application.csproj" />
   <Project Path="Travely.Infrastructure/Travely.Infrastructure.csproj" />
   <Project Path="Travely.Shared/Travely.Shared.csproj" />
+  <Project Path="Travely.Test/Travely.Test.csproj" Id="c6047585-c383-456c-b103-e3eba1aad4f4" />
 </Solution>
