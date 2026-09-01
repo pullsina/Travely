@@ -5,6 +5,7 @@ import ContinentPage from "./pages/ContinentPage";
 import GamePage from "./pages/GamePage";
 import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 
 function App() {
@@ -24,18 +25,23 @@ function App() {
   return (
     <>
       <Routes>
+        {/* public routes-------------------- */}
         <Route
           path="/"
           element={<StartPage onRegister={() => {}} onLogin={() => {}} />}
         />
-
         <Route path="/register" element={<RegisterPage />} />
-
         <Route path="/login" element={<LoginPage />} />
+        {/* --------------------------------- */}
 
-        <Route path="/continents" element={<ContinentPage />} />
+        {/* protected routes----------------- */}
+        <Route element={<ProtectedRoute />}>
+                  <Route path="/continents" element={<ContinentPage />} />
+                  <Route path="/game" element={<GamePage />} />
+        </Route>
+        {/* --------------------------------- */}
 
-        <Route path="/game" element={<GamePage />} />
+        
       </Routes>
       <Footer />
     </>
