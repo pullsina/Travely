@@ -23,11 +23,22 @@ namespace Travely.Api.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = "Invalid registration data."
+                });
+            }
 
             var result = await _authService.RegisterAsync(dto);
             if (!result.Success)
-                return BadRequest(result.Error);
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = result.Error ?? "Registration failed."
+                });
+            }
+
 
             return Ok(result);
         }
@@ -36,8 +47,23 @@ namespace Travely.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = "Invalid login data."
+                });
+            }
+
+
             var result = await _authService.LoginAsync(dto);
-            if (!result.Success) return Unauthorized(result);
+            if (!result.Success)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = result.Error ?? "Login failed."
+                });
+            }
 
             return Ok(result);
         }
@@ -47,7 +73,10 @@ namespace Travely.Api.Controllers
         public async Task<IActionResult> Logout()
         {
             await _authService.LogoutAsync();
-            return Ok("You have been logged out.");
+            return Ok(new
+            {
+                Message = "You have been logged out."
+            });
         }
 
         [Authorize]
@@ -65,13 +94,28 @@ namespace Travely.Api.Controllers
         public async Task<IActionResult> Delete()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
 
             var success = await _authService.DeleteAsync(userId);
-            if (!success) return BadRequest("Something went wrong when trying to delete the account.");
+            if (!success)
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = "Something went wrong when trying to delete the account."
+                });
+            }
 
             await _authService.LogoutAsync();
-            return Ok("Account deleted.");
+            return Ok(new
+            {
+                Message = "Account deleted."
+            });
         }
     }
 }
