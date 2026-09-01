@@ -3,6 +3,7 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ContinentPage from "./pages/ContinentPage";
 import GamePage from "./pages/GamePage";
+import ProfilePage from "./pages/ProfilePage";
 import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -38,6 +39,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
                   <Route path="/continents" element={<ContinentPage />} />
                   <Route path="/game" element={<GamePage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
         </Route>
         {/* --------------------------------- */}
 

@@ -1,0 +1,55 @@
+.user-info-card {
+  width: min(100%, 1240px);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 96px;
+}
+
+.user-info-card__body {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.user-info-card__title {
+  margin: 0;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.user-info-card__text {
+  margin: 34px 0 0;
+  font-size: clamp(22px, 2.5vw, 28px);
+}
+
+.user-info-card__actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+  margin-top: 56px;
+}
+
+@media (max-width: 1020px) {
+  .user-info-card {
+    padding-bottom: 112px;
+  }
+
+  .user-info-card__body,
+  .user-info-card__actions {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .user-info-card {
+    padding: 0 0 104px;
+  }
+}
