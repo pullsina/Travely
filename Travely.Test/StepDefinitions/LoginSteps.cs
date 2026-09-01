@@ -51,4 +51,15 @@ public class LoginSteps
 
         Assert.That(_hooks.Page.Url, Does.Contain("/continents"));
     }
+
+    [Then("I should get an error message")]
+    public async Task ThenIShouldGetAnErrorMessage()
+    {
+        //playwright finds the element with the matching class name 
+        var errorMessage = _hooks.Page.Locator(".login-page__message--error");
+
+        //waits for the element to be visible in frontend (if visible = error (great for this test, login failed as expected and the test passes), if not visible = no error in frontend, login succeeded and this test fails)
+        await Assertions.Expect(errorMessage).ToBeVisibleAsync();
+
+    }
 }
