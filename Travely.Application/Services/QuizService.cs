@@ -44,7 +44,9 @@ namespace Travely.Application.Services
             {
                 QuestionId = question.QuestionId,
                 IsCorrect = isCorrect,
-                CorrectAnswerId = question.QuestionId
+                CorrectAnswerId = question.QuestionId,
+                // Calculate the score based on whether the answer is correct
+                Score = isCorrect ? question.Points : 0 
             };
         }
     }

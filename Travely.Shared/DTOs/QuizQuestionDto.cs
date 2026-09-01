@@ -1,4 +1,6 @@
-﻿namespace Travely.Shared.DTOs
+﻿using Travely.Shared.Enums;
+
+namespace Travely.Shared.DTOs
 {
     public class QuizQuestionDto
     {
@@ -10,5 +12,11 @@
 
         // Show the answer options with countries
         public List<QuizAnswerDto> Answers { get; set; } = new();
+
+        // Show difficulty with enum
+        public Difficulty Difficulty { get; set; }
+
+        // Show points for the question
+        public int Points { get; set; }
     }
 }

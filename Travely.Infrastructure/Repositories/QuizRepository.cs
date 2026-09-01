@@ -2,6 +2,7 @@
 using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
 using Travely.Shared.DTOs;
+using Travely.Shared.Enums;
 
 namespace Travely.Infrastructure.Repositories
 {
@@ -62,8 +63,20 @@ namespace Travely.Infrastructure.Repositories
             return new QuizQuestionDto
             {
                 QuestionId = question.Id, // UI needs the country ID to identify the question without showing it to the user
-                Question = question.Name,
-                Answers = answers
+                //Question = question.Name,
+                Question = question.Capital, // Show the capital to the user instead of the country name
+                Answers = answers,
+                Difficulty = question.Difficulty,
+
+                // Assign points based on the difficulty level of the question
+                Points = question.Difficulty switch
+                {
+                    Difficulty.Easy => 5,
+                    Difficulty.Medium => 7,
+                    Difficulty.Hard => 10,
+                    _ => 0
+                }
+
             };
         }
 
