@@ -33,8 +33,9 @@ async function request(path, options = {}) {
   }
 
   if (!response.ok) {
+    // Backend sends ApiErrorDto with "message" as the standard error field
     const errorMessage =
-      data?.error || data?.message || data?.title || "Request failed";
+      data?.message || data?.error || data?.title || "Something went wrong.";
     throw new Error(errorMessage);
   }
 
