@@ -1,0 +1,55 @@
+.user-results-card {
+  width: min(100%, 1240px);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 0 96px;
+}
+
+.user-results-card__body {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.user-results-card__title {
+  margin: 0;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+}
+
+.user-results-card__text {
+  margin: 34px 0 0;
+  font-size: clamp(22px, 2.5vw, 28px);
+}
+
+.user-results-card__actions {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(360px, 570px) minmax(440px, 1fr);
+  gap: 48px;
+  align-items: center;
+  margin-top: 56px;
+}
+
+@media (max-width: 1020px) {
+  .user-results-card {
+    padding-bottom: 112px;
+  }
+
+  .user-results-card__body,
+  .user-results-card__actions {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .user-results-card {
+    padding: 0 0 104px;
+  }
+}
