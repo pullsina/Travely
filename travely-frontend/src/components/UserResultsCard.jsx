@@ -1,21 +1,40 @@
+import "./UserResultsCard.css";
 
 // Submits the user as a property
 function UserResultsCard({ user }) {
   return (
-    <div className="user-results-card">
+    <div
+      className="user-results-card__body"
+      aria-label="User game summary card"
+    >
       {" "}
-      <h2>Game result summary</h2>{" "}
-      <p>
+      <h2 id="user-results-card__title">Game result summary</h2>{" "}
+      {/*  Number of questions answered */}
+      <p
+        className="user-results-card__text"
+        aria-labelledby="user-results-card__title"
+      >
         {" "}
-        <strong>Name:</strong> {user.name}{" "}
+        <strong>Number of Questions answered:</strong>{" "}
+        {user.numQuestionsAnswered}{" "}
       </p>{" "}
-      <p>
+      {/*  Number of correct answers */}
+      <p
+        className="user-results-card__text"
+        aria-labelledby="user-results-card__title"
+      >
         {" "}
-        <strong>Email:</strong> {user.email}{" "}
+        <strong>Number of Correct Answers:</strong>{" "}
+        {user.numCorrectAnswers}{" "}
       </p>{" "}
-      <p>
+      {/* Continents achieved */}
+      <p
+        className="user-results-card__text"
+        aria-labelledby="user-results-card__title"
+      >
         {" "}
-        <strong>Password:</strong> ••••••••{" "}
+        <strong>Continents conquered:</strong>{" "}
+        {user.continentsConquered.join(", ")}{" "}
       </p>{" "}
     </div>
   );

@@ -3,7 +3,7 @@ import "./UserInfoCard.css";
 // Submits the user as a property
 function UserInfoCard({ user }) {
   return (
-    <div className="user-info-card__title" aria-label="User details card">
+    <div className="user-info-card__body" aria-label="User details card">
       {" "}
       <h2 id="user-info-card-title" className="user-info-card__title">
         User details
