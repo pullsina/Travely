@@ -243,6 +243,13 @@ namespace Travely.Infrastructure.Repositories
             };
         }
 
+        // Method to count all quiz questions in a continent
+        public async Task<int> GetQuestionCountAsync(Continent continent)
+        {
+            return await _context.Countries
+                .CountAsync(c => c.Continent == continent);
+        }
+
         // Method to check if the provided answer ID is correct for a quiz question
         public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
         {

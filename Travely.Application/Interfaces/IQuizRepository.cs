@@ -28,5 +28,8 @@ namespace Travely.Application.Interfaces
             Continent continent,
             int numberOfOptions,
             List<int> excludedQuestionIds);
+
+        // Abstraction to method for counting quiz questions in a continent
+        Task<int> GetQuestionCountAsync(Continent continent);
     }
 }

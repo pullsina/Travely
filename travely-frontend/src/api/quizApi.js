@@ -96,6 +96,21 @@ export async function getNextQuestion(continent, excludedQuestionIds = []) {
 }
 
 // ---------------------------------------------
+// GET question count
+// ---------------------------------------------
+
+// This function retrieves how many questions exist for a continent.
+export async function getQuestionCount(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/questions/count?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
 // POST answers
 // ---------------------------------------------
 export async function submitAnswers(questionId, answerId) {
@@ -117,6 +132,7 @@ export default {
   getQuestion,
   getRandomQuestion,
   getNextQuestion,
+  getQuestionCount,
   submitAnswers,
   getResults,
 };

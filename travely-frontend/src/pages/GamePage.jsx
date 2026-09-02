@@ -9,10 +9,8 @@ import europeOutline from "../assets/continent-outlines/europe.png";
 import northAmericaOutline from "../assets/continent-outlines/north-america.png";
 import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
-import { getNextQuestion, submitAnswers } from "../api/quizApi";
+import { getNextQuestion, getQuestionCount, submitAnswers } from "../api/quizApi";
 import "./GamePage.css";
-
-const minimumVisibleQuestions = 10;
 
 const continentConfig = {
   Europe: { label: "Europe", apiValue: "Europe", mapImage: europeOutline },
@@ -41,6 +39,7 @@ function GamePage() {
 
   const [points, setPoints] = useState(100);
   const [questionNumber, setQuestionNumber] = useState(1);
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const [question, setQuestion] = useState(null);
   const [usedQuestionIds, setUsedQuestionIds] = useState([]);
   const [hintType, setHintType] = useState("map");
@@ -52,9 +51,33 @@ function GamePage() {
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
-  const totalQuestions = Math.max(questionNumber, minimumVisibleQuestions);
+  const visibleTotalQuestions = totalQuestions || questionNumber;
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadQuestionCount() {
+      try {
+        const count = await getQuestionCount(currentContinent.apiValue);
+
+        if (!ignore) {
+          setTotalQuestions(count);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setGameError(error.message);
+        }
+      }
+    }
+
+    loadQuestionCount();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentContinent.apiValue]);
 
   useEffect(() => {
     let ignore = false;
@@ -218,7 +241,7 @@ function GamePage() {
         <QuestionCard
           continent={currentContinent.label}
           questionNumber={questionNumber}
-          totalQuestions={totalQuestions}
+          totalQuestions={visibleTotalQuestions}
           capital={question.question}
           answers={answers}
           selectedAnswerId={selectedAnswerId}

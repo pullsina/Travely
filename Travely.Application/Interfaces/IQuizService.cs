@@ -23,5 +23,8 @@ namespace Travely.Application.Interfaces
         Task<QuizQuestionDto?> GetNextQuestionAsync(
             Continent continent,
             List<int> excludedQuestionIds);
+
+        // Count all quiz questions in the specified continent.
+        Task<int> GetQuestionCountAsync(Continent continent);
     }
 }

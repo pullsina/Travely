@@ -85,5 +85,11 @@ namespace Travely.Application.Services
 
             return question;
         }
+
+        // Method to count all quiz questions in a continent
+        public async Task<int> GetQuestionCountAsync(Continent continent)
+        {
+            return await _quizRepo.GetQuestionCountAsync(continent);
+        }
     }
 }
