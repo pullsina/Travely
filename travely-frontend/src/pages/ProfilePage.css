@@ -1,15 +1,32 @@
 .profile-page {
   min-height: 100vh;
-  background-color: var(--color-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: #173a8a;
+  background: radial-gradient(
+    circle,
+    rgba(23, 58, 138, 1) 0%,
+    rgba(11, 35, 112, 1) 48%,
+    rgba(6, 22, 74, 1) 100%
+  );
   color: var(--color-text);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 32px;
+  padding: 32px 40px 76px;
+  position: relative;
+}
+
+.profile-page__back {
+  position: absolute;
+  top: 92px;
+  left: 36px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--color-warning);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
 }
 
 .profile-page__content {
@@ -19,11 +36,26 @@
   gap: 42px;
 }
 
+.profile-page__logo {
+  margin: 50px 0 0;
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: clamp(34px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
 .profile-page__tagline {
   margin: 0;
   color: var(--color-text);
   font-family: "Actor", system-ui, sans-serif;
   font-size: clamp(22px, 3vw, 38px);
+}
+
+.profile-page__text {
+  margin: 0;
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: clamp(22px, 2vw, 38px);
 }
 
 .profile-page__actions {

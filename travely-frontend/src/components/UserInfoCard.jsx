@@ -3,54 +3,47 @@ import "./UserInfoCard.css";
 // Submits the user as a property
 function UserInfoCard({ user }) {
   return (
-    <div className="user-info-card__body" aria-label="User details card">
-      {" "}
-      <h2 id="user-info-card-title" className="user-info-card__title">
-        User details
-      </h2>{" "}
-      <p
-        className="user-info-card__text"
-        aria-labelledby="user-info-card-title"
-      >
-        {" "}
-        <strong>Name:</strong> {user.name}{" "}
-      </p>{" "}
-      <p
-        className="user-info-card__text"
-        aria-labelledby="user-info-card-title"
-      >
-        {" "}
-        <strong>Email:</strong> {user.email}{" "}
-      </p>{" "}
-      <p
-        className="user-info-card__text"
-        aria-labelledby="user-info-card-title"
-      >
-        {" "}
-        <strong>Password:</strong> ••••••••{" "}
-      </p>{" "}
-      {/* Buttons for actions */}
-      <p className="user-info-card__text">
-        To be implemented: Button to change info and password
-      </p>
-      <button
-        className="user-info-card__change-info-button"
-        type="button"
-        aria-label="Change user info - Not implemented"
-      >
-        Change Info
-      </button>
-      <p className="user-info-card__text">
-        To be implemented: Button to delete profile
-      </p>
-      <button
-        className="user-info-card__delete-profile-button"
-        type="button"
-        aria-label="Delete user profile - Not implemented"
-      >
-        Delete Profile
-      </button>
-    </div>
+    <section className="user-info-card" aria-label="User details card">
+      <div className="user-info-card__body-panel">
+        <div className="user-info-card__panel-info" aria-label="User details">
+          <p
+            className="user-info-card__text"
+            aria-labelledby="user-info-card__text"
+          >
+            <strong>Name:</strong> {user.username}
+          </p>
+          <p
+            className="user-info-card__text"
+            aria-labelledby="user-info-card__text"
+          >
+            <strong>Email:</strong> {user.email}
+          </p>
+        </div>
+        <div
+          className="user-info-card__panel-actions"
+          aria-label="User actions"
+        >
+          {/* Buttons for actions */}
+          <button
+            className="primary-button user-info-card__change-info-button"
+            type="button"
+            aria-label="Change user info - Not implemented"
+          >
+            Change Info
+          </button>
+          <p className="user-info-card__text-small">To be implemented!</p>
+          <button
+            className="primary-button user-info-card__delete-profile-button"
+            type="button"
+            aria-label="Delete user profile - Not implemented"
+          >
+            Delete Profile
+          </button>
+          <p className="user-info-card__text-small">To be implemented!</p>
+        </div>
+      </div>
+    </section>
   );
 }
+
 export default UserInfoCard;
