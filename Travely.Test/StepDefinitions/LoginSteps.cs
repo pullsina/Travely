@@ -62,4 +62,13 @@ public class LoginSteps
         await Assertions.Expect(errorMessage).ToBeVisibleAsync();
 
     }
+
+    [When("I leave email and password empty")]
+    public async Task WhenILeaveEmailAndPasswordEmpty()
+    {
+        //playwright searches for label "Email" in frontend but does not fill with any values
+        await _hooks.Page.GetByLabel("Email").FillAsync("");
+        await _hooks.Page.GetByLabel("Password").FillAsync("");
+    }
+
 }
