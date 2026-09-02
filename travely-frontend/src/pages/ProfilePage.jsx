@@ -1,11 +1,10 @@
+import Navbar from "../components/Navbar";
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import backgroundMap from "../assets/background_map.png";
-import "./ProfilePage.css";
-import Navbar from "../components/Navbar";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
+import "./ProfilePage.css";
 
 function ProfilePage() {
   const { user } = useAuth();
@@ -14,15 +13,12 @@ function ProfilePage() {
   const navigate = useNavigate();
 
   return (
-    <main
-      className="profile-page"
-      style={{ backgroundImage: `url(${backgroundMap})` }}
-    >
+    <main className="profile-page">
       {/* Visa meny för inloggat läge */}
-      <Navbar variant="user" showAuthLinks />
+      <Navbar variant="app" showAuthLinks />
       {/* BACK BUTTON */}
       <button
-        className="game-page__back"
+        className="profile-page__back"
         type="button"
         onClick={() => navigate("/continents")}
         aria-label="Go back to continents"
@@ -36,7 +32,7 @@ function ProfilePage() {
         <p className="profile-page__tagline">
           Hi {user.name}! Welcome to your profile page.
         </p>
-        <p className="profile-page__tagline">
+        <p className="profile-page__text">
           Make your choice below to see your user details or your game summary.
         </p>
         {/*  DIV for action buttons */}
@@ -45,13 +41,13 @@ function ProfilePage() {
             className="primary-button profile-page__show-info-button"
             onClick={() => setShowUserInfoCard(true)}
           >
-            Show user details
+            User details
           </button>
           <button
             className="primary-button profile-page__show-results-button"
             onClick={() => setShowUserResultsCard(true)}
           >
-            Show user game summary
+            Results
           </button>
         </div>
         {/* CARDS */}
