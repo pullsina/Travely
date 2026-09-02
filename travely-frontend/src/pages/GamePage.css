@@ -32,6 +32,18 @@
   outline-offset: 3px;
 }
 
+.game-page__message {
+  align-self: center;
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 22px;
+  text-align: center;
+}
+
+.game-page__message--error {
+  color: var(--color-error);
+}
+
 @media (max-width: 760px) {
   .game-page {
     padding: 88px 20px 0;
