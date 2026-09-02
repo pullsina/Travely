@@ -9,10 +9,10 @@ import europeOutline from "../assets/continent-outlines/europe.png";
 import northAmericaOutline from "../assets/continent-outlines/north-america.png";
 import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
-import { getRandomQuestion, submitAnswers } from "../api/quizApi";
+import { getNextQuestion, submitAnswers } from "../api/quizApi";
 import "./GamePage.css";
 
-const totalQuestions = 10;
+const minimumVisibleQuestions = 10;
 
 const continentConfig = {
   Europe: { label: "Europe", apiValue: "Europe", mapImage: europeOutline },
@@ -31,17 +31,6 @@ const continentConfig = {
   },
 };
 
-function getDifficulty(questionNumber) {
-  if (questionNumber <= 3) {
-    return "Easy";
-  }
-
-  if (questionNumber <= 7) {
-    return "Medium";
-  }
-
-  return "Hard";
-}
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
   const navigate = useNavigate();
@@ -63,26 +52,30 @@ function GamePage() {
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
-  const difficulty = getDifficulty(questionNumber);
+  const totalQuestions = Math.max(questionNumber, minimumVisibleQuestions);
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
 
   useEffect(() => {
     let ignore = false;
-    // This effect loads a new question whenever the continent, difficulty, or used question IDs change.
+    // This effect loads a new question whenever the continent or used question IDs change.
     async function loadQuestion() {
       setIsLoading(true);
       setGameError("");
       setSubmitError("");
 
       try {
-        const nextQuestion = await getRandomQuestion(
+        const nextQuestion = await getNextQuestion(
           currentContinent.apiValue,
-          difficulty,
           usedQuestionIds,
         );
 
         if (!ignore) {
+          if (!nextQuestion) {
+            setGameError("No more questions for this continent.");
+            return;
+          }
+
           setQuestion(nextQuestion);
         }
       } catch (error) {
@@ -101,7 +94,7 @@ function GamePage() {
     return () => {
       ignore = true;
     };
-  }, [currentContinent.apiValue, difficulty, usedQuestionIds]);
+  }, [currentContinent.apiValue, usedQuestionIds]);
 
   // This effect shows the country information after a delay when an answer is submitted.
   useEffect(() => {
@@ -161,11 +154,6 @@ function GamePage() {
   // This function handles moving to the next question, updating the state and navigating back to the continents page if all questions have been answered.
   function handleNextQuestion() {
     if (!question) {
-      return;
-    }
-
-    if (questionNumber >= totalQuestions) {
-      navigate("/continents");
       return;
     }
 

@@ -18,5 +18,10 @@ namespace Travely.Application.Interfaces
             Continent continent,
             Difficulty difficulty,
             List<int> excludedQuestionIds);
+
+        // Get the next question based on the specified continent, excluding the provided question IDs.
+        Task<QuizQuestionDto?> GetNextQuestionAsync(
+            Continent continent,
+            List<int> excludedQuestionIds);
     }
 }

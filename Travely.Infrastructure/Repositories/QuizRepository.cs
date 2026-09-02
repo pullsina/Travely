@@ -157,6 +157,92 @@ namespace Travely.Infrastructure.Repositories
             };
         }
 
+        // Method to retrieve the next quiz question based on continent, number of options, and excluded answered question IDs
+        public async Task<QuizQuestionDto?> GetNextQuestionAsync(
+            Continent continent,
+            int numberOfOptions,
+            List<int> excludedQuestionIds)
+        {
+            // Retrieve a random question (Capital?) based on the specified continent,
+            var question = await _context.Countries
+                .Where(c => c.Continent == continent)
+                .Where(c => c.Difficulty == Difficulty.Easy)
+                .Where(c => !excludedQuestionIds.Contains(c.Id))
+                .OrderBy(c => Guid.NewGuid())
+                .FirstOrDefaultAsync();
+
+            // If no easy question is found, try to find a medium difficulty question
+            if (question == null)
+            {
+                question = await _context.Countries
+                    .Where(c => c.Continent == continent)
+                    .Where(c => c.Difficulty == Difficulty.Medium)
+                    .Where(c => !excludedQuestionIds.Contains(c.Id))
+                    .OrderBy(c => Guid.NewGuid())
+                    .FirstOrDefaultAsync();
+            }
+
+            // If no medium question is found, try to find a hard difficulty question
+            if (question == null)
+            {
+                question = await _context.Countries
+                    .Where(c => c.Continent == continent)
+                    .Where(c => c.Difficulty == Difficulty.Hard)
+                    .Where(c => !excludedQuestionIds.Contains(c.Id))
+                    .OrderBy(c => Guid.NewGuid())
+                    .FirstOrDefaultAsync();
+            }
+
+            if (question == null)
+            {
+                return null;
+            }
+            // Retrieve answer options (Countries) excluding the correct answer
+
+            var otherCountries = await _context.Countries
+                .Where(c => c.Id != question.Id)
+                .Where(c => c.Continent == continent)
+                .OrderBy(c => Guid.NewGuid())
+                .Take(numberOfOptions - 1)
+                .ToListAsync();
+
+            var answers = otherCountries
+                .Select(c => new QuizAnswerDto
+                {
+                    AnswerId = c.Id,
+                    Country = c.Name
+                })
+                .ToList();
+
+            answers.Add(new QuizAnswerDto
+            {
+                AnswerId = question.Id,
+                Country = question.Name
+            });
+
+            answers = answers.OrderBy(_ => Guid.NewGuid()).ToList();
+
+            return new QuizQuestionDto
+            {
+                QuestionId = question.Id,
+                Question = question.Capital,
+                Answers = answers,
+                Country = question.Name,
+                Fact = question.Fact,
+                FlagUrl = question.FlagUrl,
+                FactUrl = question.FactUrl,
+                Difficulty = question.Difficulty,
+                Points = question.Difficulty switch
+                {
+                    Difficulty.Easy => 5,
+                    Difficulty.Medium => 7,
+                    Difficulty.Hard => 10,
+                    _ => 0
+                },
+                Continent = question.Continent
+            };
+        }
+
         // Method to check if the provided answer ID is correct for a quiz question
         public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
         {
