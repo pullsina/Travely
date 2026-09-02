@@ -69,5 +69,33 @@ namespace Travely.Api.Controllers
 
             return Ok(question);
         }
+
+        // Endpoint to retrieve the next quiz question by continent
+        [HttpGet("question/next")]
+        public async Task<ActionResult<QuizQuestionDto>> GetNextQuestion(
+            [FromQuery] Continent continent,
+            [FromQuery] List<int> excludedQuestionIds)
+        {
+            var question = await _quizService.GetNextQuestionAsync(
+                continent,
+                excludedQuestionIds);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(question);
+        }
+
+        // Endpoint to count all quiz questions in a continent
+        [HttpGet("questions/count")]
+        public async Task<ActionResult<int>> GetQuestionCount(
+            [FromQuery] Continent continent)
+        {
+            var count = await _quizService.GetQuestionCountAsync(continent);
+
+            return Ok(count);
+        }
     }
 }

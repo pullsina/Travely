@@ -9,10 +9,8 @@ import europeOutline from "../assets/continent-outlines/europe.png";
 import northAmericaOutline from "../assets/continent-outlines/north-america.png";
 import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
-import { getRandomQuestion, submitAnswers } from "../api/quizApi";
+import { getNextQuestion, getQuestionCount, submitAnswers } from "../api/quizApi";
 import "./GamePage.css";
-
-const totalQuestions = 10;
 
 const continentConfig = {
   Europe: { label: "Europe", apiValue: "Europe", mapImage: europeOutline },
@@ -31,17 +29,15 @@ const continentConfig = {
   },
 };
 
-function getDifficulty(questionNumber) {
-  if (questionNumber <= 3) {
-    return "Easy";
-  }
+const difficultyLabels = {
+  0: "Easy",
+  1: "Medium",
+  2: "Hard",
+  Easy: "Easy",
+  Medium: "Medium",
+  Hard: "Hard",
+};
 
-  if (questionNumber <= 7) {
-    return "Medium";
-  }
-
-  return "Hard";
-}
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
   const navigate = useNavigate();
@@ -52,6 +48,7 @@ function GamePage() {
 
   const [points, setPoints] = useState(100);
   const [questionNumber, setQuestionNumber] = useState(1);
+  const [totalQuestions, setTotalQuestions] = useState(0);
   const [question, setQuestion] = useState(null);
   const [usedQuestionIds, setUsedQuestionIds] = useState([]);
   const [hintType, setHintType] = useState("map");
@@ -63,26 +60,54 @@ function GamePage() {
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
-  const difficulty = getDifficulty(questionNumber);
+  const visibleTotalQuestions = totalQuestions || questionNumber;
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
 
   useEffect(() => {
     let ignore = false;
-    // This effect loads a new question whenever the continent, difficulty, or used question IDs change.
+
+    async function loadQuestionCount() {
+      try {
+        const count = await getQuestionCount(currentContinent.apiValue);
+
+        if (!ignore) {
+          setTotalQuestions(count);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setGameError(error.message);
+        }
+      }
+    }
+
+    loadQuestionCount();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentContinent.apiValue]);
+
+  useEffect(() => {
+    let ignore = false;
+    // This effect loads a new question whenever the continent or used question IDs change.
     async function loadQuestion() {
       setIsLoading(true);
       setGameError("");
       setSubmitError("");
 
       try {
-        const nextQuestion = await getRandomQuestion(
+        const nextQuestion = await getNextQuestion(
           currentContinent.apiValue,
-          difficulty,
           usedQuestionIds,
         );
 
         if (!ignore) {
+          if (!nextQuestion) {
+            setGameError("No more questions for this continent.");
+            return;
+          }
+
           setQuestion(nextQuestion);
         }
       } catch (error) {
@@ -101,7 +126,7 @@ function GamePage() {
     return () => {
       ignore = true;
     };
-  }, [currentContinent.apiValue, difficulty, usedQuestionIds]);
+  }, [currentContinent.apiValue, usedQuestionIds]);
 
   // This effect shows the country information after a delay when an answer is submitted.
   useEffect(() => {
@@ -161,11 +186,6 @@ function GamePage() {
   // This function handles moving to the next question, updating the state and navigating back to the continents page if all questions have been answered.
   function handleNextQuestion() {
     if (!question) {
-      return;
-    }
-
-    if (questionNumber >= totalQuestions) {
-      navigate("/continents");
       return;
     }
 
@@ -230,7 +250,9 @@ function GamePage() {
         <QuestionCard
           continent={currentContinent.label}
           questionNumber={questionNumber}
-          totalQuestions={totalQuestions}
+          totalQuestions={visibleTotalQuestions}
+          difficulty={difficultyLabels[question.difficulty] || "Easy"}
+          points={question.points}
           capital={question.question}
           answers={answers}
           selectedAnswerId={selectedAnswerId}

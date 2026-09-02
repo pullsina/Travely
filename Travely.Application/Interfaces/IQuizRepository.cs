@@ -21,5 +21,15 @@ namespace Travely.Application.Interfaces
         Task<bool> IsCorrectAnswerAsync(
             int questionId,
             int answerId);
+
+        // Abstraction to method for retrieving the next quiz question based on the continent,
+        // number of options, and a list of excluded question IDs
+        Task<QuizQuestionDto?> GetNextQuestionAsync(
+            Continent continent,
+            int numberOfOptions,
+            List<int> excludedQuestionIds);
+
+        // Abstraction to method for counting quiz questions in a continent
+        Task<int> GetQuestionCountAsync(Continent continent);
     }
 }

@@ -68,5 +68,28 @@ namespace Travely.Application.Services
 
             return question;
         }
+
+
+        // Method to retrieve the next quiz question based on continent and excluded question IDs
+        public async Task<QuizQuestionDto?> GetNextQuestionAsync(
+            Continent continent,
+            List<int> excludedQuestionIds)
+        {
+            var question = await _quizRepo.GetNextQuestionAsync(
+                continent,
+                8,
+                excludedQuestionIds);
+
+            if (question == null)
+                return null;
+
+            return question;
+        }
+
+        // Method to count all quiz questions in a continent
+        public async Task<int> GetQuestionCountAsync(Continent continent)
+        {
+            return await _quizRepo.GetQuestionCountAsync(continent);
+        }
     }
 }

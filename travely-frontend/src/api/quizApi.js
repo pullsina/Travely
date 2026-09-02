@@ -68,6 +68,49 @@ export async function getRandomQuestion(
 }
 
 // ---------------------------------------------
+// GET next question
+// ---------------------------------------------
+
+// This function retrieves the next question for a continent.
+// The backend decides difficulty order: Easy, then Medium, then Hard.
+export async function getNextQuestion(continent, excludedQuestionIds = []) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  excludedQuestionIds.forEach((questionId) => {
+    params.append("excludedQuestionIds", questionId);
+  });
+
+  try {
+    return await request(`/api/quiz/question/next?${params.toString()}`, {
+      method: "GET",
+    });
+  } catch (error) {
+    if (error.message === "Not Found") {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+// ---------------------------------------------
+// GET question count
+// ---------------------------------------------
+
+// This function retrieves how many questions exist for a continent.
+export async function getQuestionCount(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/questions/count?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
 // POST answers
 // ---------------------------------------------
 export async function submitAnswers(questionId, answerId) {
@@ -88,6 +131,8 @@ export async function getResults() {
 export default {
   getQuestion,
   getRandomQuestion,
+  getNextQuestion,
+  getQuestionCount,
   submitAnswers,
   getResults,
 };
