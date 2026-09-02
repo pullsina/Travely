@@ -29,6 +29,15 @@ const continentConfig = {
   },
 };
 
+const difficultyLabels = {
+  0: "Easy",
+  1: "Medium",
+  2: "Hard",
+  Easy: "Easy",
+  Medium: "Medium",
+  Hard: "Hard",
+};
+
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
   const navigate = useNavigate();
@@ -242,6 +251,8 @@ function GamePage() {
           continent={currentContinent.label}
           questionNumber={questionNumber}
           totalQuestions={visibleTotalQuestions}
+          difficulty={difficultyLabels[question.difficulty] || "Easy"}
+          points={question.points}
           capital={question.question}
           answers={answers}
           selectedAnswerId={selectedAnswerId}

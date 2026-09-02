@@ -38,6 +38,14 @@
   background: var(--color-primary);
 }
 
+.question-card__difficulty {
+  margin: 10px 0 0;
+  color: var(--color-primary);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .question-card__prompt {
   margin: 70px 0 52px;
   text-align: center;
