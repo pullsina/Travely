@@ -71,4 +71,29 @@ public class LoginSteps
         await _hooks.Page.GetByLabel("Password").FillAsync("");
     }
 
+    [Then("I should remain on the login page")]
+    public async Task ThenIShouldRemainOnTheLoginPage()
+    {
+        //make sure the page is /login, if not the test fails
+        Assert.That(_hooks.Page.Url, Does.Contain("/login"));
+    }
+
+    [When("I leave email empty and fill in password {string}")]
+    public async Task WhenILeaveEmailEmptyAndFillInPassword(string password)
+    {
+        //playwright searches for label "Email" in frontend but does not fill with any values
+        await _hooks.Page.GetByLabel("Email").FillAsync("");
+        //playwright searches for label "Password" in frontend and fills with correct value
+        await _hooks.Page.GetByLabel("Password").FillAsync(password);
+    }
+
+    [When("I fill in email {string} and leave password empty")]
+    public async Task WhenIFillInEmailAndLeavePasswordEmpty(string email)
+    {
+        //playwright searches for label "Email" in frontend and fills with correct value
+        await _hooks.Page.GetByLabel("Email").FillAsync(email);
+        //playwright searches for label "Password" in frontend but does not fill with a value
+        await _hooks.Page.GetByLabel("Password").FillAsync("");
+    }
+
 }
