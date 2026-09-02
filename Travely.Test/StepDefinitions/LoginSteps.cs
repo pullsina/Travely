@@ -10,7 +10,7 @@ public class LoginSteps
 {
     private readonly Hooks.Hooks _hooks;
 
-    //konstructor
+    //constructor
     public LoginSteps(Hooks.Hooks hooks)
     {
         _hooks = hooks;
