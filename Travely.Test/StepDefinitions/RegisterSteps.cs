@@ -69,11 +69,22 @@ public class RegisterSteps
 
         var response = await responseTask;
 
-        //check the registration response
-        Assert.That(response.Status, Is.EqualTo(200));
+        //delete the user only if registration actually succeeded
+        if (response.Status == 200)
+        {
+            //this test created a user, the variable is used in the AfterScenario hook to delete the user after the test
+            _hooks.DeleteRegisteredUser = true;
+        }
+    }
 
-        //this test created a user, the variable is used in the AfterScenario hook to delete the user after the test
-        _hooks.DeleteRegisteredUser = true;
+    //frontend only test, does not wait for api response, only checks that the error message appears
+    [When("I click the register button in frontend")]
+    public async Task WhenIClickTheRegisterButtonInFrontend()
+    {
+        await _hooks.Page.GetByRole(AriaRole.Button, new()
+        {
+            Name = "Register"
+        }).ClickAsync();
     }
 
     [Then("I should get logged in")]
@@ -100,5 +111,23 @@ public class RegisterSteps
         //make sure response is 200 since /me endpoint requires authentication (200 means logged in)
         Assert.That(response.Status, Is.EqualTo(200));
     }
+
+    [Then("I should get a register error message")]
+    public async Task ThenIShouldGetARegisterErrorMessage()
+    {
+        var errorMessage = _hooks.Page.Locator(
+            ".register-page__message--error"
+        );
+
+        await Assertions.Expect(errorMessage).ToBeVisibleAsync();
+    }
+
+    [Then("I should remain on the register page")]
+    public async Task ThenIShouldRemainOnTheRegisterPage()
+    {
+        //make sure the url is /register, if not the test fails
+        Assert.That(_hooks.Page.Url, Does.Contain("/register"));
+    }
+
 
 }
