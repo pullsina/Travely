@@ -32,7 +32,8 @@ namespace Travely.Application.Services
 
         // Method to submit an answer for a quiz question
         public async Task<SubmitAnswerResultDto?> SubmitAnswerAsync(
-            SubmitAnswerDto dto)
+            SubmitAnswerDto dto,
+            string userId)
         {
             var question = await _quizRepo.GetQuestionAsync(dto.QuestionId, 8);
 
@@ -41,13 +42,27 @@ namespace Travely.Application.Services
 
             var isCorrect = await _quizRepo.IsCorrectAnswerAsync(dto.QuestionId, dto.AnswerId);
 
+            var hintPenalty = Math.Max(dto.UsedHintsCount, 0);
+            var finalScore = isCorrect
+                ? Math.Max(question.Points - hintPenalty, 0)
+                : 0;
+
+            await _quizRepo.SaveUserResultAsync(
+                userId,
+                question.QuestionId,
+                question.Continent,
+                question.Difficulty,
+                isCorrect,
+                dto.UsedHintsCount,
+                finalScore,
+                1);
+
             return new SubmitAnswerResultDto
             {
                 QuestionId = question.QuestionId,
                 IsCorrect = isCorrect,
                 CorrectAnswerId = question.QuestionId,
-                // Calculate the score based on whether the answer is correct
-                Score = isCorrect ? question.Points : 0 
+                Score = finalScore
             };
         }
 
