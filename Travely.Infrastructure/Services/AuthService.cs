@@ -49,6 +49,18 @@ namespace Travely.Infrastructure.Services
                 };
             }
 
+            //ensure email does not already exist
+            var existingEmail = await _userManager.FindByEmailAsync(dto.Email);
+
+            if (existingEmail != null)
+            {
+                return new AuthResultDto
+                {
+                    Success = false,
+                    Error = "Email is already registered."
+                };
+            }
+
             var user = new ApplicationUser
             {
                 UserName = dto.Username,
@@ -60,10 +72,13 @@ namespace Travely.Infrastructure.Services
 
             if (!result.Succeeded)
             {
+                var error = result.Errors.FirstOrDefault()?.Description
+                ?? "Something went wrong trying to register.";
+
                 return new AuthResultDto
                 {
                     Success = false,
-                    Error = "Something went wrong trying to register."
+                    Error = error
                 };
             }
 
