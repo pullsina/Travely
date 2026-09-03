@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
+using Travely.Infrastructure.Entities;
 using Travely.Shared.DTOs;
 using Travely.Shared.Enums;
 
@@ -254,6 +255,34 @@ namespace Travely.Infrastructure.Repositories
         public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
         {
               return questionId == answerId;
-        }  
+        }
+
+        // Method to save one submitted answer result for a user
+        public async Task SaveUserResultAsync(
+            string userId,
+            int questionId,
+            Continent continent,
+            Difficulty difficulty,
+            bool isCorrect,
+            int usedHintsCount,
+            int score,
+            int totalQuestions)
+        {
+            var userResult = new UserResult
+            {
+                UserId = userId,
+                QuestionId = questionId,
+                Continent = continent,
+                Difficulty = difficulty,
+                IsCorrect = isCorrect,
+                UsedHintsCount = usedHintsCount,
+                Score = score,
+                TotalQuestions = totalQuestions,
+                CompletedAt = DateTime.UtcNow
+            };
+
+            _context.UserResults.Add(userResult);
+            await _context.SaveChangesAsync();
+        }
     }
 } 

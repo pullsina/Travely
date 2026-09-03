@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Travely.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Travely.Shared.DTOs;
 using Travely.Shared.Enums;
 
@@ -35,12 +37,23 @@ namespace Travely.Api.Controllers
         }
 
         // Endpoint to submit an answer for a quiz question
+        [Authorize]
         [HttpPost("answer")]
         public async Task<ActionResult<SubmitAnswerResultDto>> SubmitAnswer([FromBody] SubmitAnswerDto dto)
         {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
             // Call the quiz service to submit the answer
             var result =
-                await _quizService.SubmitAnswerAsync(dto);
+                await _quizService.SubmitAnswerAsync(dto, userId);
 
             if (result == null)
             {

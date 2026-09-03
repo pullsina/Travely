@@ -11,7 +11,8 @@ namespace Travely.Application.Interfaces
         Task<QuizQuestionDto?> GetQuestionAsync(int questionId);
 
         Task<SubmitAnswerResultDto?> SubmitAnswerAsync(
-            SubmitAnswerDto dto);
+            SubmitAnswerDto dto,
+            string userId);
 
         // Get a random question based on the specified continent and difficulty, excluding the provided question IDs.
         Task<QuizQuestionDto?> GetRandomQuestionAsync(
