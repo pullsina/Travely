@@ -123,7 +123,7 @@ export async function submitAnswers(questionId, answerId) {
 // GET results
 // ---------------------------------------------
 export async function getResults() {
-  return request("/quiz/results");
+  return request("/api/quiz/results");
 }
 // ---------------------------------------------
 // EXPORTS

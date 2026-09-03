@@ -1,40 +1,7 @@
 import "./UserResultsCard.css";
 
-const results = [
-  {
-    continent: "Europe",
-    correct: 8,
-    total: 10,
-  },
-  {
-    continent: "Asia",
-    correct: 6,
-    total: 10,
-  },
-  {
-    continent: "Africa",
-    correct: 9,
-    total: 10,
-  },
-  {
-    continent: "North America",
-    correct: 5,
-    total: 10,
-  },
-  {
-    continent: "South America",
-    correct: 7,
-    total: 10,
-  },
-  {
-    continent: "Oceania",
-    correct: 4,
-    total: 10,
-  },
-];
-
 // Submits the results as a property
-function UserResultsCard({ results }) {
+function UserResultsCard({ results = [] }) {
   return (
     <div className="user-results-card">
       <h2>Results</h2>
@@ -62,6 +29,9 @@ function UserResultsCard({ results }) {
               <span className="user-results-card__continent-result-header__score">
                 {result.correct} / {result.answered}
               </span>
+              <p className="user-results-card__continent-result-header__text-smaller">
+                To be implemented
+              </p>
             </div>
             <div className="user-results-card__continent-result__progressbar">
               {/* component to provide dynamic progress bar width */}

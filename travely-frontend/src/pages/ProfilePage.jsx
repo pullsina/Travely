@@ -1,49 +1,47 @@
 import Navbar from "../components/Navbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
+import { getResults } from "../api/quizApi";
 import "./ProfilePage.css";
 
 function ProfilePage() {
   const { user } = useAuth();
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
+  const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
-  const results = [
-  {
-    continent: "Europe",
-    correct: 8,
-    total: 10,
-  },
-  {
-    continent: "Asia",
-    correct: 6,
-    total: 10,
-  },
-  {
-    continent: "Africa",
-    correct: 9,
-    total: 10,
-  },
-  {
-    continent: "North America",
-    correct: 5,
-    total: 10,
-  },
-  {
-    continent: "South America",
-    correct: 7,
-    total: 10,
-  },
-  {
-    continent: "Oceania",
-    correct: 4,
-    total: 10,
-  },
-];
+  useEffect(() => {
+    if (!showUserResultsCard) {
+      return undefined;
+    }
+
+    let ignore = false;
+
+    async function loadResults() {
+      try {
+        const response = await getResults();
+        const loadedResults = Array.isArray(response)
+          ? response
+          : response?.results || [];
+
+        if (!ignore) {
+          setResults(loadedResults);
+        }
+      } catch (error) {
+        console.error("Could not load results:", error);
+      }
+    }
+
+    loadResults();
+
+    return () => {
+      ignore = true;
+    };
+  }, [showUserResultsCard]);
 
   return (
     <main className="profile-page">
@@ -92,6 +90,7 @@ function ProfilePage() {
         ) : null}
         {showUserResultsCard ? (
           <UserResultsCard
+            results={results}
             user={user}
             onClose={() => setShowUserResultsCard(false)}
           />
