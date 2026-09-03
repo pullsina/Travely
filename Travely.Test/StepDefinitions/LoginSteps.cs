@@ -52,7 +52,7 @@ public class LoginSteps
         Assert.That(_hooks.Page.Url, Does.Contain("/continents"));
     }
 
-    [Then("I should get an error message")]
+    [Then("I should get a login error message")]
     public async Task ThenIShouldGetAnErrorMessage()
     {
         //playwright finds the element with the matching class name 

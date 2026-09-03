@@ -17,7 +17,7 @@ Scenario: Failed login with incorrect email
     Given I am on the login page
     When I fill in email "wrong@test.com" and password "Test123!"
     And I click the login button
-    Then I should get an error message
+    Then I should get a login error message
     And I should remain on the login page
 
 Scenario: Failed login with empty fields
