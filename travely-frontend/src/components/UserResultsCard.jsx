@@ -1,9 +1,16 @@
 import "./UserResultsCard.css";
 
 // Submits the results as a property
-function UserResultsCard({ results = [] }) {
+function UserResultsCard({ results = [], onClose }) {
   return (
     <div className="user-results-card">
+      <button
+        className="primary-button user-results-card__back-button"
+        type="button"
+        onClick={onClose}
+      >
+        Back to profile
+      </button>
       <h2>Results</h2>
       {/* list results */}
       {results.map((result) => {

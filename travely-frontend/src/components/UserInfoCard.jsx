@@ -1,12 +1,19 @@
 import "./UserInfoCard.css";
 
 // Submits the user as a property
-function UserInfoCard({ user }) {
+function UserInfoCard({ user, onClose }) {
   const email =
     user.email ?? user.Email ?? user.emailAddress ?? user.EmailAddress;
 
   return (
     <section className="user-info-card" aria-label="User details card">
+      <button
+        className="primary-button user-info-card__back-button"
+        type="button"
+        onClick={onClose}
+      >
+        Back to profile
+      </button>
       <div className="user-info-card__body-panel">
         <div className="user-info-card__panel-info" aria-label="User details">
           <p
