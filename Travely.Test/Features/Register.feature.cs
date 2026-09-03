@@ -132,8 +132,8 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.GivenAsync("I am on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 5
-    await testRunner.WhenAsync("I fill in username \"test9\", email \"test9@test.com\", password \"Test123!\" and confi" +
-                        "rm password \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I fill in username \"testRegister\", email \"test@register.com\", password \"Test123!\"" +
+                        " and confirm password \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 6
     await testRunner.AndAsync("I click the register button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");

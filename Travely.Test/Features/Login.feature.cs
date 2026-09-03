@@ -132,7 +132,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.GivenAsync("I am on the login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 5
-    await testRunner.WhenAsync("I fill in email \"test3@\" and password \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I fill in email \"test@login.com\" and password \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 6
     await testRunner.AndAsync("I click the login button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -168,7 +168,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.GivenAsync("I am on the login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 11
-    await testRunner.WhenAsync("I fill in email \"test3@\" and password \"Test1!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I fill in email \"test@login.com\" and password \"Test1!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 12
     await testRunner.AndAsync("I click the login button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
@@ -324,7 +324,7 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.GivenAsync("I am on the login page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 39
-    await testRunner.WhenAsync("I fill in email \"test3@\" and leave password empty", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I fill in email \"test@login.com\" and leave password empty", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 40
     await testRunner.AndAsync("I click the login button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
