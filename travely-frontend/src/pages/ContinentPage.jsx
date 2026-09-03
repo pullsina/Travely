@@ -5,7 +5,9 @@ import northAmericaImage from "../assets/continents/north-america.png";
 import southAmericaImage from "../assets/continents/south-america.png";
 import asiaImage from "../assets/continents/asia.png";
 import oceaniaImage from "../assets/continents/oceania.png";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUserPoints } from "../api/quizApi";
 import "./ContinentPage.css";
 
 const continents = [
@@ -19,10 +21,33 @@ const continents = [
 
 function ContinentPage() {
   const navigate = useNavigate();
+  const [points, setPoints] = useState(100);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadPoints() {
+      try {
+        const response = await getUserPoints();
+
+        if (!ignore) {
+          setPoints(response?.points ?? 100);
+        }
+      } catch (error) {
+        console.error("Could not load user points:", error);
+      }
+    }
+
+    loadPoints();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   return (
     <main className="continent-page">
-      <Navbar variant="app" points={100} />
+      <Navbar variant="app" points={points} />
 
       <header className="continent-page__header">
         <h1 className="continent-page__logo">TRAVELY</h1>

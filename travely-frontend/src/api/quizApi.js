@@ -28,8 +28,12 @@ async function request(path, options = {}) {
   }
   if (!response.ok) {
     const errorMessage =
-      (data && data.message) || response.statusText || "Something went wrong.";
-    throw new Error(errorMessage);
+      (data && data.message) ||
+      response.statusText ||
+      `Request failed with status ${response.status}.`;
+    const error = new Error(errorMessage);
+    error.status = response.status;
+    throw error;
   }
   return data;
 }
@@ -87,7 +91,7 @@ export async function getNextQuestion(continent, excludedQuestionIds = []) {
       method: "GET",
     });
   } catch (error) {
-    if (error.message === "Not Found") {
+    if (error.status === 404) {
       return null;
     }
 
@@ -106,6 +110,32 @@ export async function getQuestionCount(continent) {
   });
 
   return request(`/api/quiz/questions/count?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
+// GET saved progress
+// ---------------------------------------------
+
+// This function retrieves the logged-in user's saved progress for one continent.
+export async function getProgress(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/progress?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
+// GET total points
+// ---------------------------------------------
+
+// This function retrieves the logged-in user's total points across all continents.
+export async function getUserPoints() {
+  return request("/api/quiz/points", {
     method: "GET",
   });
 }
@@ -133,6 +163,8 @@ export default {
   getRandomQuestion,
   getNextQuestion,
   getQuestionCount,
+  getProgress,
+  getUserPoints,
   submitAnswers,
   getResults,
 };

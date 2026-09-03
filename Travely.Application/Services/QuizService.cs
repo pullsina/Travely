@@ -106,5 +106,19 @@ namespace Travely.Application.Services
         {
             return await _quizRepo.GetQuestionCountAsync(continent);
         }
+
+        // Method to retrieve saved quiz progress for a user in one continent
+        public async Task<QuizProgressDto> GetUserProgressAsync(
+            string userId,
+            Continent continent)
+        {
+            return await _quizRepo.GetUserProgressAsync(userId, continent);
+        }
+
+        // Method to retrieve total points for a user across all continents
+        public async Task<int> GetUserTotalPointsAsync(string userId)
+        {
+            return await _quizRepo.GetUserTotalPointsAsync(userId);
+        }
     }
 }

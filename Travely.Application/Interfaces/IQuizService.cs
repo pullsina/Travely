@@ -27,5 +27,13 @@ namespace Travely.Application.Interfaces
 
         // Count all quiz questions in the specified continent.
         Task<int> GetQuestionCountAsync(Continent continent);
+
+        // Get saved quiz progress for a user in one continent.
+        Task<QuizProgressDto> GetUserProgressAsync(
+            string userId,
+            Continent continent);
+
+        // Get total points for a user across all continents.
+        Task<int> GetUserTotalPointsAsync(string userId);
     }
 }
