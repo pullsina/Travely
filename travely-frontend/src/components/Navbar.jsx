@@ -43,7 +43,11 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
         {isApp && (
           <>
-            <button className="navbar__link" type="button">
+            <button
+              className="navbar__link"
+              type="button"
+              onClick={() => navigate("/profile")}
+            >
               Profile
             </button>
 

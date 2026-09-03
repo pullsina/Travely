@@ -37,15 +37,84 @@ async function request(path, options = {}) {
 // GET questions
 // ---------------------------------------------
 export async function getQuestion(questionId) {
-  return request(`/quiz/question/${questionId}`, {
+  return request(`/api/quiz/question/${questionId}`, {
     method: "GET",
   });
 }
+
+// ---------------------------------------------
+// GET random question
+// ---------------------------------------------
+
+// This function retrieves a random question based on the specified continent and difficulty level.
+export async function getRandomQuestion(
+  continent,
+  difficulty,
+  excludedQuestionIds = [],
+) {
+  const params = new URLSearchParams({
+    continent,
+    difficulty,
+  });
+
+  // Append excluded question IDs to the query parameters
+  excludedQuestionIds.forEach((questionId) => {
+    params.append("excludedQuestionIds", questionId);
+  });
+
+  return request(`/api/quiz/question/random?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
+// GET next question
+// ---------------------------------------------
+
+// This function retrieves the next question for a continent.
+// The backend decides difficulty order: Easy, then Medium, then Hard.
+export async function getNextQuestion(continent, excludedQuestionIds = []) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  excludedQuestionIds.forEach((questionId) => {
+    params.append("excludedQuestionIds", questionId);
+  });
+
+  try {
+    return await request(`/api/quiz/question/next?${params.toString()}`, {
+      method: "GET",
+    });
+  } catch (error) {
+    if (error.message === "Not Found") {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+// ---------------------------------------------
+// GET question count
+// ---------------------------------------------
+
+// This function retrieves how many questions exist for a continent.
+export async function getQuestionCount(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/questions/count?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
 // ---------------------------------------------
 // POST answers
 // ---------------------------------------------
 export async function submitAnswers(questionId, answerId) {
-  return request("/quiz/answer", {
+  return request("/api/quiz/answer", {
     method: "POST",
     body: JSON.stringify({ questionId, answerId }),
   });
@@ -54,13 +123,16 @@ export async function submitAnswers(questionId, answerId) {
 // GET results
 // ---------------------------------------------
 export async function getResults() {
-  return request("/quiz/results");
+  return request("/api/quiz/results");
 }
 // ---------------------------------------------
 // EXPORTS
 // ---------------------------------------------
 export default {
   getQuestion,
+  getRandomQuestion,
+  getNextQuestion,
+  getQuestionCount,
   submitAnswers,
   getResults,
 };

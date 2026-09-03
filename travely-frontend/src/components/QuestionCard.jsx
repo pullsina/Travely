@@ -18,6 +18,8 @@ function QuestionCard({
   continent = "Europe",
   questionNumber = 6,
   totalQuestions = 10,
+  difficulty = "Easy",
+  points = 5,
   capital = "Paris",
   answers = defaultAnswers,
   selectedAnswerId,
@@ -56,6 +58,9 @@ function QuestionCard({
         <div className="question-card__progress" aria-hidden="true">
           <span style={{ width: `${progressPercent}%` }} />
         </div>
+        <p className="question-card__difficulty">
+          {difficulty} · +{points} points
+        </p>
       </header>
 
       <div className="question-card__prompt">
