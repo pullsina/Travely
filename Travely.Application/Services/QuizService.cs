@@ -41,13 +41,17 @@ namespace Travely.Application.Services
 
             var isCorrect = await _quizRepo.IsCorrectAnswerAsync(dto.QuestionId, dto.AnswerId);
 
+            var hintPenalty = Math.Max(dto.UsedHintsCount, 0);
+            var finalScore = isCorrect
+                ? Math.Max(question.Points - hintPenalty, 0)
+                : 0;
+
             return new SubmitAnswerResultDto
             {
                 QuestionId = question.QuestionId,
                 IsCorrect = isCorrect,
                 CorrectAnswerId = question.QuestionId,
-                // Calculate the score based on whether the answer is correct
-                Score = isCorrect ? question.Points : 0 
+                Score = finalScore
             };
         }
 

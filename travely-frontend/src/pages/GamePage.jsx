@@ -9,7 +9,11 @@ import europeOutline from "../assets/continent-outlines/europe.png";
 import northAmericaOutline from "../assets/continent-outlines/north-america.png";
 import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
-import { getNextQuestion, getQuestionCount, submitAnswers } from "../api/quizApi";
+import {
+  getNextQuestion,
+  getQuestionCount,
+  submitAnswers,
+} from "../api/quizApi";
 import "./GamePage.css";
 
 const continentConfig = {
@@ -61,6 +65,9 @@ function GamePage() {
   const [submitError, setSubmitError] = useState("");
 
   const visibleTotalQuestions = totalQuestions || questionNumber;
+  const possibleQuestionPoints = question
+    ? Math.max(question.points - usedHints.length, 0)
+    : 0;
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
 
@@ -175,7 +182,11 @@ function GamePage() {
     }
 
     try {
-      const result = await submitAnswers(question.questionId, selectedAnswerId);
+      const result = await submitAnswers(
+        question.questionId,
+        selectedAnswerId,
+        usedHints.length,
+      );
       setAnswerResult(result);
       setPoints((currentPoints) => currentPoints + result.score);
     } catch (error) {
@@ -252,7 +263,7 @@ function GamePage() {
           questionNumber={questionNumber}
           totalQuestions={visibleTotalQuestions}
           difficulty={difficultyLabels[question.difficulty] || "Easy"}
-          points={question.points}
+          points={possibleQuestionPoints}
           capital={question.question}
           answers={answers}
           selectedAnswerId={selectedAnswerId}

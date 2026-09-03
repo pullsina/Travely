@@ -113,10 +113,10 @@ export async function getQuestionCount(continent) {
 // ---------------------------------------------
 // POST answers
 // ---------------------------------------------
-export async function submitAnswers(questionId, answerId) {
+export async function submitAnswers(questionId, answerId, usedHintsCount = 0) {
   return request("/api/quiz/answer", {
     method: "POST",
-    body: JSON.stringify({ questionId, answerId }),
+    body: JSON.stringify({ questionId, answerId, usedHintsCount }),
   });
 }
 // ---------------------------------------------
