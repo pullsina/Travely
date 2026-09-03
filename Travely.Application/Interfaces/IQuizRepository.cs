@@ -31,5 +31,16 @@ namespace Travely.Application.Interfaces
 
         // Abstraction to method for counting quiz questions in a continent
         Task<int> GetQuestionCountAsync(Continent continent);
+
+        // Abstraction to method for saving a submitted answer result for a user
+        Task SaveUserResultAsync(
+            string userId,
+            int questionId,
+            Continent continent,
+            Difficulty difficulty,
+            bool isCorrect,
+            int usedHintsCount,
+            int score,
+            int totalQuestions);
     }
 }
