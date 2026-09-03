@@ -12,6 +12,39 @@ function ProfilePage() {
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const navigate = useNavigate();
 
+  const results = [
+  {
+    continent: "Europe",
+    correct: 8,
+    total: 10,
+  },
+  {
+    continent: "Asia",
+    correct: 6,
+    total: 10,
+  },
+  {
+    continent: "Africa",
+    correct: 9,
+    total: 10,
+  },
+  {
+    continent: "North America",
+    correct: 5,
+    total: 10,
+  },
+  {
+    continent: "South America",
+    correct: 7,
+    total: 10,
+  },
+  {
+    continent: "Oceania",
+    correct: 4,
+    total: 10,
+  },
+];
+
   return (
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
