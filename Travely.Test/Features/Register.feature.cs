@@ -105,7 +105,7 @@ namespace Travely.Test.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Register.feature.ndjson", 4);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Register.feature.ndjson", 8);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -182,6 +182,166 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
     await testRunner.ThenAsync("I should get a register error message", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 16
+    await testRunner.AndAsync("I should remain on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Register with new username but existing email")]
+        public async global::System.Threading.Tasks.Task RegisterWithNewUsernameButExistingEmail()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "2";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Register with new username but existing email", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 19
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 20
+    await testRunner.GivenAsync("I am on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 21
+    await testRunner.WhenAsync("I fill in username \"test\", email \"test@user.com\", password \"Test123!\" and confirm" +
+                        " password \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 22
+    await testRunner.AndAsync("I click the register button", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 23
+    await testRunner.ThenAsync("I should get a register error message", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 24
+    await testRunner.AndAsync("I should remain on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Register with non-matching passwords")]
+        public async global::System.Threading.Tasks.Task RegisterWithNon_MatchingPasswords()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "3";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Register with non-matching passwords", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 26
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 27
+    await testRunner.GivenAsync("I am on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 28
+    await testRunner.WhenAsync("I fill in username \"newUser\", email \"new@email.com\", password \"Test123!\" and conf" +
+                        "irm password \"test\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 29
+    await testRunner.AndAsync("I click the register button in frontend", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 30
+    await testRunner.ThenAsync("I should get a register error message", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 31
+    await testRunner.AndAsync("I should remain on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Register with invalid email")]
+        public async global::System.Threading.Tasks.Task RegisterWithInvalidEmail()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "4";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Register with invalid email", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 33
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 34
+    await testRunner.GivenAsync("I am on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 35
+    await testRunner.WhenAsync("I fill in username \"newUser\", email \"email\", password \"Test123!\" and confirm pass" +
+                        "word \"Test123!\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 36
+    await testRunner.AndAsync("I click the register button in frontend", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 37
+    await testRunner.ThenAsync("I should get a register error message", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 38
+    await testRunner.AndAsync("I should remain on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Register with too short password")]
+        public async global::System.Threading.Tasks.Task RegisterWithTooShortPassword()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "5";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Register with too short password", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 40
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 41
+    await testRunner.GivenAsync("I am on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 42
+    await testRunner.WhenAsync("I fill in username \"newUser\", email \"new@email.com\", password \"Test1\" and confirm" +
+                        " password \"Test1\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 43
+    await testRunner.AndAsync("I click the register button in frontend", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 44
+    await testRunner.ThenAsync("I should get a register error message", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 45
     await testRunner.AndAsync("I should remain on the register page", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }

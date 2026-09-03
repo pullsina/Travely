@@ -77,6 +77,16 @@ public class RegisterSteps
         }
     }
 
+    //frontend only test, does not wait for api response, only checks that the error message appears
+    [When("I click the register button in frontend")]
+    public async Task WhenIClickTheRegisterButtonInFrontend()
+    {
+        await _hooks.Page.GetByRole(AriaRole.Button, new()
+        {
+            Name = "Register"
+        }).ClickAsync();
+    }
+
     [Then("I should get logged in")]
     public async Task ThenIShouldGetLoggedIn()
     {
