@@ -10,7 +10,7 @@ public class LoginSteps
 {
     private readonly Hooks.Hooks _hooks;
 
-    //konstructor
+    //constructor
     public LoginSteps(Hooks.Hooks hooks)
     {
         _hooks = hooks;
@@ -51,4 +51,49 @@ public class LoginSteps
 
         Assert.That(_hooks.Page.Url, Does.Contain("/continents"));
     }
+
+    [Then("I should get an error message")]
+    public async Task ThenIShouldGetAnErrorMessage()
+    {
+        //playwright finds the element with the matching class name 
+        var errorMessage = _hooks.Page.Locator(".login-page__message--error");
+
+        //waits for the element to be visible in frontend (if visible = error (great for this test, login failed as expected and the test passes), if not visible = no error in frontend, login succeeded and this test fails)
+        await Assertions.Expect(errorMessage).ToBeVisibleAsync();
+
+    }
+
+    [When("I leave email and password empty")]
+    public async Task WhenILeaveEmailAndPasswordEmpty()
+    {
+        //playwright searches for label "Email" in frontend but does not fill with any values
+        await _hooks.Page.GetByLabel("Email").FillAsync("");
+        await _hooks.Page.GetByLabel("Password").FillAsync("");
+    }
+
+    [Then("I should remain on the login page")]
+    public async Task ThenIShouldRemainOnTheLoginPage()
+    {
+        //make sure the page is /login, if not the test fails
+        Assert.That(_hooks.Page.Url, Does.Contain("/login"));
+    }
+
+    [When("I leave email empty and fill in password {string}")]
+    public async Task WhenILeaveEmailEmptyAndFillInPassword(string password)
+    {
+        //playwright searches for label "Email" in frontend but does not fill with any values
+        await _hooks.Page.GetByLabel("Email").FillAsync("");
+        //playwright searches for label "Password" in frontend and fills with correct value
+        await _hooks.Page.GetByLabel("Password").FillAsync(password);
+    }
+
+    [When("I fill in email {string} and leave password empty")]
+    public async Task WhenIFillInEmailAndLeavePasswordEmpty(string email)
+    {
+        //playwright searches for label "Email" in frontend and fills with correct value
+        await _hooks.Page.GetByLabel("Email").FillAsync(email);
+        //playwright searches for label "Password" in frontend but does not fill with a value
+        await _hooks.Page.GetByLabel("Password").FillAsync("");
+    }
+
 }
