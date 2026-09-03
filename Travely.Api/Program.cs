@@ -33,6 +33,12 @@ builder.Services
     .AddEntityFrameworkStores<TravelyDbContext>()
     .AddSignInManager();
 
+// Require unique email when creating a user
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+});
+
 //------------------------------------
 // Authentication and Authorization
 //------------------------------------
@@ -82,6 +88,20 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+//------------------------------------
+// Test data
+//------------------------------------
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var services = scope.ServiceProvider;
+
+        await TestDataSeeder.SeedAsync(services);
+    }
+}
+
 //------------------------------------
 // Middleware
 //------------------------------------
