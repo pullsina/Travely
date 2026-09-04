@@ -110,5 +110,71 @@ namespace Travely.Api.Controllers
 
             return Ok(count);
         }
+
+        // Endpoint to retrieve saved quiz progress for the logged-in user in one continent
+        [Authorize]
+        [HttpGet("progress")]
+        public async Task<ActionResult<QuizProgressDto>> GetProgress(
+            [FromQuery] Continent continent)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var progress = await _quizService.GetUserProgressAsync(
+                userId,
+                continent);
+
+            return Ok(progress);
+        }
+
+        // Endpoint to retrieve total points for the logged-in user across all continents
+        [Authorize]
+        [HttpGet("points")]
+        public async Task<ActionResult<UserPointsDto>> GetPoints()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var points = await _quizService.GetUserTotalPointsAsync(userId);
+
+            return Ok(new UserPointsDto
+            {
+                Points = points
+            });
+        }
+
+        // Endpoint to retrieve total points and points split by continent for the logged-in user
+        [Authorize]
+        [HttpGet("points/summary")]
+        public async Task<ActionResult<UserPointsSummaryDto>> GetPointsSummary()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var pointsSummary = await _quizService.GetUserPointsSummaryAsync(userId);
+
+            return Ok(pointsSummary);
+        }
     }
 }
