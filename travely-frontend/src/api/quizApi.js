@@ -140,6 +140,13 @@ export async function getUserPoints() {
   });
 }
 
+// This function retrieves the logged-in user's total points and points per continent.
+export async function getUserPointsSummary() {
+  return request("/api/quiz/points/summary", {
+    method: "GET",
+  });
+}
+
 // ---------------------------------------------
 // POST answers
 // ---------------------------------------------
@@ -165,6 +172,7 @@ export default {
   getQuestionCount,
   getProgress,
   getUserPoints,
+  getUserPointsSummary,
   submitAnswers,
   getResults,
 };

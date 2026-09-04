@@ -304,6 +304,40 @@ namespace Travely.Infrastructure.Repositories
                 0);
         }
 
+        // Method to retrieve points split by continent for a user
+        public async Task<UserPointsSummaryDto> GetUserPointsSummaryAsync(string userId)
+        {
+            var results = await _context.UserResults
+                .Where(result => result.UserId == userId)
+                .ToListAsync();
+
+            var latestResultsByQuestion = results
+                .GroupBy(result => result.QuestionId)
+                .Select(group => group
+                    .OrderByDescending(result => result.CompletedAt)
+                    .First())
+                .ToList();
+
+            var continentPoints = Enum
+                .GetValues<Continent>()
+                .Select(continent => new ContinentPointsDto
+                {
+                    Continent = continent,
+                    Points = latestResultsByQuestion
+                        .Where(result => result.Continent == continent)
+                        .Sum(result => result.Score)
+                })
+                .ToList();
+
+            return new UserPointsSummaryDto
+            {
+                TotalPoints = Math.Max(
+                    100 + latestResultsByQuestion.Sum(result => result.Score),
+                    0),
+                Continents = continentPoints
+            };
+        }
+
         // Method to check if the provided answer ID is correct for a quiz question
         public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
         {

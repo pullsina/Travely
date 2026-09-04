@@ -120,5 +120,11 @@ namespace Travely.Application.Services
         {
             return await _quizRepo.GetUserTotalPointsAsync(userId);
         }
+
+        // Method to retrieve points split by continent for a user
+        public async Task<UserPointsSummaryDto> GetUserPointsSummaryAsync(string userId)
+        {
+            return await _quizRepo.GetUserPointsSummaryAsync(userId);
+        }
     }
 }
