@@ -55,8 +55,8 @@ function haveSameQuestionIds(firstIds = [], secondIds = []) {
 
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
-  const navigaconst { continent } = useParams();te = useNavigate();
-  
+  const navigate = useNavigate();
+  const { continent } = useParams();
   const selectedContinent = decodeURIComponent(continent || "Europe");
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
@@ -381,7 +381,11 @@ function GamePage() {
         />
       ) : null}
 
-      {!isLoading && !gameError && !isContinentComplete && question && showCountryInfo ? (
+      {!isLoading &&
+      !gameError &&
+      !isContinentComplete &&
+      question &&
+      showCountryInfo ? (
         <CountryInfoCard
           country={{
             name: correctCountry,
@@ -397,7 +401,11 @@ function GamePage() {
         />
       ) : null}
 
-      {!isLoading && !gameError && !isContinentComplete && question && !showCountryInfo ? (
+      {!isLoading &&
+      !gameError &&
+      !isContinentComplete &&
+      question &&
+      !showCountryInfo ? (
         <QuestionCard
           continent={currentContinent.label}
           questionNumber={questionNumber}

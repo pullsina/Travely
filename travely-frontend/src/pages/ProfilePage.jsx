@@ -1,12 +1,8 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import {
-  getQuestionCount,
-  getUserPoints,
-  getUserPointsSummary,
-} from "../api/quizApi";
+import { useAuth } from "../contexts/AuthContext";
+import { getUserPoints, getResults } from "../api/quizApi";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 import "./ProfilePage.css";
@@ -16,11 +12,11 @@ import "./ProfilePage.css";
 // user's total points across all continents: getUserPoints
 
 function ProfilePage() {
-  const { user } = useAuth();
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(100);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,13 +28,10 @@ function ProfilePage() {
 
     async function loadResults() {
       try {
-        const response = await getUserPointsSummary();
-        const loadedResults = Array.isArray(response)
-          ? response
-          : response?.results || [];
+        const response = await getResults();
 
         if (!ignore) {
-          setResults(loadedResults);
+          setResults(response);
         }
       } catch (error) {
         console.error("Could not load results:", error);
@@ -46,6 +39,32 @@ function ProfilePage() {
     }
 
     loadResults();
+
+    return () => {
+      ignore = true;
+    };
+  }, [showUserResultsCard]);
+
+  useEffect(() => {
+    if (!showUserResultsCard) {
+      return undefined;
+    }
+
+    let ignore = false;
+
+    async function loadPoints() {
+      try {
+        const response = await getUserPoints();
+
+        if (!ignore) {
+          setPoints(response);
+        }
+      } catch (error) {
+        console.error("Could not load points:", error);
+      }
+    }
+
+    loadPoints();
 
     return () => {
       ignore = true;
@@ -92,15 +111,11 @@ function ProfilePage() {
         </div>
         {/* CARDS */}
         {showUserInfoCard ? (
-          <UserInfoCard
-            user={user}
-            onClose={() => setShowUserInfoCard(false)}
-          />
+          <UserInfoCard onClose={() => setShowUserInfoCard(false)} />
         ) : null}
         {showUserResultsCard ? (
           <UserResultsCard
             results={results}
-            user={user}
             onClose={() => setShowUserResultsCard(false)}
           />
         ) : null}

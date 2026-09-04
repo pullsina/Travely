@@ -371,5 +371,22 @@ namespace Travely.Infrastructure.Repositories
             _context.UserResults.Add(userResult);
             await _context.SaveChangesAsync();
         }
+
+        // Method to retrieve quiz results for a user by continent
+        public async Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent)
+        {
+            var results = await _context.UserResults
+                .Where(result => result.UserId == userId)
+                .Where(result => result.Continent == continent)
+                .ToListAsync();
+            return results
+                .Select(result => new UserResultsDto
+                {
+                    Continent = continent.ToString(),
+                    Correct = result.IsCorrect ? 1 : 0,
+                    Total = result.TotalQuestions,
+                })
+                .ToList();
+        }
     }
-} 
+}
