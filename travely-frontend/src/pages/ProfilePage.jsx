@@ -7,10 +7,6 @@ import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 import "./ProfilePage.css";
 
-// how many questions exist for a continent: getQuestionCount
-// user's total points and points per continent: getUserPointsSummary
-// user's total points across all continents: getUserPoints
-
 function ProfilePage() {
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
@@ -40,18 +36,6 @@ function ProfilePage() {
 
     loadResults();
 
-    return () => {
-      ignore = true;
-    };
-  }, [showUserResultsCard]);
-
-  useEffect(() => {
-    if (!showUserResultsCard) {
-      return undefined;
-    }
-
-    let ignore = false;
-
     async function loadPoints() {
       try {
         const response = await getUserPoints();
@@ -74,7 +58,7 @@ function ProfilePage() {
   return (
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
-      <Navbar variant="app" showAuthLinks points={points} />
+      <Navbar variant="app" />
       {/* BACK BUTTON */}
       <button
         className="profile-page__back"
@@ -98,12 +82,14 @@ function ProfilePage() {
         <div className="profile-page__actions">
           <button
             className="primary-button profile-page__show-info-button"
+            user={user}
             onClick={() => setShowUserInfoCard(true)}
           >
             User details
           </button>
           <button
             className="primary-button profile-page__show-results-button"
+            user={user}
             onClick={() => setShowUserResultsCard(true)}
           >
             Results
@@ -111,11 +97,15 @@ function ProfilePage() {
         </div>
         {/* CARDS */}
         {showUserInfoCard ? (
-          <UserInfoCard onClose={() => setShowUserInfoCard(false)} />
+          <UserInfoCard
+            user={user}
+            onClose={() => setShowUserInfoCard(false)}
+          />
         ) : null}
         {showUserResultsCard ? (
           <UserResultsCard
             results={results}
+            user={user}
             onClose={() => setShowUserResultsCard(false)}
           />
         ) : null}
