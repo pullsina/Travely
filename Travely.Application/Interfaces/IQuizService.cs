@@ -38,5 +38,8 @@ namespace Travely.Application.Interfaces
 
         // Get points split by continent for a user.
         Task<UserPointsSummaryDto> GetUserPointsSummaryAsync(string userId);
+        
+        // Get quiz results for a user.
+        Task<List<UserQuizResultDto>> GetUserResultsAsync(string userId);
     }
 }
