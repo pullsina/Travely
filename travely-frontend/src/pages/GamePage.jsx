@@ -55,8 +55,8 @@ function haveSameQuestionIds(firstIds = [], secondIds = []) {
 
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
-  const navigate = useNavigate();
-  const { continent } = useParams();
+  const navigaconst { continent } = useParams();te = useNavigate();
+  
   const selectedContinent = decodeURIComponent(continent || "Europe");
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;

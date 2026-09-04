@@ -176,5 +176,25 @@ namespace Travely.Api.Controllers
 
             return Ok(pointsSummary);
         }
+
+        // Endpoint to retrieve quiz results for the logged-in user
+        [Authorize]
+        [HttpGet("results")]
+        public async Task<ActionResult<List<UserQuizResultDto>>> GetResults()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var results = await _quizService.GetUserResultsAsync(userId);
+
+            return Ok(results);
+        }
     }
 }

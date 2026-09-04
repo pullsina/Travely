@@ -2,10 +2,18 @@ import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import {
+  getQuestionCount,
+  getUserPoints,
+  getUserPointsSummary,
+} from "../api/quizApi";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
-import { getResults, getUserPoints } from "../api/quizApi";
 import "./ProfilePage.css";
+
+// how many questions exist for a continent: getQuestionCount
+// user's total points and points per continent: getUserPointsSummary
+// user's total points across all continents: getUserPoints
 
 function ProfilePage() {
   const { user } = useAuth();
@@ -16,28 +24,6 @@ function ProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let ignore = false;
-
-    async function loadPoints() {
-      try {
-        const response = await getUserPoints();
-
-        if (!ignore) {
-          setPoints(response?.points ?? 100);
-        }
-      } catch (error) {
-        console.error("Could not load user points:", error);
-      }
-    }
-
-    loadPoints();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  useEffect(() => {
     if (!showUserResultsCard) {
       return undefined;
     }
@@ -46,7 +32,7 @@ function ProfilePage() {
 
     async function loadResults() {
       try {
-        const response = await getResults();
+        const response = await getUserPointsSummary();
         const loadedResults = Array.isArray(response)
           ? response
           : response?.results || [];

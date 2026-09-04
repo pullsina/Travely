@@ -2,9 +2,7 @@ import "./UserInfoCard.css";
 
 // Submits the user as a property
 function UserInfoCard({ user, onClose }) {
-  const email =
-    user.email ?? user.Email ?? user.emailAddress ?? user.EmailAddress;
-
+  
   return (
     <section className="user-info-card" aria-label="User details card">
       <div className="user-info-card__info" aria-label="User details">
@@ -12,13 +10,13 @@ function UserInfoCard({ user, onClose }) {
           className="user-info-card__text"
           aria-labelledby="user-info-card__text"
         >
-          <strong>Name:</strong> {user.username}
+          <strong>Name:</strong> {user.username || "No name available"}
         </p>
         <p
           className="user-info-card__text"
           aria-labelledby="user-info-card__text"
         >
-          <strong>Email:</strong> {email || "No email available"}
+          <strong>Email:</strong> {user.email || "No email available"}
         </p>
       </div>
       <div className="user-info-card__panel-actions" aria-label="User actions">
