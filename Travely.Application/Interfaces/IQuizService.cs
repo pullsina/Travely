@@ -40,6 +40,6 @@ namespace Travely.Application.Interfaces
         Task<UserPointsSummaryDto> GetUserPointsSummaryAsync(string userId);
         
         // Get quiz results for a user.
-        Task<List<UserQuizResultDto>> GetUserResultsAsync(string userId);
+        Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Travely.Shared.DTOs;
 using Travely.Shared.Enums;
+using Microsoft.OpenApi;
 
 namespace Travely.Api.Controllers
 {
@@ -180,7 +181,7 @@ namespace Travely.Api.Controllers
         // Endpoint to retrieve quiz results for the logged-in user
         [Authorize]
         [HttpGet("results")]
-        public async Task<ActionResult<List<UserQuizResultDto>>> GetResults()
+        public async Task<ActionResult<List<UserResultsDto>>> GetResults([FromQuery] Continent continent)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
@@ -192,9 +193,9 @@ namespace Travely.Api.Controllers
                 });
             }
 
-            var results = await _quizService.GetUserResultsAsync(userId);
+            var results = await _quizService.GetUserResultsAsync(userId, continent);
 
-            return Ok(results);
+            return Ok(results); 
         }
     }
 }
