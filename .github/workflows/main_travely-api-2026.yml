@@ -1,0 +1,77 @@
+name: Build and deploy Travely API to Azure
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      # Hämtar koden från GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Installerar .NET 10
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.x'
+
+      # Restore för just API-projektet
+      - name: Restore dependencies
+        run: dotnet restore ./Travely.Api/Travely.Api.csproj
+
+      # Bygger just API-projektet
+      - name: Build Travely.Api
+        run: dotnet build ./Travely.Api/Travely.Api.csproj --configuration Release --no-restore
+
+      # Publicerar API:t till en separat mapp
+      - name: Publish Travely.Api
+        run: dotnet publish ./Travely.Api/Travely.Api.csproj --configuration Release --output ./publish --no-build
+
+      # Sparar det publicerade API:t som artifact
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ./publish
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      # Hämtar det publicerade API:t från build-jobbet
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+          path: ./publish
+
+      # Loggar in mot Azure
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_80B7BA368D544A9796013F0211B6A246 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6F89F1967A474F9195920F6EFD0DA7E9 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0EBA10B7184B489F9BDF8FEFBD4920C6 }}
+
+      # Deployar API:t till Azure App Service
+      - name: Deploy Travely.Api to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'travely-api-2026'
+          slot-name: 'Production'
+          package: ./publish
