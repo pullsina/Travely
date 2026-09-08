@@ -126,5 +126,19 @@ namespace Travely.Application.Services
         {
             return await _quizRepo.GetUserPointsSummaryAsync(userId);
         }
+
+        public async Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent)
+        {
+            var results = await _quizRepo.GetUserResultsAsync(userId, continent);
+
+            return results
+                .Select(result => new UserResultsDto
+                {
+                    Continent = result.Continent,
+                    Correct = result.Correct,
+                    Total = result.Total
+                })
+                .ToList();
+        }
     }
 }

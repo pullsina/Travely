@@ -381,7 +381,11 @@ function GamePage() {
         />
       ) : null}
 
-      {!isLoading && !gameError && !isContinentComplete && question && showCountryInfo ? (
+      {!isLoading &&
+      !gameError &&
+      !isContinentComplete &&
+      question &&
+      showCountryInfo ? (
         <CountryInfoCard
           country={{
             name: correctCountry,
@@ -397,7 +401,11 @@ function GamePage() {
         />
       ) : null}
 
-      {!isLoading && !gameError && !isContinentComplete && question && !showCountryInfo ? (
+      {!isLoading &&
+      !gameError &&
+      !isContinentComplete &&
+      question &&
+      !showCountryInfo ? (
         <QuestionCard
           continent={currentContinent.label}
           questionNumber={questionNumber}
