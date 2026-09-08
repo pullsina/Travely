@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
-import { getResults } from "../api/quizApi";
+import { getResults, getUserPoints } from "../api/quizApi";
 import "./ProfilePage.css";
 
 function ProfilePage() {
@@ -12,7 +12,30 @@ function ProfilePage() {
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const [results, setResults] = useState([]);
+  const [points, setPoints] = useState(100);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadPoints() {
+      try {
+        const response = await getUserPoints();
+
+        if (!ignore) {
+          setPoints(response?.points ?? 100);
+        }
+      } catch (error) {
+        console.error("Could not load user points:", error);
+      }
+    }
+
+    loadPoints();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!showUserResultsCard) {
@@ -46,7 +69,7 @@ function ProfilePage() {
   return (
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
-      <Navbar variant="app" showAuthLinks />
+      <Navbar variant="app" showAuthLinks points={points} />
       {/* BACK BUTTON */}
       <button
         className="profile-page__back"

@@ -251,6 +251,93 @@ namespace Travely.Infrastructure.Repositories
                 .CountAsync(c => c.Continent == continent);
         }
 
+        // Method to retrieve saved quiz progress for a user in one continent
+        public async Task<QuizProgressDto> GetUserProgressAsync(
+            string userId,
+            Continent continent)
+        {
+            var results = await _context.UserResults
+                .Where(result => result.UserId == userId)
+                .Where(result => result.Continent == continent)
+                .ToListAsync();
+
+            var latestResultsByQuestion = results
+                .GroupBy(result => result.QuestionId)
+                .Select(group => group
+                    .OrderByDescending(result => result.CompletedAt)
+                    .First())
+                .ToList();
+            var earnedScore = latestResultsByQuestion.Sum(result => result.Score);
+            var usedHintsCount = latestResultsByQuestion.Sum(result => result.UsedHintsCount);
+            var answeredQuestionIds = latestResultsByQuestion
+                .Select(result => result.QuestionId)
+                .ToList();
+
+            return new QuizProgressDto
+            {
+                CurrentPoints = Math.Max(100 + earnedScore, 0),
+                EarnedScore = earnedScore,
+                UsedHintsCount = usedHintsCount,
+                AnsweredQuestions = answeredQuestionIds.Count,
+                CorrectAnswers = latestResultsByQuestion.Count(result => result.IsCorrect),
+                WrongAnswers = latestResultsByQuestion.Count(result => !result.IsCorrect),
+                AnsweredQuestionIds = answeredQuestionIds
+            };
+        }
+
+        // Method to retrieve total points for a user across all continents
+        public async Task<int> GetUserTotalPointsAsync(string userId)
+        {
+            var results = await _context.UserResults
+                .Where(result => result.UserId == userId)
+                .ToListAsync();
+
+            var latestResultsByQuestion = results
+                .GroupBy(result => result.QuestionId)
+                .Select(group => group
+                    .OrderByDescending(result => result.CompletedAt)
+                    .First())
+                .ToList();
+
+            return Math.Max(
+                100 + latestResultsByQuestion.Sum(result => result.Score),
+                0);
+        }
+
+        // Method to retrieve points split by continent for a user
+        public async Task<UserPointsSummaryDto> GetUserPointsSummaryAsync(string userId)
+        {
+            var results = await _context.UserResults
+                .Where(result => result.UserId == userId)
+                .ToListAsync();
+
+            var latestResultsByQuestion = results
+                .GroupBy(result => result.QuestionId)
+                .Select(group => group
+                    .OrderByDescending(result => result.CompletedAt)
+                    .First())
+                .ToList();
+
+            var continentPoints = Enum
+                .GetValues<Continent>()
+                .Select(continent => new ContinentPointsDto
+                {
+                    Continent = continent,
+                    Points = latestResultsByQuestion
+                        .Where(result => result.Continent == continent)
+                        .Sum(result => result.Score)
+                })
+                .ToList();
+
+            return new UserPointsSummaryDto
+            {
+                TotalPoints = Math.Max(
+                    100 + latestResultsByQuestion.Sum(result => result.Score),
+                    0),
+                Continents = continentPoints
+            };
+        }
+
         // Method to check if the provided answer ID is correct for a quiz question
         public async Task<bool> IsCorrectAnswerAsync(int questionId, int answerId)
         {

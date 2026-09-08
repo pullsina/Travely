@@ -1,0 +1,105 @@
+.continent-complete-card {
+  width: min(100%, 760px);
+  align-self: center;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: 42px;
+  text-align: center;
+}
+
+.continent-complete-card__eyebrow {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 22px;
+}
+
+.continent-complete-card__title {
+  margin: 0;
+  color: var(--color-primary);
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: clamp(52px, 7vw, 88px);
+  line-height: 1;
+}
+
+.continent-complete-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 36px 0;
+}
+
+.continent-complete-card__stat {
+  border: 2px solid rgba(105, 224, 0, 0.7);
+  border-radius: 6px;
+  background: rgba(11, 35, 112, 0.56);
+  padding: 18px;
+}
+
+.continent-complete-card__stat:first-child {
+  grid-column: 1 / -1;
+}
+
+.continent-complete-card__stat-value,
+.continent-complete-card__stat-label {
+  display: block;
+  font-family: "Actor", system-ui, sans-serif;
+}
+
+.continent-complete-card__stat-value {
+  color: var(--color-primary);
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.continent-complete-card__stat-label {
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
+.continent-complete-card__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.continent-complete-card__button {
+  min-width: 260px;
+}
+
+.continent-complete-card__profile-link {
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 20px;
+}
+
+.continent-complete-card__profile-link:hover,
+.continent-complete-card__profile-link:focus-visible {
+  color: var(--color-text);
+}
+
+@media (max-width: 760px) {
+  .continent-complete-card {
+    padding: 30px 20px;
+  }
+
+  .continent-complete-card__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .continent-complete-card__actions {
+    flex-direction: column;
+  }
+
+  .continent-complete-card__button,
+  .continent-complete-card__profile-link {
+    width: 100%;
+  }
+}

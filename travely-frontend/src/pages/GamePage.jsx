@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import ContinentCompleteCard from "../components/ContinentCompleteCard";
 import CountryInfoCard from "../components/CountryInfoCard";
 import QuestionCard from "../components/QuestionCard";
 import africaOutline from "../assets/continent-outlines/africa.png";
@@ -11,7 +12,9 @@ import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
 import {
   getNextQuestion,
+  getProgress,
   getQuestionCount,
+  getUserPoints,
   submitAnswers,
 } from "../api/quizApi";
 import "./GamePage.css";
@@ -42,6 +45,14 @@ const difficultyLabels = {
   Hard: "Hard",
 };
 
+function haveSameQuestionIds(firstIds = [], secondIds = []) {
+  if (firstIds.length !== secondIds.length) {
+    return false;
+  }
+
+  return firstIds.every((id, index) => id === secondIds[index]);
+}
+
 // The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
 function GamePage() {
   const navigate = useNavigate();
@@ -60,9 +71,13 @@ function GamePage() {
   const [selectedAnswerId, setSelectedAnswerId] = useState(null);
   const [answerResult, setAnswerResult] = useState(null);
   const [showCountryInfo, setShowCountryInfo] = useState(false);
+  const [savedProgress, setSavedProgress] = useState(null);
+  const [isContinentComplete, setIsContinentComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProgressLoaded, setIsProgressLoaded] = useState(false);
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const currentQuestionStorageKey = `travely-current-question-${currentContinent.apiValue}`;
 
   const visibleTotalQuestions = totalQuestions || questionNumber;
   const possibleQuestionPoints = question
@@ -97,6 +112,59 @@ function GamePage() {
 
   useEffect(() => {
     let ignore = false;
+
+    async function loadSavedProgress() {
+      setIsProgressLoaded(false);
+      setQuestion(null);
+      setQuestionNumber(1);
+      setUsedQuestionIds([]);
+      setHintType("map");
+      setUsedHints([]);
+      setSelectedAnswerId(null);
+      setAnswerResult(null);
+      setShowCountryInfo(false);
+      setSavedProgress(null);
+      setIsContinentComplete(false);
+      setGameError("");
+      setSubmitError("");
+
+      try {
+        const progress = await getProgress(currentContinent.apiValue);
+        const pointsResponse = await getUserPoints();
+
+        if (!ignore) {
+          const answeredQuestionIds = progress?.answeredQuestionIds || [];
+
+          setUsedQuestionIds(answeredQuestionIds);
+          setQuestionNumber(answeredQuestionIds.length + 1);
+          setPoints(pointsResponse?.points ?? 100);
+          setSavedProgress(progress);
+        }
+      } catch (error) {
+        if (!ignore) {
+          setGameError(error.message);
+        }
+      } finally {
+        if (!ignore) {
+          setIsProgressLoaded(true);
+        }
+      }
+    }
+
+    loadSavedProgress();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentContinent.apiValue]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (!isProgressLoaded) {
+      return undefined;
+    }
+
     // This effect loads a new question whenever the continent or used question IDs change.
     async function loadQuestion() {
       setIsLoading(true);
@@ -104,6 +172,31 @@ function GamePage() {
       setSubmitError("");
 
       try {
+        const savedQuestionText = window.sessionStorage.getItem(
+          currentQuestionStorageKey,
+        );
+
+        if (savedQuestionText) {
+          const savedQuestionState = JSON.parse(savedQuestionText);
+          const savedQuestion = savedQuestionState?.question;
+          const savedQuestionIds = savedQuestionState?.usedQuestionIds || [];
+
+          if (
+            savedQuestion &&
+            !usedQuestionIds.includes(savedQuestion.questionId) &&
+            haveSameQuestionIds(savedQuestionIds, usedQuestionIds)
+          ) {
+            if (!ignore) {
+              setQuestion(savedQuestion);
+              setHintType(savedQuestionState.hintType || "map");
+              setUsedHints(savedQuestionState.usedHints || []);
+              setSelectedAnswerId(savedQuestionState.selectedAnswerId || null);
+            }
+
+            return;
+          }
+        }
+
         const nextQuestion = await getNextQuestion(
           currentContinent.apiValue,
           usedQuestionIds,
@@ -111,10 +204,15 @@ function GamePage() {
 
         if (!ignore) {
           if (!nextQuestion) {
-            setGameError("No more questions for this continent.");
+            const latestProgress = await getProgress(currentContinent.apiValue);
+
+            setSavedProgress(latestProgress);
+            setIsContinentComplete(true);
+            setQuestion(null);
             return;
           }
 
+          setIsContinentComplete(false);
           setQuestion(nextQuestion);
         }
       } catch (error) {
@@ -133,7 +231,38 @@ function GamePage() {
     return () => {
       ignore = true;
     };
-  }, [currentContinent.apiValue, usedQuestionIds]);
+  }, [
+    currentContinent.apiValue,
+    currentQuestionStorageKey,
+    isProgressLoaded,
+    usedQuestionIds,
+  ]);
+
+  useEffect(() => {
+    if (!isProgressLoaded || !question || answerResult) {
+      return;
+    }
+
+    window.sessionStorage.setItem(
+      currentQuestionStorageKey,
+      JSON.stringify({
+        question,
+        usedQuestionIds,
+        hintType,
+        usedHints,
+        selectedAnswerId,
+      }),
+    );
+  }, [
+    answerResult,
+    currentQuestionStorageKey,
+    hintType,
+    isProgressLoaded,
+    question,
+    selectedAnswerId,
+    usedHints,
+    usedQuestionIds,
+  ]);
 
   // This effect shows the country information after a delay when an answer is submitted.
   useEffect(() => {
@@ -157,7 +286,6 @@ function GamePage() {
     }
 
     setUsedHints((currentHints) => [...currentHints, nextHintType]);
-    setPoints((currentPoints) => Math.max(currentPoints - 1, 0));
   }
 
   // This function handles the selection of an answer, updating the selected answer ID and clearing any previous submission errors.
@@ -187,6 +315,7 @@ function GamePage() {
         selectedAnswerId,
         usedHints.length,
       );
+      window.sessionStorage.removeItem(currentQuestionStorageKey);
       setAnswerResult(result);
       setPoints((currentPoints) => currentPoints + result.score);
     } catch (error) {
@@ -201,6 +330,7 @@ function GamePage() {
     }
 
     // Reset state for the next question
+    window.sessionStorage.removeItem(currentQuestionStorageKey);
     setUsedQuestionIds((currentIds) => [...currentIds, question.questionId]);
     setQuestionNumber((currentNumber) => currentNumber + 1);
     setHintType("map");
@@ -208,6 +338,7 @@ function GamePage() {
     setSelectedAnswerId(null);
     setAnswerResult(null);
     setShowCountryInfo(false);
+    setIsContinentComplete(false);
     setSubmitError("");
   }
 
@@ -241,7 +372,16 @@ function GamePage() {
         </p>
       )}
 
-      {!isLoading && !gameError && question && showCountryInfo ? (
+      {!isLoading && !gameError && isContinentComplete ? (
+        <ContinentCompleteCard
+          continent={currentContinent.label}
+          progress={savedProgress}
+          onBackToContinents={() => navigate("/continents")}
+          onViewProfile={() => navigate("/profile")}
+        />
+      ) : null}
+
+      {!isLoading && !gameError && !isContinentComplete && question && showCountryInfo ? (
         <CountryInfoCard
           country={{
             name: correctCountry,
@@ -257,7 +397,7 @@ function GamePage() {
         />
       ) : null}
 
-      {!isLoading && !gameError && question && !showCountryInfo ? (
+      {!isLoading && !gameError && !isContinentComplete && question && !showCountryInfo ? (
         <QuestionCard
           continent={currentContinent.label}
           questionNumber={questionNumber}
