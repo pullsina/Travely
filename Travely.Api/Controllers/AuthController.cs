@@ -85,6 +85,7 @@ namespace Travely.Api.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            // Add email to show in profile? 
 
             return Ok(new { userId, username });
         }

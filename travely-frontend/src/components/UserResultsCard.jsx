@@ -1,62 +1,15 @@
 import "./UserResultsCard.css";
 
-// Submits the results as a property
-function UserResultsCard({ results = [], onClose }) {
-  console.log("API response:", results);
-  console.log("Is response an array:", Array.isArray(results));
-  console.log("Is response.results an array:", Array.isArray(results?.results));
-  return (
-    <section className="user-results-card" aria-label="User results card">
-      <h2>Results</h2>
-      {/* list results per continent */}
-      <div className="user-results-card__list">
-        {results.map((result) => {
-          // const to provide dynamic progress bar width
-          const percentage =
-            result.total > 0 ? (result.correct / result.total) * 100 : 0;
+function UserResultsCard({ results, onClose }) {
+  const resultEntries = Array.isArray(results)
+    ? results
+    : results?.results || [];
 
-          return (
-            <div key={result.continent}>
-              {/* results per continent */}
-              <div
-                className="user-results-card__list-result"
-                key={`${result.continent}-${result.userId}`}
-              >
-                <div className="user-results-card__list-result-header">
-                  <span className="user-results-card__list-result-header__name">
-                    {result.continent}
-                  </span>
-                  {/* Display the number of correct answered questions */}
-                  <span className="user-results-card__list-result-header__score">
-                    <p className="user-results-card__list-result-header__score">
-                      Number of correct answers: {result.correct}
-                    </p>
-                  </span>
-                  {/* Display the number of answered questions */}
-                  <span className="user-results-card__list-result-header__score">
-                    <p className="user-results-card__list-result-header__score">
-                      Number of questions answered: {result.total}
-                    </p>
-                  </span>
-                  {/* Display the number of correct answered questions in relation to the total number of questions */}
-                  <span className="user-results-card__list-result-header__score">
-                    {result.correct} / {result.total}
-                  </span>
-                </div>
-                <div className="user-results-card__list-result__progressbar">
-                  <div
-                    className="user-results-card__list-result__progressbar-fill"
-                    // component to provide dynamic progress bar width
-                    style={{
-                      width: `${percentage}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+  return (
+    <section
+      className="user-results-card"
+      aria-labelledby="user-results-card-title"
+    >
       <div className="user-results-card__actions">
         <button
           className="primary-button user-results-card__actions__close-button"
@@ -66,6 +19,58 @@ function UserResultsCard({ results = [], onClose }) {
           Close
         </button>
       </div>
+      {resultEntries.map((progress) => {
+        const correctAnswers = progress?.correctAnswers || 0;
+        const answeredQuestions = progress?.answeredQuestions || 0;
+        const totalQuestions = progress?.totalQuestions || 0;
+        const earnedScore = progress?.earnedScore || 0;
+        const usedHintsCount = progress?.usedHintsCount || 0;
+        const percentage = (correctAnswers / totalQuestions) * 100;
+        const stats = [
+          { label: "Correct answers", value: correctAnswers },
+          { label: "Questions answered", value: answeredQuestions },
+          { label: "Hints used", value: usedHintsCount },
+          { label: "Score earned", value: `${earnedScore} p` },
+        ];
+
+        return (
+          <section
+            className="user-results-card__continent"
+            key={progress.continent}
+          >
+            <div className="user-results-card__progressbar">
+              {/* Show results for each continent - as a progress bar */}
+              <h2 className="user-results-card__title">{progress.continent}</h2>
+              <div className="user-results-card__list-result__progressbar-background">
+                <div
+                  className="user-results-card__list-result__progressbar-fill"
+                  style={{ width: `${percentage}%` }}
+                />
+              </div>
+            </div>
+            {/* Show results for each continent - as a list */}
+            <div className="user-results-card__list">
+              {stats.map((stat) => (
+                <div
+                  className="user-results-card__list-result"
+                  key={stat.label}
+                >
+                  <span className="user-results-card__list-result-label">
+                    {stat.label}
+                  </span>
+                  <span className="user-results-card__list-result-value">
+                    {stat.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+
+      {resultEntries.length === 0 ? (
+        <p className="user-results-card__empty">No results available yet.</p>
+      ) : null}
     </section>
   );
 }
