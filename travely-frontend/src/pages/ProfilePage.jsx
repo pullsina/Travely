@@ -1,20 +1,32 @@
 import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { getProgress, getQuestionCount, getUserPoints } from "../api/quizApi";
+import { getCurrentUser } from "../api/authApi";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
-import { getResults, getUserPoints } from "../api/quizApi";
 import "./ProfilePage.css";
 
+const continents = [
+  { name: "Europe", apiValue: "Europe" },
+  { name: "Africa", apiValue: "Africa" },
+  { name: "North America", apiValue: "NorthAmerica" },
+  { name: "South America", apiValue: "SouthAmerica" },
+  { name: "Asia", apiValue: "Asia" },
+  { name: "Oceania", apiValue: "Oceania" },
+];
+
 function ProfilePage() {
-  const { user } = useAuth();
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(100);
+  const [userInfo, setUserInfo] = useState(null);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Function for loading user points
   useEffect(() => {
     let ignore = false;
 
@@ -26,7 +38,7 @@ function ProfilePage() {
           setPoints(response?.points ?? 100);
         }
       } catch (error) {
-        console.error("Could not load user points:", error);
+        console.error("Could not load points:", error);
       }
     }
 
@@ -38,6 +50,33 @@ function ProfilePage() {
   }, []);
 
   useEffect(() => {
+    if (!showUserInfoCard) {
+      return undefined;
+    }
+
+    let ignore = false;
+
+    async function loadUserInfo() {
+      try {
+        const currentUser = await getCurrentUser();
+
+        if (!ignore) {
+          setUserInfo(currentUser);
+        }
+      } catch (error) {
+        console.error("Could not load user info:", error);
+      }
+    }
+
+    loadUserInfo();
+
+    return () => {
+      ignore = true;
+    };
+  }, [showUserInfoCard]);
+
+  // Function for loading user results
+  useEffect(() => {
     if (!showUserResultsCard) {
       return undefined;
     }
@@ -46,13 +85,26 @@ function ProfilePage() {
 
     async function loadResults() {
       try {
-        const response = await getResults();
-        const loadedResults = Array.isArray(response)
-          ? response
-          : response?.results || [];
+        const resultEntries = await Promise.all(
+          continents.map(async (continent) => {
+            const [progress, totalQuestions] = await Promise.all([
+              getProgress(continent.apiValue),
+              getQuestionCount(continent.apiValue),
+            ]);
+
+            return {
+              continent: continent.name,
+              correctAnswers: progress?.correctAnswers ?? 0,
+              answeredQuestions: progress?.answeredQuestions ?? 0,
+              earnedScore: progress?.earnedScore ?? 0,
+              usedHintsCount: progress?.usedHintsCount ?? 0,
+              totalQuestions: totalQuestions ?? 0,
+            };
+          }),
+        );
 
         if (!ignore) {
-          setResults(loadedResults);
+          setResults(resultEntries);
         }
       } catch (error) {
         console.error("Could not load results:", error);
@@ -69,7 +121,7 @@ function ProfilePage() {
   return (
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
-      <Navbar variant="app" showAuthLinks points={points} />
+      <Navbar variant="app" points={points} />
       {/* BACK BUTTON */}
       <button
         className="profile-page__back"
@@ -93,12 +145,14 @@ function ProfilePage() {
         <div className="profile-page__actions">
           <button
             className="primary-button profile-page__show-info-button"
+            // user={user}
             onClick={() => setShowUserInfoCard(true)}
           >
             User details
           </button>
           <button
             className="primary-button profile-page__show-results-button"
+            // user={user}
             onClick={() => setShowUserResultsCard(true)}
           >
             Results
@@ -107,14 +161,14 @@ function ProfilePage() {
         {/* CARDS */}
         {showUserInfoCard ? (
           <UserInfoCard
-            user={user}
+            userInfo={userInfo ?? user}
             onClose={() => setShowUserInfoCard(false)}
           />
         ) : null}
         {showUserResultsCard ? (
           <UserResultsCard
             results={results}
-            user={user}
+            // user={user}
             onClose={() => setShowUserResultsCard(false)}
           />
         ) : null}
