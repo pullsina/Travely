@@ -78,7 +78,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("ReactApp", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins("http://localhost:5173",
+            "https://travely-frontend-2026-gta2arhfdxc9b0ck.germanywestcentral-01.azurewebsites.net")
             .AllowAnyHeader()
 
             .AllowAnyMethod()
