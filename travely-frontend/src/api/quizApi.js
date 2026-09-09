@@ -1,7 +1,8 @@
 // ---------------------------------------------
 // BASE URL for the backend API (Should be retrieved from environment variables)
 // ---------------------------------------------
-const API_BASE = "https://localhost:7009";
+const API_BASE =
+  "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
 // ---------------------------------------------
 // GENERIC REQUEST FUNCTION (to communicate with the backend API)
 // ---------------------------------------------
