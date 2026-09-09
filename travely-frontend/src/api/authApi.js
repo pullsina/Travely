@@ -1,4 +1,5 @@
-const API_BASE = "https://localhost:7009";
+const API_BASE =
+  "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
 
 //function to reuse in every request
 async function request(path, options = {}) {
