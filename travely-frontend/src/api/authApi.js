@@ -1,5 +1,6 @@
-const API_BASE =
-  "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
+//const API_BASE = "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
+
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 //function to reuse in every request
 async function request(path, options = {}) {

@@ -1,8 +1,9 @@
 // ---------------------------------------------
 // BASE URL for the backend API (Should be retrieved from environment variables)
 // ---------------------------------------------
-const API_BASE =
-  "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
+//const API_BASE = "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 // ---------------------------------------------
 // GENERIC REQUEST FUNCTION (to communicate with the backend API)
 // ---------------------------------------------
