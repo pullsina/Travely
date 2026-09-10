@@ -275,7 +275,7 @@ namespace Travely.Infrastructure.Repositories
 
             return new QuizProgressDto
             {
-                CurrentPoints = Math.Max(100 + earnedScore, 0),
+                CurrentPoints = Math.Max(earnedScore, 0),
                 EarnedScore = earnedScore,
                 UsedHintsCount = usedHintsCount,
                 AnsweredQuestions = answeredQuestionIds.Count,
@@ -300,7 +300,7 @@ namespace Travely.Infrastructure.Repositories
                 .ToList();
 
             return Math.Max(
-                100 + latestResultsByQuestion.Sum(result => result.Score),
+                latestResultsByQuestion.Sum(result => result.Score),
                 0);
         }
 
@@ -332,7 +332,7 @@ namespace Travely.Infrastructure.Repositories
             return new UserPointsSummaryDto
             {
                 TotalPoints = Math.Max(
-                    100 + latestResultsByQuestion.Sum(result => result.Score),
+                    latestResultsByQuestion.Sum(result => result.Score),
                     0),
                 Continents = continentPoints
             };

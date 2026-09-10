@@ -1,5 +1,5 @@
 import "./Navbar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getUserPointsSummary } from "../api/quizApi";
@@ -28,6 +28,25 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
   const isGuest = variant === "guest";
   const isApp = variant === "app";
+  const displayPoints = points ?? "...";
+
+  async function loadPointsSummary() {
+    try {
+      const summary = await getUserPointsSummary();
+      setPointsSummary(summary);
+      setPointsError("");
+    } catch (error) {
+      setPointsError(error.message);
+    }
+  }
+
+  useEffect(() => {
+    if (!isPointsOpen) {
+      return;
+    }
+
+    loadPointsSummary();
+  }, [isPointsOpen, points]);
 
   async function handleLogout() {
     try {
@@ -40,18 +59,6 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
   async function openPointsSummary() {
     setIsPointsOpen(true);
-
-    if (pointsSummary) {
-      return;
-    }
-
-    try {
-      const summary = await getUserPointsSummary();
-      setPointsSummary(summary);
-      setPointsError("");
-    } catch (error) {
-      setPointsError(error.message);
-    }
   }
 
   return (
@@ -105,13 +112,13 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                 aria-expanded={isPointsOpen}
                 aria-label="Show points by continent"
               >
-                {points} p
+                {displayPoints} p
               </button>
 
               {isPointsOpen ? (
                 <div className="navbar__points-dropdown">
                   <p className="navbar__points-total">
-                    Total: {pointsSummary?.totalPoints ?? points} p
+                    Total: {pointsSummary?.totalPoints ?? displayPoints} p
                   </p>
 
                   {pointsError ? (

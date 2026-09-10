@@ -21,7 +21,7 @@ const continents = [
 
 function ContinentPage() {
   const navigate = useNavigate();
-  const [points, setPoints] = useState(100);
+  const [points, setPoints] = useState(null);
   const [continentProgress, setContinentProgress] = useState({});
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function ContinentPage() {
         const response = await getUserPoints();
 
         if (!ignore) {
-          setPoints(response?.points ?? 100);
+          setPoints(response?.points ?? null);
         }
       } catch (error) {
         console.error("Could not load user points:", error);
