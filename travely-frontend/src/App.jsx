@@ -2,6 +2,7 @@ import StartPage from "./pages/StartPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ModePage from "./pages/ModePage";
+import LearningPage from "./pages/LearningPage";
 import ContinentPage from "./pages/ContinentPage";
 import GamePage from "./pages/GamePage";
 import ProfilePage from "./pages/ProfilePage";
@@ -40,8 +41,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/continents" element={<ContinentPage />} />
           <Route path="/mode/:continent" element={<ModePage />} />
-          // This route is for the game page, which takes a continent as a URL
-          parameter.
+          <Route path="/learning/:continent" element={<LearningPage />} />
+          {/* Game page takes a continent as a URL parameter. */}
           <Route path="/game/:continent" element={<GamePage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>

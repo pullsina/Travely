@@ -88,7 +88,6 @@ function ContinentPage() {
       <Navbar variant="app" points={points} />
 
       <header className="continent-page__header">
-        <h1 className="continent-page__logo">TRAVELY</h1>
         <p className="continent-page__subtitle">
           Pick a continent to start the game
         </p>
