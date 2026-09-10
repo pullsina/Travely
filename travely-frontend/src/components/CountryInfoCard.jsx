@@ -56,7 +56,15 @@ function CountryInfoCard({
 
       <div className="country-info-card__info">
         <div className="country-info-card__media">
-          <img src={factImageUrl} alt={`${countryName} fun fact`} />
+          <img
+            src={factImageUrl}
+            alt={`${countryName} fun fact`}
+            onError={(event) => {
+              if (event.currentTarget.src !== fallbackFactImageUrl) {
+                event.currentTarget.src = fallbackFactImageUrl;
+              }
+            }}
+          />
         </div>
 
         <div className="country-info-card__fact-panel">
