@@ -251,6 +251,25 @@ namespace Travely.Infrastructure.Repositories
                 .CountAsync(c => c.Continent == continent);
         }
 
+        // Method to retrieve country cards for learning mode
+        public async Task<List<LearningCountryDto>> GetLearningCountriesAsync(Continent continent)
+        {
+            return await _context.Countries
+                .Where(country => country.Continent == continent)
+                .OrderBy(country => country.Name)
+                .Select(country => new LearningCountryDto
+                {
+                    QuestionId = country.Id,
+                    Country = country.Name,
+                    Capital = country.Capital,
+                    Fact = country.Fact,
+                    FlagUrl = country.FlagUrl,
+                    FactUrl = country.FactUrl,
+                    Continent = country.Continent
+                })
+                .ToListAsync();
+        }
+
         // Method to retrieve saved quiz progress for a user in one continent
         public async Task<QuizProgressDto> GetUserProgressAsync(
             string userId,

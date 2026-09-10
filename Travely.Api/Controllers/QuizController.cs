@@ -112,6 +112,16 @@ namespace Travely.Api.Controllers
             return Ok(count);
         }
 
+        // Endpoint to retrieve country cards for learning mode
+        [HttpGet("learning")]
+        public async Task<ActionResult<List<LearningCountryDto>>> GetLearningCountries(
+            [FromQuery] Continent continent)
+        {
+            var countries = await _quizService.GetLearningCountriesAsync(continent);
+
+            return Ok(countries);
+        }
+
         // Endpoint to retrieve saved quiz progress for the logged-in user in one continent
         [Authorize]
         [HttpGet("progress")]

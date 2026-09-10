@@ -66,7 +66,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
       <button
         className="navbar__brand"
         type="button"
-        onClick={() => navigate("/")}
+        onClick={() => navigate(isApp ? "/continents" : "/")}
       >
         TRAVELY
       </button>

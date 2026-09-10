@@ -107,6 +107,12 @@ namespace Travely.Application.Services
             return await _quizRepo.GetQuestionCountAsync(continent);
         }
 
+        // Method to retrieve country cards for learning mode
+        public async Task<List<LearningCountryDto>> GetLearningCountriesAsync(Continent continent)
+        {
+            return await _quizRepo.GetLearningCountriesAsync(continent);
+        }
+
         // Method to retrieve saved quiz progress for a user in one continent
         public async Task<QuizProgressDto> GetUserProgressAsync(
             string userId,

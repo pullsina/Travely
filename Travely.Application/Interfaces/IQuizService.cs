@@ -28,6 +28,9 @@ namespace Travely.Application.Interfaces
         // Count all quiz questions in the specified continent.
         Task<int> GetQuestionCountAsync(Continent continent);
 
+        // Get country cards for learning mode in the specified continent.
+        Task<List<LearningCountryDto>> GetLearningCountriesAsync(Continent continent);
+
         // Get saved quiz progress for a user in one continent.
         Task<QuizProgressDto> GetUserProgressAsync(
             string userId,

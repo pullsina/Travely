@@ -32,6 +32,9 @@ namespace Travely.Application.Interfaces
         // Abstraction to method for counting quiz questions in a continent
         Task<int> GetQuestionCountAsync(Continent continent);
 
+        // Abstraction to method for retrieving country cards for learning mode
+        Task<List<LearningCountryDto>> GetLearningCountriesAsync(Continent continent);
+
         // Abstraction to method for retrieving saved quiz progress for a user in one continent
         Task<QuizProgressDto> GetUserProgressAsync(
             string userId,

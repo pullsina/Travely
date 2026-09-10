@@ -117,6 +117,21 @@ export async function getQuestionCount(continent) {
 }
 
 // ---------------------------------------------
+// GET learning countries
+// ---------------------------------------------
+
+// This function retrieves all country cards for learning mode in one continent.
+export async function getLearningCountries(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/learning?${params.toString()}`, {
+    method: "GET",
+  });
+}
+
+// ---------------------------------------------
 // GET saved progress
 // ---------------------------------------------
 
@@ -172,6 +187,7 @@ export default {
   getRandomQuestion,
   getNextQuestion,
   getQuestionCount,
+  getLearningCountries,
   getProgress,
   getUserPoints,
   getUserPointsSummary,
