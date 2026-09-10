@@ -1,9 +1,10 @@
-//const API_BASE = "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
-
-  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "");
 
 //function to reuse in every request
 async function request(path, options = {}) {
+  if (!API_BASE) {
+    throw new Error("The API URL is not configured. Please contact support.");
+  }
   const headers = options.headers || {};
 
   //backend needs data to be in json
@@ -30,8 +31,7 @@ async function request(path, options = {}) {
       data = JSON.parse(text);
     }
   } catch {
-    //if response is not json, keep as text
-    data = text;
+    throw new Error("The server returned an unexpected response. Please try again later.");
   }
 
   if (!response.ok) {
@@ -39,6 +39,10 @@ async function request(path, options = {}) {
     const errorMessage =
       data?.message || data?.error || data?.title || "Something went wrong.";
     throw new Error(errorMessage);
+  }
+
+  if (response.status !== 204 && (!data || typeof data !== "object")) {
+    throw new Error("The server returned an unexpected response. Please try again later.");
   }
 
   return data;

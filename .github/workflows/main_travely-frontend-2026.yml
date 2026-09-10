@@ -26,6 +26,8 @@ jobs:
 
       - name: npm install, build, and test
         working-directory: ./travely-frontend
+        env:
+          VITE_API_BASE_URL: https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net
         run: |
           npm install
           npm run build --if-present
