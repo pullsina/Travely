@@ -100,7 +100,7 @@ function ContinentPage() {
             className="continent-page__card"
             key={continent.name}
             type="button"
-            onClick={() => navigate(`/game/${encodeURIComponent(continent.name)}`)}
+            onClick={() => navigate(`/mode/${encodeURIComponent(continent.name)}`)}
             style={{ backgroundImage: `url(${continent.image})` }}
           >
             <span className="continent-page__card-name">{continent.name}</span>
