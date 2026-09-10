@@ -21,7 +21,7 @@ function ProfilePage() {
   const [showUserInfoCard, setShowUserInfoCard] = useState(false);
   const [showUserResultsCard, setShowUserResultsCard] = useState(false);
   const [results, setResults] = useState([]);
-  const [points, setPoints] = useState(100);
+  const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ function ProfilePage() {
         const response = await getUserPoints();
 
         if (!ignore) {
-          setPoints(response?.points ?? 100);
+          setPoints(response?.points ?? null);
         }
       } catch (error) {
         console.error("Could not load points:", error);

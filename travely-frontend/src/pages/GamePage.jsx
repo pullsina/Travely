@@ -61,7 +61,7 @@ function GamePage() {
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
 
-  const [points, setPoints] = useState(100);
+  const [points, setPoints] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [question, setQuestion] = useState(null);
@@ -137,7 +137,7 @@ function GamePage() {
 
           setUsedQuestionIds(answeredQuestionIds);
           setQuestionNumber(answeredQuestionIds.length + 1);
-          setPoints(pointsResponse?.points ?? 100);
+          setPoints(pointsResponse?.points ?? null);
           setSavedProgress(progress);
         }
       } catch (error) {
