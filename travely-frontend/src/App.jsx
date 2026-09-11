@@ -10,6 +10,7 @@ import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
+import PracticePage from "./pages/PracticePage";
 
 function App() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -42,6 +43,7 @@ function App() {
           <Route path="/continents" element={<ContinentPage />} />
           <Route path="/mode/:continent" element={<ModePage />} />
           <Route path="/learning/:continent" element={<LearningPage />} />
+          <Route path="/practice/:continent" element={<PracticePage />} />
           {/* Game page takes a continent as a URL parameter. */}
           <Route path="/game/:continent" element={<GamePage />} />
           <Route path="/profile" element={<ProfilePage />} />
