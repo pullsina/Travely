@@ -75,7 +75,7 @@ function PracticePage() {
   const [practiceDirection, setPracticeDirection] = useState(
     practiceTypes[practiceMode] || "",
   );
-  const practiceType = practiceTypes[practiceMode] || null;
+  const practiceType = practiceDirection || null;
 
   // Use the custom hook to manage practice question state and actions
   // The hook returns various state variables and functions related to practice questions
@@ -100,8 +100,10 @@ function PracticePage() {
 
   // Function to choose a practice mode and save it in session storage
   function choosePracticeMode(nextPracticeMode) {
+    const nextDirection = practiceTypes[nextPracticeMode];
+
     setPracticeMode(nextPracticeMode);
-    setPracticeDirection(practiceTypes[nextPracticeMode]);
+    setPracticeDirection(nextDirection);
     window.sessionStorage.setItem(practiceModeStorageKey, nextPracticeMode);
   }
 
@@ -128,6 +130,18 @@ function PracticePage() {
     setPracticeMode(savedPracticeMode);
     setPracticeDirection(practiceTypes[savedPracticeMode] || "");
   }, [practiceModeStorageKey]);
+
+  function getCorrectAnswerText() {
+    if (!question) {
+      return "";
+    }
+
+    const correctAnswer = question.answers.find(
+      (answer) => answer.answerId === question.correctAnswerId,
+    );
+
+    return correctAnswer?.text || question.country;
+  }
 
   return (
     <main
@@ -336,7 +350,7 @@ function PracticePage() {
               <>
                 {isRevealed ? (
                   <p className="practice-question__feedback">
-                    Correct answer: {question.country}
+                    Correct answer: {getCorrectAnswerText()}
                   </p>
                 ) : (
                   <p
@@ -348,7 +362,7 @@ function PracticePage() {
                   >
                     {isCorrect
                       ? "Correct!"
-                      : `Not quite. Correct answer: ${question.country}`}
+                      : `Not quite. Correct answer: ${getCorrectAnswerText()}`}
                   </p>
                 )}
               </>
