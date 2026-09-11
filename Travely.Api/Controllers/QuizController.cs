@@ -102,6 +102,26 @@ namespace Travely.Api.Controllers
             return Ok(question);
         }
 
+        // Endpoint to retrieve the next practice question by continent and practice type
+        [HttpGet("practice/next")]
+        public async Task<ActionResult<PracticeQuestionDto>> GetNextPracticeQuestion(
+            [FromQuery] Continent continent,
+            [FromQuery] PracticeQuestionType type,
+            [FromQuery] List<int> excludedQuestionIds)
+        {
+            var question = await _quizService.GetNextPracticeQuestionAsync(
+                continent,
+                type,
+                excludedQuestionIds);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(question);
+        }
+
         // Endpoint to count all quiz questions in a continent
         [HttpGet("questions/count")]
         public async Task<ActionResult<int>> GetQuestionCount(

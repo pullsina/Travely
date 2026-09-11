@@ -29,6 +29,13 @@ namespace Travely.Application.Interfaces
             int numberOfOptions,
             List<int> excludedQuestionIds);
 
+        // Abstraction to method for retrieving the next practice question based on continent and practice type
+        Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
+            Continent continent,
+            PracticeQuestionType type,
+            int numberOfOptions,
+            List<int> excludedQuestionIds);
+
         // Abstraction to method for counting quiz questions in a continent
         Task<int> GetQuestionCountAsync(Continent continent);
 

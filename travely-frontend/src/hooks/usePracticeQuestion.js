@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
-import { getNextQuestion, getQuestionCount } from "../api/quizApi";
+import { getNextPracticeQuestion, getQuestionCount } from "../api/quizApi";
 
+// this function retrieves the saved practice state from sessionStorage for a given storage key.
 function getSavedPracticeState(storageKey) {
   const savedStateText = window.sessionStorage.getItem(storageKey);
-  return savedStateText ? JSON.parse(savedStateText) : null;
-}
 
-function usePracticeQuestion(continent) {
-  const storageKey = `travely-practice-flags-${continent}`;
+  if (!savedStateText) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(savedStateText);
+  } catch {
+    window.sessionStorage.removeItem(storageKey);
+    return null;
+  }
+}
+// This custom hook manages the state of practice questions for a given continent and practice type.
+function usePracticeQuestion(continent, practiceType) {
+  const storageKey = `travely-practice-${continent}-${practiceType || "none"}`;
   const savedState = getSavedPracticeState(storageKey);
 
   // Stores the current practice question from the backend
@@ -51,7 +62,7 @@ function usePracticeQuestion(continent) {
 
   const isCorrect =
     question && selectedAnswerId
-      ? selectedAnswerId === question.questionId
+      ? selectedAnswerId === question.correctAnswerId
       : false;
 
   // Used to show loading text/spinner while the question is loading
@@ -74,9 +85,13 @@ function usePracticeQuestion(continent) {
     setIsComplete(nextSavedState?.isComplete || false);
     setIsLoading(false);
     setError("");
-  }, [storageKey]);
+  }, [storageKey, practiceType]);
 
   async function loadNextQuestion() {
+    if (!practiceType) {
+      return;
+    }
+
     // Start loading and clear old errors
     setIsLoading(true);
     setError("");
@@ -98,7 +113,11 @@ function usePracticeQuestion(continent) {
 
       // Ask backend for a question from this continent,
       // but skip questions we already practiced
-      const nextQuestion = await getNextQuestion(continent, nextUsedQuestionIds);
+      const nextQuestion = await getNextPracticeQuestion(
+        continent,
+        practiceType,
+        nextUsedQuestionIds,
+      );
 
       if (!nextQuestion) {
         setQuestion(null);
@@ -250,7 +269,11 @@ function usePracticeQuestion(continent) {
 
     try {
       const count = await getQuestionCount(continent);
-      const firstQuestion = await getNextQuestion(continent, []);
+      const firstQuestion = await getNextPracticeQuestion(
+        continent,
+        practiceType,
+        [],
+      );
       const nextTotalQuestions = count || 0;
 
       setQuestion(firstQuestion);

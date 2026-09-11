@@ -208,6 +208,16 @@
   background: var(--color-surface);
 }
 
+.practice-question__text-question {
+  margin: 0 auto;
+  max-width: 620px;
+  color: var(--color-primary);
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: clamp(46px, 8vw, 82px);
+  font-weight: 700;
+  line-height: 0.95;
+}
+
 .practice-question__prompt {
   margin: 26px 0 0;
   color: var(--color-text);
@@ -265,6 +275,14 @@
 
 .practice-question__answer:disabled:hover {
   transform: none;
+}
+
+.practice-question__answer-image {
+  display: block;
+  width: 100%;
+  max-height: 76px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .practice-question__feedback {
