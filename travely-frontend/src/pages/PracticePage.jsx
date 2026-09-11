@@ -143,6 +143,16 @@ function PracticePage() {
     return correctAnswer?.text || question.country;
   }
 
+  function getCorrectAnswer() {
+    if (!question) {
+      return null;
+    }
+
+    return question.answers.find(
+      (answer) => answer.answerId === question.correctAnswerId,
+    );
+  }
+
   return (
     <main
       className="practice-page"
@@ -201,7 +211,11 @@ function PracticePage() {
                 className="practice-card__direction-button"
                 key={option.value}
                 type="button"
-                onClick={() => setPracticeDirection(option.value)}
+                onClick={() => {
+                  if (practiceMode === "capitals") {
+                    setPracticeDirection(option.value);
+                  }
+                }}
                 aria-pressed={practiceDirection === option.value}
               >
                 {option.label}
@@ -247,7 +261,11 @@ function PracticePage() {
                 className="practice-card__direction-button"
                 key={option.value}
                 type="button"
-                onClick={() => setPracticeDirection(option.value)}
+                onClick={() => {
+                  if (practiceMode === "flags") {
+                    setPracticeDirection(option.value);
+                  }
+                }}
                 aria-pressed={practiceDirection === option.value}
               >
                 {option.label}
@@ -352,17 +370,20 @@ function PracticePage() {
                   <p className="practice-question__feedback">
                     Correct answer: {getCorrectAnswerText()}
                   </p>
+                ) : isCorrect ? (
+                  <p className="practice-question__feedback">Correct!</p>
+                ) : practiceType === "CountryToFlag" ? (
+                  <div className="practice-question__feedback practice-question__feedback--incorrect">
+                    <span>Not quite. Correct answer:</span>
+                    <img
+                      className="practice-question__correct-answer-flag"
+                      src={getCorrectAnswer()?.imageUrl}
+                      alt={getCorrectAnswer()?.text}
+                    />
+                  </div>
                 ) : (
-                  <p
-                    className={
-                      isCorrect
-                        ? "practice-question__feedback"
-                        : "practice-question__feedback practice-question__feedback--incorrect"
-                    }
-                  >
-                    {isCorrect
-                      ? "Correct!"
-                      : `Not quite. Correct answer: ${getCorrectAnswerText()}`}
+                  <p className="practice-question__feedback practice-question__feedback--incorrect">
+                    Not quite. Correct answer: {getCorrectAnswerText()}
                   </p>
                 )}
               </>
