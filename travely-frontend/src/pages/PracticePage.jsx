@@ -51,6 +51,17 @@ const practiceTypes = {
   flags: "FlagToCountry",
 };
 
+const practiceDirectionOptions = {
+  capitals: [
+    { value: "CapitalToCountry", label: "Capital → Country" },
+    { value: "CountryToCapital", label: "Country → Capital" },
+  ],
+  flags: [
+    { value: "FlagToCountry", label: "Flag → Country" },
+    { value: "CountryToFlag", label: "Country → Flag" },
+  ],
+};
+
 function PracticePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -60,6 +71,9 @@ function PracticePage() {
   const practiceModeStorageKey = `travely-practice-mode-${currentContinent.apiValue}`;
   const [practiceMode, setPracticeMode] = useState(
     window.sessionStorage.getItem(practiceModeStorageKey),
+  );
+  const [practiceDirection, setPracticeDirection] = useState(
+    practiceTypes[practiceMode] || "",
   );
   const practiceType = practiceTypes[practiceMode] || null;
 
@@ -87,12 +101,14 @@ function PracticePage() {
   // Function to choose a practice mode and save it in session storage
   function choosePracticeMode(nextPracticeMode) {
     setPracticeMode(nextPracticeMode);
+    setPracticeDirection(practiceTypes[nextPracticeMode]);
     window.sessionStorage.setItem(practiceModeStorageKey, nextPracticeMode);
   }
 
   // Function to clear the practice mode and remove it from session storage
   function clearPracticeMode() {
     setPracticeMode(null);
+    setPracticeDirection("");
     window.sessionStorage.removeItem(practiceModeStorageKey);
   }
 
@@ -105,7 +121,12 @@ function PracticePage() {
 
   // Update the practice mode state when the component mounts or when the practiceModeStorageKey changes
   useEffect(() => {
-    setPracticeMode(window.sessionStorage.getItem(practiceModeStorageKey));
+    const savedPracticeMode = window.sessionStorage.getItem(
+      practiceModeStorageKey,
+    );
+
+    setPracticeMode(savedPracticeMode);
+    setPracticeDirection(practiceTypes[savedPracticeMode] || "");
   }, [practiceModeStorageKey]);
 
   return (
@@ -155,28 +176,70 @@ function PracticePage() {
           </p>
         </header>
 
-        <div className="practice-card__options">
-          <button
-            className="practice-card__button"
-            type="button"
-            onClick={() => {
-              choosePracticeMode("capitals");
-            }}
-            aria-pressed={practiceMode === "capitals"}
+        <div className="practice-card__switch-row">
+          <div
+            className="practice-card__direction-switch practice-card__direction-switch--left"
+            role="group"
+            aria-label="Choose capitals practice direction"
           >
-            Countries & Capitals
-          </button>
+            {practiceDirectionOptions.capitals.map((option) => (
+              <button
+                className="practice-card__direction-button"
+                key={option.value}
+                type="button"
+                onClick={() => setPracticeDirection(option.value)}
+                aria-pressed={practiceDirection === option.value}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
 
-          <button
-            className="practice-card__button"
-            type="button"
-            onClick={() => {
-              choosePracticeMode("flags");
-            }}
-            aria-pressed={practiceMode === "flags"}
+          <div
+            className="practice-card__options"
+            role="group"
+            aria-label="Choose practice type"
           >
-            Flags & Countries
-          </button>
+            <button
+              className="practice-card__button"
+              type="button"
+              onClick={() => {
+                choosePracticeMode("capitals");
+              }}
+              aria-pressed={practiceMode === "capitals"}
+            >
+              Capitals
+            </button>
+
+            <button
+              className="practice-card__button"
+              type="button"
+              onClick={() => {
+                choosePracticeMode("flags");
+              }}
+              aria-pressed={practiceMode === "flags"}
+            >
+              Flags
+            </button>
+          </div>
+
+          <div
+            className="practice-card__direction-switch practice-card__direction-switch--right"
+            role="group"
+            aria-label="Choose flags practice direction"
+          >
+            {practiceDirectionOptions.flags.map((option) => (
+              <button
+                className="practice-card__direction-button"
+                key={option.value}
+                type="button"
+                onClick={() => setPracticeDirection(option.value)}
+                aria-pressed={practiceDirection === option.value}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {isLoading && (
