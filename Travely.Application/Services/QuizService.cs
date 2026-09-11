@@ -101,6 +101,24 @@ namespace Travely.Application.Services
             return question;
         }
 
+        // Method to retrieve the next practice question based on continent, practice type, and excluded question IDs
+        public async Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
+            Continent continent,
+            PracticeQuestionType type,
+            List<int> excludedQuestionIds)
+        {
+            var question = await _quizRepo.GetNextPracticeQuestionAsync(
+                continent,
+                type,
+                8,
+                excludedQuestionIds);
+
+            if (question == null)
+                return null;
+
+            return question;
+        }
+
         // Method to count all quiz questions in a continent
         public async Task<int> GetQuestionCountAsync(Continent continent)
         {

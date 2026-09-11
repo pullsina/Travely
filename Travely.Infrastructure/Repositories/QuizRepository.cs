@@ -3,6 +3,7 @@ using Travely.Application.Interfaces;
 using Travely.Infrastructure.Data;
 using Travely.Infrastructure.Entities;
 using Travely.Shared.DTOs;
+using Travely.Shared.Entities;
 using Travely.Shared.Enums;
 
 namespace Travely.Infrastructure.Repositories
@@ -242,6 +243,105 @@ namespace Travely.Infrastructure.Repositories
                 },
                 Continent = question.Continent
             };
+        }
+
+        // Method to retrieve the next practice question based on continent and practice type
+        public async Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
+            Continent continent,
+            PracticeQuestionType type,
+            int numberOfOptions,
+            List<int> excludedQuestionIds)
+        {
+            var question = await _context.Countries
+                .Where(country => country.Continent == continent)
+                .Where(country => !excludedQuestionIds.Contains(country.Id))
+                .OrderBy(country => Guid.NewGuid())
+                .FirstOrDefaultAsync();
+
+            if (question == null)
+            {
+                return null;
+            }
+
+            var otherCountries = await _context.Countries
+                .Where(country => country.Continent == continent)
+                .Where(country => country.Id != question.Id)
+                .OrderBy(country => Guid.NewGuid())
+                .Take(numberOfOptions - 1)
+                .ToListAsync();
+
+            var answerCountries = otherCountries
+                .Append(question)
+                .OrderBy(_ => Guid.NewGuid())
+                .ToList();
+
+            var answers = answerCountries
+                .Select(country => CreatePracticeAnswer(country, type))
+                .ToList();
+
+            return new PracticeQuestionDto
+            {
+                QuestionId = question.Id,
+                Type = type,
+                QuestionText = GetPracticeQuestionText(question, type),
+                QuestionImageUrl = GetPracticeQuestionImageUrl(question, type),
+                Answers = answers,
+                CorrectAnswerId = question.Id,
+                Country = question.Name,
+                Capital = question.Capital,
+                Fact = question.Fact,
+                FlagUrl = question.FlagUrl,
+                FactUrl = question.FactUrl,
+                Continent = question.Continent
+            };
+        }
+
+        private static PracticeAnswerDto CreatePracticeAnswer(
+            Country country,
+            PracticeQuestionType type)
+        {
+            return type switch
+            {
+                PracticeQuestionType.CountryToFlag => new PracticeAnswerDto
+                {
+                    AnswerId = country.Id,
+                    ImageUrl = country.FlagUrl,
+                    Text = country.Name
+                },
+                PracticeQuestionType.CountryToCapital => new PracticeAnswerDto
+                {
+                    AnswerId = country.Id,
+                    Text = country.Capital
+                },
+                _ => new PracticeAnswerDto
+                {
+                    AnswerId = country.Id,
+                    Text = country.Name
+                }
+            };
+        }
+
+        private static string GetPracticeQuestionText(
+            Country country,
+            PracticeQuestionType type)
+        {
+            return type switch
+            {
+                PracticeQuestionType.FlagToCountry => "Which country has this flag?",
+                PracticeQuestionType.CountryToFlag => country.Name,
+                PracticeQuestionType.CapitalToCountry => country.Capital,
+                PracticeQuestionType.CountryToCapital => country.Name,
+                _ => string.Empty
+            };
+        }
+
+        private static string GetPracticeQuestionImageUrl(
+            Country country,
+            PracticeQuestionType type)
+        {
+            return type == PracticeQuestionType.FlagToCountry
+                ? country.FlagUrl
+                : string.Empty;
         }
 
         // Method to count all quiz questions in a continent

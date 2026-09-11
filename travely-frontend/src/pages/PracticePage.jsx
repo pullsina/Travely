@@ -46,6 +46,22 @@ const continentConfig = {
 
 const continentOptions = Object.values(continentConfig);
 
+const practiceTypes = {
+  capitals: "CapitalToCountry",
+  flags: "FlagToCountry",
+};
+
+const practiceDirectionOptions = {
+  capitals: [
+    { value: "CapitalToCountry", label: "Capital → Country" },
+    { value: "CountryToCapital", label: "Country → Capital" },
+  ],
+  flags: [
+    { value: "FlagToCountry", label: "Flag → Country" },
+    { value: "CountryToFlag", label: "Country → Flag" },
+  ],
+};
+
 function PracticePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -56,6 +72,10 @@ function PracticePage() {
   const [practiceMode, setPracticeMode] = useState(
     window.sessionStorage.getItem(practiceModeStorageKey),
   );
+  const [practiceDirection, setPracticeDirection] = useState(
+    practiceTypes[practiceMode] || "",
+  );
+  const practiceType = practiceTypes[practiceMode] || null;
 
   // Use the custom hook to manage practice question state and actions
   // The hook returns various state variables and functions related to practice questions
@@ -76,30 +96,37 @@ function PracticePage() {
     revealAnswer,
     restartPractice,
     selectAnswer,
-  } = usePracticeQuestion(currentContinent.apiValue);
+  } = usePracticeQuestion(currentContinent.apiValue, practiceType);
 
   // Function to choose a practice mode and save it in session storage
   function choosePracticeMode(nextPracticeMode) {
     setPracticeMode(nextPracticeMode);
+    setPracticeDirection(practiceTypes[nextPracticeMode]);
     window.sessionStorage.setItem(practiceModeStorageKey, nextPracticeMode);
   }
 
   // Function to clear the practice mode and remove it from session storage
   function clearPracticeMode() {
     setPracticeMode(null);
+    setPracticeDirection("");
     window.sessionStorage.removeItem(practiceModeStorageKey);
   }
 
   // Load the next question when the continent changes or when there is no current question
   useEffect(() => {
-    if (!question) {
+    if (practiceType && !question && !isComplete) {
       loadNextQuestion();
     }
-  }, [currentContinent.apiValue, question]);
+  }, [currentContinent.apiValue, practiceType, question, isComplete]);
 
   // Update the practice mode state when the component mounts or when the practiceModeStorageKey changes
   useEffect(() => {
-    setPracticeMode(window.sessionStorage.getItem(practiceModeStorageKey));
+    const savedPracticeMode = window.sessionStorage.getItem(
+      practiceModeStorageKey,
+    );
+
+    setPracticeMode(savedPracticeMode);
+    setPracticeDirection(practiceTypes[savedPracticeMode] || "");
   }, [practiceModeStorageKey]);
 
   return (
@@ -149,28 +176,70 @@ function PracticePage() {
           </p>
         </header>
 
-        <div className="practice-card__options">
-          <button
-            className="practice-card__button"
-            type="button"
-            onClick={() => {
-              choosePracticeMode("capitals");
-            }}
-            aria-pressed={practiceMode === "capitals"}
+        <div className="practice-card__switch-row">
+          <div
+            className="practice-card__direction-switch practice-card__direction-switch--left"
+            role="group"
+            aria-label="Choose capitals practice direction"
           >
-            Countries & Capitals
-          </button>
+            {practiceDirectionOptions.capitals.map((option) => (
+              <button
+                className="practice-card__direction-button"
+                key={option.value}
+                type="button"
+                onClick={() => setPracticeDirection(option.value)}
+                aria-pressed={practiceDirection === option.value}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
 
-          <button
-            className="practice-card__button"
-            type="button"
-            onClick={() => {
-              choosePracticeMode("flags");
-            }}
-            aria-pressed={practiceMode === "flags"}
+          <div
+            className="practice-card__options"
+            role="group"
+            aria-label="Choose practice type"
           >
-            Flags & Countries
-          </button>
+            <button
+              className="practice-card__button"
+              type="button"
+              onClick={() => {
+                choosePracticeMode("capitals");
+              }}
+              aria-pressed={practiceMode === "capitals"}
+            >
+              Capitals
+            </button>
+
+            <button
+              className="practice-card__button"
+              type="button"
+              onClick={() => {
+                choosePracticeMode("flags");
+              }}
+              aria-pressed={practiceMode === "flags"}
+            >
+              Flags
+            </button>
+          </div>
+
+          <div
+            className="practice-card__direction-switch practice-card__direction-switch--right"
+            role="group"
+            aria-label="Choose flags practice direction"
+          >
+            {practiceDirectionOptions.flags.map((option) => (
+              <button
+                className="practice-card__direction-button"
+                key={option.value}
+                type="button"
+                onClick={() => setPracticeDirection(option.value)}
+                aria-pressed={practiceDirection === option.value}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {isLoading && (
@@ -182,17 +251,11 @@ function PracticePage() {
           </p>
         )}
 
-        {practiceMode === "capitals" && (
-          <p className="practice-page__message">
-            Countries and capitals practice is coming next.
-          </p>
-        )}
-
-        {practiceMode === "flags" && isComplete && (
+        {practiceMode && isComplete && (
           <section className="practice-complete">
-            <h2>Flags practice complete!</h2>
+            <h2>Practice complete!</h2>
             <p>
-              You practiced all {totalQuestions} flags in{" "}
+              You practiced all {totalQuestions} questions in{" "}
               {currentContinent.label}.
             </p>
 
@@ -216,19 +279,27 @@ function PracticePage() {
           </section>
         )}
 
-        {practiceMode === "flags" && !isComplete && question && (
+        {practiceMode && !isComplete && question && (
           <section className="practice-question">
             <p className="practice-question__count">
               {questionNumber} / {totalQuestions || questionNumber}
             </p>
 
-            <img
-              className="practice-question__flag"
-              src={question.flagUrl}
-              alt={`${question.country} flag`}
-            />
+            {question.questionImageUrl ? (
+              <img
+                className="practice-question__flag"
+                src={question.questionImageUrl}
+                alt={`${question.country} flag`}
+              />
+            ) : (
+              <p className="practice-question__text-question">
+                {question.questionText}
+              </p>
+            )}
             <p className="practice-question__prompt">
-              Which country has this flag?
+              {question.questionImageUrl
+                ? question.questionText
+                : "Choose the correct answer."}
             </p>
 
             <div className="practice-question__answers">
@@ -240,15 +311,23 @@ function PracticePage() {
                   onClick={() => selectAnswer(answer.answerId)}
                   disabled={isAnswered}
                   data-correct={
-                    isAnswered && answer.answerId === question.questionId
+                    isAnswered && answer.answerId === question.correctAnswerId
                   }
                   data-incorrect={
                     isAnswered &&
                     selectedAnswerId === answer.answerId &&
-                    answer.answerId !== question.questionId
+                    answer.answerId !== question.correctAnswerId
                   }
                 >
-                  {answer.country}
+                  {answer.imageUrl ? (
+                    <img
+                      className="practice-question__answer-image"
+                      src={answer.imageUrl}
+                      alt={answer.text}
+                    />
+                  ) : (
+                    answer.text
+                  )}
                 </button>
               ))}
             </div>
@@ -317,7 +396,7 @@ function PracticePage() {
                   />
                   <div>
                     <h2>{question.country}</h2>
-                    <p>Capital: {question.question}</p>
+                    <p>Capital: {question.capital}</p>
                   </div>
                 </div>
 

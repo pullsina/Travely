@@ -102,6 +102,38 @@ export async function getNextQuestion(continent, excludedQuestionIds = []) {
 }
 
 // ---------------------------------------------
+// GET next practice question
+// ---------------------------------------------
+
+// This function retrieves the next practice question for a continent and practice type.
+export async function getNextPracticeQuestion(
+  continent,
+  type,
+  excludedQuestionIds = [],
+) {
+  const params = new URLSearchParams({
+    continent,
+    type,
+  });
+
+  excludedQuestionIds.forEach((questionId) => {
+    params.append("excludedQuestionIds", questionId);
+  });
+
+  try {
+    return await request(`/api/quiz/practice/next?${params.toString()}`, {
+      method: "GET",
+    });
+  } catch (error) {
+    if (error.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
+}
+
+// ---------------------------------------------
 // GET question count
 // ---------------------------------------------
 
@@ -186,6 +218,7 @@ export default {
   getQuestion,
   getRandomQuestion,
   getNextQuestion,
+  getNextPracticeQuestion,
   getQuestionCount,
   getLearningCountries,
   getProgress,
