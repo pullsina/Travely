@@ -75,7 +75,7 @@ function PracticePage() {
   const [practiceDirection, setPracticeDirection] = useState(
     practiceTypes[practiceMode] || "",
   );
-  const practiceType = practiceTypes[practiceMode] || null;
+  const practiceType = practiceDirection || null;
 
   // Use the custom hook to manage practice question state and actions
   // The hook returns various state variables and functions related to practice questions
@@ -100,8 +100,10 @@ function PracticePage() {
 
   // Function to choose a practice mode and save it in session storage
   function choosePracticeMode(nextPracticeMode) {
+    const nextDirection = practiceTypes[nextPracticeMode];
+
     setPracticeMode(nextPracticeMode);
-    setPracticeDirection(practiceTypes[nextPracticeMode]);
+    setPracticeDirection(nextDirection);
     window.sessionStorage.setItem(practiceModeStorageKey, nextPracticeMode);
   }
 
@@ -128,6 +130,28 @@ function PracticePage() {
     setPracticeMode(savedPracticeMode);
     setPracticeDirection(practiceTypes[savedPracticeMode] || "");
   }, [practiceModeStorageKey]);
+
+  function getCorrectAnswerText() {
+    if (!question) {
+      return "";
+    }
+
+    const correctAnswer = question.answers.find(
+      (answer) => answer.answerId === question.correctAnswerId,
+    );
+
+    return correctAnswer?.text || question.country;
+  }
+
+  function getCorrectAnswer() {
+    if (!question) {
+      return null;
+    }
+
+    return question.answers.find(
+      (answer) => answer.answerId === question.correctAnswerId,
+    );
+  }
 
   return (
     <main
@@ -187,7 +211,11 @@ function PracticePage() {
                 className="practice-card__direction-button"
                 key={option.value}
                 type="button"
-                onClick={() => setPracticeDirection(option.value)}
+                onClick={() => {
+                  if (practiceMode === "capitals") {
+                    setPracticeDirection(option.value);
+                  }
+                }}
                 aria-pressed={practiceDirection === option.value}
               >
                 {option.label}
@@ -233,7 +261,11 @@ function PracticePage() {
                 className="practice-card__direction-button"
                 key={option.value}
                 type="button"
-                onClick={() => setPracticeDirection(option.value)}
+                onClick={() => {
+                  if (practiceMode === "flags") {
+                    setPracticeDirection(option.value);
+                  }
+                }}
                 aria-pressed={practiceDirection === option.value}
               >
                 {option.label}
@@ -336,19 +368,22 @@ function PracticePage() {
               <>
                 {isRevealed ? (
                   <p className="practice-question__feedback">
-                    Correct answer: {question.country}
+                    Correct answer: {getCorrectAnswerText()}
                   </p>
+                ) : isCorrect ? (
+                  <p className="practice-question__feedback">Correct!</p>
+                ) : practiceType === "CountryToFlag" ? (
+                  <div className="practice-question__feedback practice-question__feedback--incorrect">
+                    <span>Not quite. Correct answer:</span>
+                    <img
+                      className="practice-question__correct-answer-flag"
+                      src={getCorrectAnswer()?.imageUrl}
+                      alt={getCorrectAnswer()?.text}
+                    />
+                  </div>
                 ) : (
-                  <p
-                    className={
-                      isCorrect
-                        ? "practice-question__feedback"
-                        : "practice-question__feedback practice-question__feedback--incorrect"
-                    }
-                  >
-                    {isCorrect
-                      ? "Correct!"
-                      : `Not quite. Correct answer: ${question.country}`}
+                  <p className="practice-question__feedback practice-question__feedback--incorrect">
+                    Not quite. Correct answer: {getCorrectAnswerText()}
                   </p>
                 )}
               </>
