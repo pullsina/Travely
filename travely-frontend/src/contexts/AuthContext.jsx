@@ -59,14 +59,9 @@ export function AuthProvider({ children }) {
   }
 
   // Function for updating user info
-  async function updateUserInfo(userInfo) {
+  async function updateCurrentUser(userInfo) {
     const updatedUser = await updateUserInfo(userInfo);
-
-    if (updatedUser.success) {
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    }
-
+    setUser(updatedUser);
     return updatedUser;
   }
 
@@ -78,7 +73,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: !!user,
         login,
         register,
-        updateUserInfo,
+        updateCurrentUser,
         logout,
       }}
     >
