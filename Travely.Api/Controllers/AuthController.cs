@@ -97,11 +97,11 @@ namespace Travely.Api.Controllers
             return Ok(new { userId, username = user.UserName, email = user.Email });
         }
 
-        // Endpoint for changing user information (username, email)
+        // Endpoint for updating user information (username, email)
 
         [Authorize]
-        [HttpPost("change-info")]
-        public async Task<IActionResult> ChangeInfo([FromBody] ChangeInfoDto dto)
+        [HttpPut("update-info")]
+        public async Task<IActionResult> UpdateInfo([FromBody] UpdateInfoDto dto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -111,7 +111,7 @@ namespace Travely.Api.Controllers
                     Message = "You are not logged in."
                 });
             }
-            var result = await _authService.ChangeInfoAsync(userId, dto);
+            var result = await _authService.UpdateInfoAsync(userId, dto);
             if (!result.Success)
             {
                 return BadRequest(new ApiErrorDto
