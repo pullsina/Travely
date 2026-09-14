@@ -23,8 +23,8 @@ function ProfilePage() {
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();  // returnerar ett user-objekt
+  const navigate = useNavigate(); // returnerar navigate-funktion 
 
   // Function for loading user points
   useEffect(() => {
