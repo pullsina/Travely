@@ -42,16 +42,16 @@ export function AuthProvider({ children }) {
   }
 
   //userData to get users input
- async function register(userData) {
-   const result = await apiRegister(userData);
+  async function register(userData) {
+    const result = await apiRegister(userData);
 
-   if (result.success) {
-     const currentUser = await getCurrentUser();
-     setUser(currentUser);
-   }
+    if (result.success) {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    }
 
-   return result;
- }
+    return result;
+  }
 
   async function logout() {
     await apiLogout();
@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: !!user,
         login,
         register,
-        updateUserInfo: updateUserInfo,
+        updateUserInfo,
         logout,
       }}
     >
