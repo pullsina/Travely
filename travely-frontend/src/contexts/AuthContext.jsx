@@ -4,6 +4,7 @@ import {
   register as apiRegister,
   logout as apiLogout,
   getCurrentUser,
+  updateUserInfo,
 } from "../api/authApi";
 
 //context shares user's state globally throughout the app. useState is used for local state
@@ -57,6 +58,18 @@ export function AuthProvider({ children }) {
     setUser(null);
   }
 
+  // Function for updating user info
+  async function updateUserInfo(userInfo) {
+    const updatedUser = await updateUserInfo(userInfo);
+
+    if (updatedUser.success) {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    }
+
+    return updatedUser;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -65,6 +78,7 @@ export function AuthProvider({ children }) {
         isAuthenticated: !!user,
         login,
         register,
+        updateUserInfo: updateUserInfo,
         logout,
       }}
     >
