@@ -17,7 +17,7 @@ function UserResultsCard({ results, onClose }) {
           onClick={onClose}
           aria-label="Close user results card"
         >
-          X
+          Close
         </button>
       </div>
       {resultEntries.map((progress) => {

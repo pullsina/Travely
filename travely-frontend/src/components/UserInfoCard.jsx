@@ -52,7 +52,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
             onClick={onClose}
             aria-label="Close user info card"
           >
-            X
+            Close
           </button>
         </div>
       </div>
