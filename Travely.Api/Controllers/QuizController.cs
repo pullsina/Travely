@@ -106,7 +106,7 @@ namespace Travely.Api.Controllers
         [HttpGet("practice/next")]
         public async Task<ActionResult<PracticeQuestionDto>> GetNextPracticeQuestion(
             [FromQuery] Continent continent,
-            [FromQuery] PracticeQuestionType type,
+            [FromQuery] QuestionType type,
             [FromQuery] List<int> excludedQuestionIds)
         {
             var question = await _quizService.GetNextPracticeQuestionAsync(

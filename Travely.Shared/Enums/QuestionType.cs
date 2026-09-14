@@ -1,8 +1,6 @@
 namespace Travely.Shared.Enums
 {
-
-    // enums for switching between practice question types
-    public enum PracticeQuestionType
+    public enum QuestionType
     {
         FlagToCountry,
         CountryToFlag,

@@ -19,6 +19,9 @@ import {
 } from "../api/quizApi";
 import "./GamePage.css";
 
+// ---------------------------
+// Continent configuration
+// ---------------------------
 const continentConfig = {
   Europe: { label: "Europe", apiValue: "Europe", mapImage: europeOutline },
   Africa: { label: "Africa", apiValue: "Africa", mapImage: africaOutline },
@@ -36,6 +39,9 @@ const continentConfig = {
   },
 };
 
+// ---------------------------
+// Labels from backend enums
+// ---------------------------
 const difficultyLabels = {
   0: "Easy",
   1: "Medium",
@@ -45,6 +51,34 @@ const difficultyLabels = {
   Hard: "Hard",
 };
 
+const questionTypeLabels = {
+  0: "FlagToCountry",
+  1: "CountryToFlag",
+  2: "CapitalToCountry",
+  3: "CountryToCapital",
+  FlagToCountry: "FlagToCountry",
+  CountryToFlag: "CountryToFlag",
+  CapitalToCountry: "CapitalToCountry",
+  CountryToCapital: "CountryToCapital",
+};
+
+const questionPromptTexts = {
+  FlagToCountry: "Which country has this flag?",
+  CountryToFlag: "Which flag belongs to this country?",
+  CapitalToCountry: "Which country has this capital?",
+  CountryToCapital: "What is the capital of this country?",
+};
+
+// ---------------------------
+// Hint and timer settings
+// ---------------------------
+const capitalHintQuestionTypes = new Set(["FlagToCountry", "CountryToFlag"]);
+
+const QUESTION_TIME_LIMIT = 15;
+
+// ---------------------------
+// Small helpers
+// ---------------------------
 function haveSameQuestionIds(firstIds = [], secondIds = []) {
   if (firstIds.length !== secondIds.length) {
     return false;
@@ -53,32 +87,54 @@ function haveSameQuestionIds(firstIds = [], secondIds = []) {
   return firstIds.every((id, index) => id === secondIds[index]);
 }
 
-// The GamePage component manages the state and logic for the quiz game, including loading questions, handling user answers, and displaying results.
+// ---------------------------
+// Page component
+// ---------------------------
 function GamePage() {
+  // ---------------------------
+  // Router and selected continent
+  // ---------------------------
   const navigate = useNavigate();
   const { continent } = useParams();
   const selectedContinent = decodeURIComponent(continent || "Europe");
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
 
+  // ---------------------------
+  // Game state
+  // ---------------------------
   const [points, setPoints] = useState(null);
   const [questionNumber, setQuestionNumber] = useState(1);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [question, setQuestion] = useState(null);
   const [usedQuestionIds, setUsedQuestionIds] = useState([]);
+
+  // ---------------------------
+  // Hint and answer state
+  // ---------------------------
   const [hintType, setHintType] = useState("map");
   const [usedHints, setUsedHints] = useState([]);
   const [selectedAnswerId, setSelectedAnswerId] = useState(null);
   const [answerResult, setAnswerResult] = useState(null);
   const [showCountryInfo, setShowCountryInfo] = useState(false);
+
+  // ---------------------------
+  // Progress and UI state
+  // ---------------------------
   const [savedProgress, setSavedProgress] = useState(null);
   const [isContinentComplete, setIsContinentComplete] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isProgressLoaded, setIsProgressLoaded] = useState(false);
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
+
+  // Current question is saved so refresh does not change the active question.
   const currentQuestionStorageKey = `travely-current-question-${currentContinent.apiValue}`;
 
+  // ---------------------------
+  // Derived values for rendering
+  // ---------------------------
   const visibleTotalQuestions = totalQuestions || questionNumber;
   const possibleQuestionPoints = question
     ? Math.max(question.points - usedHints.length, 0)
@@ -86,6 +142,9 @@ function GamePage() {
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
 
+  // ---------------------------
+  // Load total question count
+  // ---------------------------
   useEffect(() => {
     let ignore = false;
 
@@ -110,6 +169,9 @@ function GamePage() {
     };
   }, [currentContinent.apiValue]);
 
+  // ---------------------------
+  // Load saved user progress and points
+  // ---------------------------
   useEffect(() => {
     let ignore = false;
 
@@ -123,6 +185,7 @@ function GamePage() {
       setSelectedAnswerId(null);
       setAnswerResult(null);
       setShowCountryInfo(false);
+      setTimeLeft(QUESTION_TIME_LIMIT);
       setSavedProgress(null);
       setIsContinentComplete(false);
       setGameError("");
@@ -158,6 +221,9 @@ function GamePage() {
     };
   }, [currentContinent.apiValue]);
 
+  // ---------------------------
+  // Load or restore the current question
+  // ---------------------------
   useEffect(() => {
     let ignore = false;
 
@@ -165,7 +231,6 @@ function GamePage() {
       return undefined;
     }
 
-    // This effect loads a new question whenever the continent or used question IDs change.
     async function loadQuestion() {
       setIsLoading(true);
       setGameError("");
@@ -191,6 +256,7 @@ function GamePage() {
               setHintType(savedQuestionState.hintType || "map");
               setUsedHints(savedQuestionState.usedHints || []);
               setSelectedAnswerId(savedQuestionState.selectedAnswerId || null);
+              setTimeLeft(savedQuestionState.timeLeft || QUESTION_TIME_LIMIT);
             }
 
             return;
@@ -214,6 +280,7 @@ function GamePage() {
 
           setIsContinentComplete(false);
           setQuestion(nextQuestion);
+          setTimeLeft(QUESTION_TIME_LIMIT);
         }
       } catch (error) {
         if (!ignore) {
@@ -238,6 +305,9 @@ function GamePage() {
     usedQuestionIds,
   ]);
 
+  // ---------------------------
+  // Save current question state for refresh
+  // ---------------------------
   useEffect(() => {
     if (!isProgressLoaded || !question || answerResult) {
       return;
@@ -251,6 +321,7 @@ function GamePage() {
         hintType,
         usedHints,
         selectedAnswerId,
+        timeLeft,
       }),
     );
   }, [
@@ -260,11 +331,34 @@ function GamePage() {
     isProgressLoaded,
     question,
     selectedAnswerId,
+    timeLeft,
     usedHints,
     usedQuestionIds,
   ]);
 
-  // This effect shows the country information after a delay when an answer is submitted.
+  // ---------------------------
+  // Question timer
+  // ---------------------------
+  useEffect(() => {
+    if (!question || answerResult || showCountryInfo || isContinentComplete) {
+      return undefined;
+    }
+
+    if (timeLeft <= 0) {
+      handleSubmit(-1);
+      return undefined;
+    }
+
+    const timerId = window.setTimeout(() => {
+      setTimeLeft((currentTime) => Math.max(currentTime - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timerId);
+  }, [answerResult, isContinentComplete, question, showCountryInfo, timeLeft]);
+
+  // ---------------------------
+  // Show country info after submitted answer
+  // ---------------------------
   useEffect(() => {
     if (!answerResult) {
       return undefined;
@@ -277,7 +371,9 @@ function GamePage() {
     return () => window.clearTimeout(timerId);
   }, [answerResult]);
 
-  // This function handles the selection of hints, updating the hint type and deducting points if a new hint is used.
+  // ---------------------------
+  // Event handlers
+  // ---------------------------
   function handleHint(nextHintType) {
     setHintType(nextHintType);
 
@@ -288,7 +384,6 @@ function GamePage() {
     setUsedHints((currentHints) => [...currentHints, nextHintType]);
   }
 
-  // This function handles the selection of an answer, updating the selected answer ID and clearing any previous submission errors.
   function handleSelectAnswer(answerId) {
     if (isSubmitted) {
       return;
@@ -298,13 +393,17 @@ function GamePage() {
     setSubmitError("");
   }
 
-  // This function handles the submission of an answer, sending it to the API and updating the state with the result.
-  async function handleSubmit() {
+  async function handleSubmit(answerIdOverride) {
     if (!question) {
       return;
     }
 
-    if (!selectedAnswerId) {
+    const answerIdToSubmit =
+      typeof answerIdOverride === "number"
+        ? answerIdOverride
+        : selectedAnswerId;
+
+    if (!answerIdToSubmit) {
       setSubmitError("Please choose an answer first.");
       return;
     }
@@ -312,7 +411,7 @@ function GamePage() {
     try {
       const result = await submitAnswers(
         question.questionId,
-        selectedAnswerId,
+        answerIdToSubmit,
         usedHints.length,
       );
       window.sessionStorage.removeItem(currentQuestionStorageKey);
@@ -323,13 +422,12 @@ function GamePage() {
     }
   }
 
-  // This function handles moving to the next question, updating the state and navigating back to the continents page if all questions have been answered.
   function handleNextQuestion() {
     if (!question) {
       return;
     }
 
-    // Reset state for the next question
+    // Reset active-question state before loading the next one.
     window.sessionStorage.removeItem(currentQuestionStorageKey);
     setUsedQuestionIds((currentIds) => [...currentIds, question.questionId]);
     setQuestionNumber((currentNumber) => currentNumber + 1);
@@ -338,19 +436,37 @@ function GamePage() {
     setSelectedAnswerId(null);
     setAnswerResult(null);
     setShowCountryInfo(false);
+    setTimeLeft(QUESTION_TIME_LIMIT);
     setIsContinentComplete(false);
     setSubmitError("");
   }
 
-  // Prepare the answers for the QuestionCard component, mapping them to the required format.
+  // ---------------------------
+  // Data prepared for child components
+  // ---------------------------
   const answers =
     question?.answers.map((answer) => ({
       id: answer.answerId,
-      label: answer.country,
+      label: answer.text || answer.country,
+      imageUrl: answer.imageUrl,
     })) || [];
-  // Determine the correct country name for display in the CountryInfoCard component.
-  const correctCountry = question?.country || "Unknown country";
 
+  const correctCountry = question?.country || "Unknown country";
+  const questionText = question?.questionText || question?.question;
+  const questionType = questionTypeLabels[question?.questionType];
+  const promptText =
+    questionPromptTexts[questionType] ||
+    question?.questionText ||
+    "Choose the correct answer.";
+  const primaryHintType = capitalHintQuestionTypes.has(questionType)
+    ? "capital"
+    : "flag";
+  const primaryHintLabel =
+    primaryHintType === "capital" ? "Capital - 1 p" : "Flag - 1 p";
+
+  // ---------------------------
+  // Render
+  // ---------------------------
   return (
     <main className="game-page">
       <Navbar variant="app" points={points} />
@@ -389,7 +505,7 @@ function GamePage() {
         <CountryInfoCard
           country={{
             name: correctCountry,
-            capital: question.question,
+            capital: question.capital || question.question,
             funFact: question.fact,
             flagUrl: question.flagUrl,
             factImageUrl: question.factUrl,
@@ -412,22 +528,29 @@ function GamePage() {
           totalQuestions={visibleTotalQuestions}
           difficulty={difficultyLabels[question.difficulty] || "Easy"}
           points={possibleQuestionPoints}
+          timeLeft={timeLeft}
           capital={question.question}
+          questionText={questionText}
+          questionImageUrl={question.questionImageUrl}
+          promptText={promptText}
           answers={answers}
           selectedAnswerId={selectedAnswerId}
           correctAnswerId={answerResult?.correctAnswerId}
           hintType={hintType}
           mapImage={currentContinent.mapImage}
           flagUrl={question.flagUrl}
+          capitalHint={question.capital || question.question}
           factImageUrl={question.factUrl}
           factText={question.fact}
+          primaryHintType={primaryHintType}
+          primaryHintLabel={primaryHintLabel}
           isSubmitted={isSubmitted}
           isCorrect={isCorrect}
           submitError={submitError}
           onSelectAnswer={handleSelectAnswer}
-          onFlagHint={() => handleHint("flag")}
+          onPrimaryHint={() => handleHint(primaryHintType)}
           onFactHint={() => handleHint("fact")}
-          onSubmit={handleSubmit}
+          onSubmit={() => handleSubmit()}
         />
       ) : null}
     </main>

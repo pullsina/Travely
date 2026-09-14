@@ -207,11 +207,11 @@
 
 .learning-country-list__item img {
   width: 34px;
-  height: 24px;
+  aspect-ratio: 4 / 3;
   flex: 0 0 auto;
   border: 1px solid rgba(79, 232, 0, 0.55);
   border-radius: 3px;
-  object-fit: cover;
+  object-fit: contain;
   background: var(--color-surface);
 }
 
@@ -261,10 +261,10 @@
 
 .learning-card__flag {
   width: 150px;
-  height: 96px;
+  aspect-ratio: 4 / 3;
   border: 2px solid var(--color-primary);
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
   background: var(--color-surface);
 }
 

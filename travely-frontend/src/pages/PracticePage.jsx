@@ -7,6 +7,8 @@ import europeBackground from "../assets/continent-backgrounds/europe_bg.png";
 import northAmericaBackground from "../assets/continent-backgrounds/north_america_bg.png";
 import oceaniaBackground from "../assets/continent-backgrounds/oceania_bg.png";
 import southAmericaBackground from "../assets/continent-backgrounds/south_amerca_bg.png";
+import correctFeedbackIcon from "../assets/feddback-icons/travely-correct-feedback.svg";
+import wrongFeedbackIcon from "../assets/feddback-icons/travely-wrong-feedback.svg";
 import "./PracticePage.css";
 
 // Configuration for each continent, including the label, API value, and background image
@@ -53,13 +55,31 @@ const practiceTypes = {
 
 const practiceDirectionOptions = {
   capitals: [
-    { value: "CapitalToCountry", label: "Capital → Country" },
-    { value: "CountryToCapital", label: "Country → Capital" },
+    { value: "CapitalToCountry", label: "Capital" },
+    { value: "CountryToCapital", label: "Country" },
   ],
   flags: [
-    { value: "FlagToCountry", label: "Flag → Country" },
-    { value: "CountryToFlag", label: "Country → Flag" },
+    { value: "FlagToCountry", label: "Flag" },
+    { value: "CountryToFlag", label: "Country" },
   ],
+};
+
+const questionTypeLabels = {
+  0: "FlagToCountry",
+  1: "CountryToFlag",
+  2: "CapitalToCountry",
+  3: "CountryToCapital",
+  FlagToCountry: "FlagToCountry",
+  CountryToFlag: "CountryToFlag",
+  CapitalToCountry: "CapitalToCountry",
+  CountryToCapital: "CountryToCapital",
+};
+
+const practicePromptTexts = {
+  FlagToCountry: "Which country has this flag?",
+  CountryToFlag: "Which flag belongs to this country?",
+  CapitalToCountry: "Which country has this capital?",
+  CountryToCapital: "What is the capital of this country?",
 };
 
 function PracticePage() {
@@ -69,11 +89,15 @@ function PracticePage() {
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
   const practiceModeStorageKey = `travely-practice-mode-${currentContinent.apiValue}`;
-  const [practiceMode, setPracticeMode] = useState(
-    window.sessionStorage.getItem(practiceModeStorageKey),
+  const practiceDirectionStorageKey = `travely-practice-direction-${currentContinent.apiValue}`;
+  const savedPracticeMode = window.sessionStorage.getItem(
+    practiceModeStorageKey,
   );
+  const [practiceMode, setPracticeMode] = useState(savedPracticeMode);
   const [practiceDirection, setPracticeDirection] = useState(
-    practiceTypes[practiceMode] || "",
+    window.sessionStorage.getItem(practiceDirectionStorageKey) ||
+      practiceTypes[savedPracticeMode] ||
+      "",
   );
   const practiceType = practiceDirection || null;
 
@@ -86,7 +110,6 @@ function PracticePage() {
     selectedAnswerId,
     isAnswered,
     isCorrect,
-    isRevealed,
     showInfo,
     isComplete,
     isLoading,
@@ -105,6 +128,7 @@ function PracticePage() {
     setPracticeMode(nextPracticeMode);
     setPracticeDirection(nextDirection);
     window.sessionStorage.setItem(practiceModeStorageKey, nextPracticeMode);
+    window.sessionStorage.setItem(practiceDirectionStorageKey, nextDirection);
   }
 
   // Function to clear the practice mode and remove it from session storage
@@ -112,6 +136,7 @@ function PracticePage() {
     setPracticeMode(null);
     setPracticeDirection("");
     window.sessionStorage.removeItem(practiceModeStorageKey);
+    window.sessionStorage.removeItem(practiceDirectionStorageKey);
   }
 
   // Load the next question when the continent changes or when there is no current question
@@ -126,32 +151,23 @@ function PracticePage() {
     const savedPracticeMode = window.sessionStorage.getItem(
       practiceModeStorageKey,
     );
+    const savedPracticeDirection = window.sessionStorage.getItem(
+      practiceDirectionStorageKey,
+    );
 
     setPracticeMode(savedPracticeMode);
-    setPracticeDirection(practiceTypes[savedPracticeMode] || "");
-  }, [practiceModeStorageKey]);
-
-  function getCorrectAnswerText() {
-    if (!question) {
-      return "";
-    }
-
-    const correctAnswer = question.answers.find(
-      (answer) => answer.answerId === question.correctAnswerId,
+    setPracticeDirection(
+      savedPracticeDirection || practiceTypes[savedPracticeMode] || "",
     );
+  }, [practiceDirectionStorageKey, practiceModeStorageKey]);
 
-    return correctAnswer?.text || question.country;
+  function choosePracticeDirection(nextDirection) {
+    setPracticeDirection(nextDirection);
+    window.sessionStorage.setItem(practiceDirectionStorageKey, nextDirection);
   }
 
-  function getCorrectAnswer() {
-    if (!question) {
-      return null;
-    }
-
-    return question.answers.find(
-      (answer) => answer.answerId === question.correctAnswerId,
-    );
-  }
+  const currentQuestionType =
+    questionTypeLabels[question?.questionType] || practiceType;
 
   return (
     <main
@@ -210,15 +226,19 @@ function PracticePage() {
               <button
                 className="practice-card__direction-button"
                 key={option.value}
+                title={`Switch between ${option.label.toLowerCase()} questions`}
                 type="button"
                 onClick={() => {
                   if (practiceMode === "capitals") {
-                    setPracticeDirection(option.value);
+                    choosePracticeDirection(option.value);
                   }
                 }}
                 aria-pressed={practiceDirection === option.value}
+                aria-label={`Switch between ${option.label.toLowerCase()} questions`}
               >
-                {option.label}
+                <span className="practice-card__direction-label">
+                  {option.label}
+                </span>
               </button>
             ))}
           </div>
@@ -260,15 +280,19 @@ function PracticePage() {
               <button
                 className="practice-card__direction-button"
                 key={option.value}
+                title={`Switch between ${option.label.toLowerCase()} questions`}
                 type="button"
                 onClick={() => {
                   if (practiceMode === "flags") {
-                    setPracticeDirection(option.value);
+                    choosePracticeDirection(option.value);
                   }
                 }}
                 aria-pressed={practiceDirection === option.value}
+                aria-label={`Switch between ${option.label.toLowerCase()} questions`}
               >
-                {option.label}
+                <span className="practice-card__direction-label">
+                  {option.label}
+                </span>
               </button>
             ))}
           </div>
@@ -318,20 +342,39 @@ function PracticePage() {
             </p>
 
             {question.questionImageUrl ? (
-              <img
-                className="practice-question__flag"
-                src={question.questionImageUrl}
-                alt={`${question.country} flag`}
-              />
+              <div className="practice-question__question-row">
+                <img
+                  className="practice-question__flag"
+                  src={question.questionImageUrl}
+                  alt={`${question.country} flag`}
+                />
+                {isAnswered && (
+                  <img
+                    className="practice-question__feedback-icon"
+                    src={isCorrect ? correctFeedbackIcon : wrongFeedbackIcon}
+                    alt={isCorrect ? "Correct answer" : "Wrong answer"}
+                  />
+                )}
+              </div>
             ) : (
-              <p className="practice-question__text-question">
-                {question.questionText}
-              </p>
+              <div className="practice-question__question-row">
+                <p className="practice-question__text-question">
+                  {question.questionText}
+                </p>
+                {isAnswered && (
+                  <img
+                    className="practice-question__feedback-icon"
+                    src={isCorrect ? correctFeedbackIcon : wrongFeedbackIcon}
+                    alt={isCorrect ? "Correct answer" : "Wrong answer"}
+                  />
+                )}
+              </div>
             )}
             <p className="practice-question__prompt">
-              {question.questionImageUrl
-                ? question.questionText
-                : "Choose the correct answer."}
+              <span>
+                {practicePromptTexts[currentQuestionType] ||
+                  "Choose the correct answer."}
+              </span>
             </p>
 
             <div className="practice-question__answers">
@@ -365,39 +408,15 @@ function PracticePage() {
               ))}
             </div>
 
-            {isAnswered && (
-              <>
-                {isRevealed ? (
-                  <p className="practice-question__feedback">
-                    Correct answer: {getCorrectAnswerText()}
-                  </p>
-                ) : isCorrect ? (
-                  <p className="practice-question__feedback">Correct!</p>
-                ) : practiceType === "CountryToFlag" ? (
-                  <div className="practice-question__feedback practice-question__feedback--incorrect">
-                    <span>Not quite. Correct answer:</span>
-                    <img
-                      className="practice-question__correct-answer-flag"
-                      src={getCorrectAnswer()?.imageUrl}
-                      alt={getCorrectAnswer()?.text}
-                    />
-                  </div>
-                ) : (
-                  <p className="practice-question__feedback practice-question__feedback--incorrect">
-                    Not quite. Correct answer: {getCorrectAnswerText()}
-                  </p>
-                )}
-              </>
+            {!isAnswered && (
+              <button
+                className="practice-question__dont-know"
+                type="button"
+                onClick={revealAnswer}
+              >
+                Don't know
+              </button>
             )}
-
-            <button
-              className="practice-question__dont-know"
-              type="button"
-              onClick={revealAnswer}
-              disabled={isAnswered}
-            >
-              Don't know
-            </button>
 
             {isAnswered && (
               <div className="practice-question__next-actions">

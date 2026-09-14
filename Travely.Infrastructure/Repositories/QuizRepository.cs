@@ -71,6 +71,7 @@ namespace Travely.Infrastructure.Repositories
                 Question = question.Capital, // Show the capital to the user instead of the country name
                 Answers = answers,
                 Country = question.Name,
+                Capital = question.Capital,
                 Fact = question.Fact,
                 FlagUrl = question.FlagUrl,
                 FactUrl = question.FactUrl,
@@ -144,6 +145,7 @@ namespace Travely.Infrastructure.Repositories
                 Question = question.Capital,
                 Answers = answers,
                 Country = question.Name,
+                Capital = question.Capital,
                 Fact = question.Fact,
                 FlagUrl = question.FlagUrl,
                 FactUrl = question.FactUrl,
@@ -208,28 +210,27 @@ namespace Travely.Infrastructure.Repositories
                 .Take(numberOfOptions - 1)
                 .ToListAsync();
 
-            var answers = otherCountries
-                .Select(c => new QuizAnswerDto
-                {
-                    AnswerId = c.Id,
-                    Country = c.Name
-                })
+            var questionType = GetRandomQuestionType();
+
+            var answerCountries = otherCountries
+                .Append(question)
+                .OrderBy(_ => Guid.NewGuid())
                 .ToList();
 
-            answers.Add(new QuizAnswerDto
-            {
-                AnswerId = question.Id,
-                Country = question.Name
-            });
-
-            answers = answers.OrderBy(_ => Guid.NewGuid()).ToList();
+            var answers = answerCountries
+                .Select(country => CreateQuizAnswer(country, questionType))
+                .ToList();
 
             return new QuizQuestionDto
             {
                 QuestionId = question.Id,
                 Question = question.Capital,
+                QuestionType = questionType,
+                QuestionText = GetQuestionText(question, questionType),
+                QuestionImageUrl = GetQuestionImageUrl(question, questionType),
                 Answers = answers,
                 Country = question.Name,
+                Capital = question.Capital,
                 Fact = question.Fact,
                 FlagUrl = question.FlagUrl,
                 FactUrl = question.FactUrl,
@@ -245,10 +246,67 @@ namespace Travely.Infrastructure.Repositories
             };
         }
 
+        private static QuestionType GetRandomQuestionType()
+        {
+            var questionTypes = Enum.GetValues<QuestionType>();
+            return questionTypes[Random.Shared.Next(questionTypes.Length)];
+        }
+
+        private static QuizAnswerDto CreateQuizAnswer(
+            Country country,
+            QuestionType type)
+        {
+            return type switch
+            {
+                QuestionType.CountryToFlag => new QuizAnswerDto
+                {
+                    AnswerId = country.Id,
+                    Country = country.Name,
+                    Text = country.Name,
+                    ImageUrl = country.FlagUrl
+                },
+                QuestionType.CountryToCapital => new QuizAnswerDto
+                {
+                    AnswerId = country.Id,
+                    Country = country.Name,
+                    Text = country.Capital
+                },
+                _ => new QuizAnswerDto
+                {
+                    AnswerId = country.Id,
+                    Country = country.Name,
+                    Text = country.Name
+                }
+            };
+        }
+
+        private static string GetQuestionText(
+            Country country,
+            QuestionType type)
+        {
+            return type switch
+            {
+                QuestionType.FlagToCountry => "Which country has this flag?",
+                QuestionType.CountryToFlag => country.Name,
+                QuestionType.CapitalToCountry => country.Capital,
+                QuestionType.CountryToCapital => country.Name,
+                _ => string.Empty
+            };
+        }
+
+        private static string GetQuestionImageUrl(
+            Country country,
+            QuestionType type)
+        {
+            return type == QuestionType.FlagToCountry
+                ? country.FlagUrl
+                : string.Empty;
+        }
+
         // Method to retrieve the next practice question based on continent and practice type
         public async Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
             Continent continent,
-            PracticeQuestionType type,
+            QuestionType type,
             int numberOfOptions,
             List<int> excludedQuestionIds)
         {
@@ -298,17 +356,17 @@ namespace Travely.Infrastructure.Repositories
 
         private static PracticeAnswerDto CreatePracticeAnswer(
             Country country,
-            PracticeQuestionType type)
+            QuestionType type)
         {
             return type switch
             {
-                PracticeQuestionType.CountryToFlag => new PracticeAnswerDto
+                QuestionType.CountryToFlag => new PracticeAnswerDto
                 {
                     AnswerId = country.Id,
                     ImageUrl = country.FlagUrl,
                     Text = country.Name
                 },
-                PracticeQuestionType.CountryToCapital => new PracticeAnswerDto
+                QuestionType.CountryToCapital => new PracticeAnswerDto
                 {
                     AnswerId = country.Id,
                     Text = country.Capital
@@ -323,23 +381,23 @@ namespace Travely.Infrastructure.Repositories
 
         private static string GetPracticeQuestionText(
             Country country,
-            PracticeQuestionType type)
+            QuestionType type)
         {
             return type switch
             {
-                PracticeQuestionType.FlagToCountry => "Which country has this flag?",
-                PracticeQuestionType.CountryToFlag => country.Name,
-                PracticeQuestionType.CapitalToCountry => country.Capital,
-                PracticeQuestionType.CountryToCapital => country.Name,
+                QuestionType.FlagToCountry => "Which country has this flag?",
+                QuestionType.CountryToFlag => country.Name,
+                QuestionType.CapitalToCountry => country.Capital,
+                QuestionType.CountryToCapital => country.Name,
                 _ => string.Empty
             };
         }
 
         private static string GetPracticeQuestionImageUrl(
             Country country,
-            PracticeQuestionType type)
+            QuestionType type)
         {
-            return type == PracticeQuestionType.FlagToCountry
+            return type == QuestionType.FlagToCountry
                 ? country.FlagUrl
                 : string.Empty;
         }

@@ -16,6 +16,9 @@ namespace Travely.Shared.DTOs
         // Show the correct country name
         public string Country { get; set; } = string.Empty;
 
+        // Show the capital for the correct country
+        public string Capital { get; set; } = string.Empty;
+
         // Show fun fact text for the country
         public string Fact { get; set; } = string.Empty;
 
@@ -32,5 +35,10 @@ namespace Travely.Shared.DTOs
         public int Points { get; set; }
 
         public Continent Continent { get; set; }
+
+        // Show question type with enum
+        public QuestionType QuestionType { get; set; }
+        public string QuestionText { get; set; } = string.Empty;
+        public string QuestionImageUrl { get; set; } = string.Empty;
     }
 }

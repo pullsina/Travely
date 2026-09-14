@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Correct answer icon</title>
+  <desc id="desc">A happy green globe character with realistic simplified continents and a check mark.</desc>
+
+  <defs>
+    <clipPath id="globeClip">
+      <circle cx="78" cy="72" r="43"/>
+    </clipPath>
+  </defs>
+
+  <!-- Globe -->
+  <circle cx="78" cy="72" r="46" fill="none" stroke="#168A32" stroke-width="6"/>
+
+  <!-- More realistic simplified continents -->
+  <g clip-path="url(#globeClip)" fill="#2D88FF">
+    <!-- North America -->
+    <path d="M37 46
+             C41 39,49 34,58 32
+             C62 31,67 33,71 36
+             L69 40
+             L63 41
+             L60 45
+             L55 46
+             L52 50
+             L47 50
+             L44 55
+             L40 54
+             L37 50 Z"/>
+    <!-- Central America -->
+    <path d="M44 55
+             C48 57,51 59,53 62
+             L52 65
+             L49 64
+             L47 61
+             L44 60 Z"/>
+    <!-- South America -->
+    <path d="M51 64
+             C57 64,63 67,66 72
+             C68 76,67 80,64 84
+             C62 88,62 93,59 99
+             C57 104,55 109,51 112
+             L48 109
+             C49 103,47 98,46 93
+             C45 88,43 83,44 78
+             C45 73,47 68,51 64 Z"/>
+
+    <!-- Greenland -->
+    <path d="M64 27
+             C68 24,74 24,78 27
+             L77 31
+             L72 33
+             L67 31 Z"/>
+
+    <!-- Europe -->
+    <path d="M80 39
+             C85 36,91 36,95 39
+             L99 38
+             L103 41
+             L101 45
+             L97 46
+             L95 50
+             L90 49
+             L88 46
+             L83 46
+             L80 43 Z"/>
+
+    <!-- Africa -->
+    <path d="M86 50
+             C92 48,100 49,105 54
+             C108 58,107 64,105 68
+             C104 74,101 80,98 86
+             C95 91,91 95,87 94
+             C84 90,83 85,82 80
+             C80 75,78 69,80 64
+             C81 59,83 54,86 50 Z"/>
+
+    <!-- Asia -->
+    <path d="M97 38
+             C105 32,115 31,123 34
+             C129 37,134 42,137 47
+             L134 52
+             L128 52
+             L126 56
+             L120 55
+             L116 59
+             L111 57
+             L108 62
+             L104 60
+             L105 54
+             L100 50
+             L101 45
+             L97 43 Z"/>
+
+    <!-- Arabian Peninsula -->
+    <path d="M104 61
+             L111 62
+             L114 66
+             L111 70
+             L106 69
+             L103 65 Z"/>
+
+    <!-- India -->
+    <path d="M116 59
+             L121 63
+             L119 70
+             L116 74
+             L113 69
+             L113 64 Z"/>
+
+    <!-- Southeast Asia -->
+    <path d="M123 62
+             C128 64,132 67,134 71
+             L131 73
+             L127 70
+             L124 68 Z"/>
+
+    <!-- Japan / islands -->
+    <path d="M136 49
+             C139 50,141 53,140 56
+             L137 55
+             L135 52 Z"/>
+    <circle cx="130" cy="77" r="2.2"/>
+    <circle cx="135" cy="82" r="1.8"/>
+
+    <!-- Madagascar -->
+    <path d="M106 87
+             C109 89,110 93,108 97
+             L105 99
+             L104 94 Z"/>
+  </g>
+
+  <!-- Face -->
+  <circle cx="62" cy="70" r="4.8" fill="#168A32"/>
+  <circle cx="94" cy="70" r="4.8" fill="#168A32"/>
+  <path d="M59 87c6 9 14 13 20 13s14-4 20-13" fill="none" stroke="#168A32" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- Arms: raised for correct answer, no round hands -->
+  <path d="M37 79 C29 73,23 64,20 53
+           M119 79 C127 73,133 64,136 53"
+        fill="none" stroke="#168A32" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Legs -->
+  <path d="M62 116v16M94 116v16" stroke="#168A32" stroke-width="6" stroke-linecap="round"/>
+  <path d="M51 137h20M85 137h20" stroke="#168A32" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Feedback badge -->
+  <circle cx="126" cy="34" r="22" fill="none" stroke="#168A32" stroke-width="5"/>
+  <path d="M116 34l7 7 14-16" fill="none" stroke="#39C900" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
