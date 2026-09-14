@@ -385,6 +385,7 @@ function PracticePage() {
                   type="button"
                   onClick={() => selectAnswer(answer.answerId)}
                   disabled={isAnswered}
+                  data-answer-id={answer.answerId}
                   data-correct={
                     isAnswered && answer.answerId === question.correctAnswerId
                   }

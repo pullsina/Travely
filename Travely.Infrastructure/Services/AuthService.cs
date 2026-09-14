@@ -135,6 +135,41 @@ namespace Travely.Infrastructure.Services
             await _signInManager.SignOutAsync();
         }
 
+        // Task to handle user info updates
+        public async Task<AuthResultDto> UpdateAsync(string userId, UpdateUserInfoDto dto)
+        {
+            //find user to update by id
+            var existingUser = await _userManager.FindByIdAsync(userId);
+            if (existingUser == null)
+            {
+                return new AuthResultDto
+                {
+                    Success = false,
+                    Error = "User not found."
+                };
+            }
+
+            //update user info
+            existingUser.UserName = dto.Username ?? existingUser.UserName;
+            existingUser.Email = dto.Email ?? existingUser.Email;
+
+            var result = await _userManager.UpdateAsync(existingUser);
+
+            if (!result.Succeeded)
+                return new AuthResultDto
+                {
+                    Success = false,
+                    Error = "Failed to update user information."
+                };
+            return new AuthResultDto
+            {
+                Success = true,
+                UserId = existingUser.Id,
+                Username = existingUser.UserName,
+                Email = existingUser.Email
+            };
+        }
+
         public async Task<bool> DeleteAsync(string userId)
         {
             //find user to delete by id

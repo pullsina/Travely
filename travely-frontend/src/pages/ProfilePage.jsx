@@ -23,7 +23,7 @@ function ProfilePage() {
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const { user } = useAuth();
+  const { user, updateCurrentUser } = useAuth();
   const navigate = useNavigate();
 
   // Function for loading user points
@@ -74,6 +74,13 @@ function ProfilePage() {
       ignore = true;
     };
   }, [showUserInfoCard]);
+
+  // Refresh local user info after an update so the card shows the new values
+  async function handleUpdateUserInfo(userInfoUpdate) {
+    const updatedUser = await updateCurrentUser(userInfoUpdate);
+    setUserInfo(updatedUser);
+    return updatedUser;
+  }
 
   // Function for loading user results
   useEffect(() => {
@@ -161,7 +168,9 @@ function ProfilePage() {
         {/* CARDS */}
         {showUserInfoCard ? (
           <UserInfoCard
+            key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
             userInfo={userInfo ?? user}
+            onUpdate={handleUpdateUserInfo}
             onClose={() => setShowUserInfoCard(false)}
           />
         ) : null}
