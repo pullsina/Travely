@@ -100,8 +100,8 @@ namespace Travely.Api.Controllers
         // Endpoint for updating user information (username, email)
 
         [Authorize]
-        [HttpPut("update-info")]
-        public async Task<IActionResult> UpdateInfo([FromBody] UpdateInfoDto dto)
+        [HttpPut("update-userinfo")]
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDto dto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
@@ -111,15 +111,34 @@ namespace Travely.Api.Controllers
                     Message = "You are not logged in."
                 });
             }
-            var result = await _authService.UpdateInfoAsync(userId, dto);
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(new ApiErrorDto
+                {
+                    Message = "User not found."
+                });
+            }
+
+            // Else, assign the new values from the DTO to the user entity
+            user.UserName = dto.Username;
+            user.Email = dto.Email;
+
+            // And, call the service to update the user information
+            var result = await _authService.UpdateUserInfoAsync(user);
+
             if (!result.Success)
             {
                 return BadRequest(new ApiErrorDto
                 {
-                    Message = result.Error ?? "Failed to change user information."
+                    Message = result.Error ?? "Failed to update user information."
                 });
             }
-            return Ok(new { Message = "User information changed successfully." });
+
+            return Ok(new { userId, username = user.UserName, email = user.Email, 
+                Message = "User information updated successfully." });
         }
 
         [Authorize]
