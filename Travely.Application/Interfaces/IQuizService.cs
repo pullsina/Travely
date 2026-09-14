@@ -28,7 +28,7 @@ namespace Travely.Application.Interfaces
         // Get the next practice question based on the specified continent and practice type.
         Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
             Continent continent,
-            PracticeQuestionType type,
+            QuestionType type,
             List<int> excludedQuestionIds);
 
         // Count all quiz questions in the specified continent.

@@ -20,31 +20,41 @@ function QuestionCard({
   totalQuestions = 10,
   difficulty = "Easy",
   points = 5,
+  timeLeft = 30,
   capital = "Paris",
+  questionText = "",
+  questionImageUrl = "",
+  promptText = "Choose the correct answer.",
   answers = defaultAnswers,
   selectedAnswerId,
   hintType = "map",
   mapImage = europeOutline,
   flagUrl,
+  capitalHint = "",
   factImageUrl,
   factText = "Use a hint to reveal more about this country.",
+  primaryHintType = "flag",
+  primaryHintLabel = "Flag - 1 p",
   correctAnswerId,
   isSubmitted = false,
   isCorrect = false,
   submitError = "",
   onSelectAnswer,
-  onFlagHint,
+  onPrimaryHint,
   onFactHint,
   onSubmit,
 }) {
   const progressPercent = (questionNumber / totalQuestions) * 100;
   const factHintImageUrl = factImageUrl || fallbackFactImageUrl;
+  const mainQuestionText = questionText || capital;
   const displayedImage =
     hintType === "flag"
       ? flagUrl
       : hintType === "fact"
         ? factHintImageUrl
-        : mapImage;
+        : hintType === "capital"
+          ? ""
+          : mapImage;
 
   return (
     <section className="question-card" aria-labelledby="question-card-title">
@@ -61,17 +71,32 @@ function QuestionCard({
         <p className="question-card__difficulty">
           {difficulty} · +{points} points
         </p>
+        <p className="question-card__timer" data-low-time={timeLeft <= 10}>
+          {timeLeft}s
+        </p>
       </header>
 
       <div className="question-card__prompt">
-        <p className="question-card__capital">{capital}</p>
-        <p className="question-card__text">is the capital of which country?</p>
+        {questionImageUrl ? (
+          <img
+            className="question-card__question-image"
+            src={questionImageUrl}
+            alt={mainQuestionText}
+          />
+        ) : (
+          <p className="question-card__capital">{mainQuestionText}</p>
+        )}
+        <p className="question-card__text">{promptText}</p>
       </div>
 
       <div className="question-card__body">
         <div className="question-card__media-panel" data-hint-type={hintType}>
           <div className="question-card__image-frame">
-            {displayedImage ? (
+            {hintType === "capital" ? (
+              <p className="question-card__capital-hint">
+                Capital: {capitalHint}
+              </p>
+            ) : displayedImage ? (
               <img
                 src={displayedImage}
                 alt={`${hintType} hint`}
@@ -110,7 +135,15 @@ function QuestionCard({
               type="button"
               onClick={() => onSelectAnswer?.(answer.id)}
             >
-              {answer.label}
+              {answer.imageUrl ? (
+                <img
+                  className="question-card__answer-image"
+                  src={answer.imageUrl}
+                  alt={answer.label}
+                />
+              ) : (
+                answer.label
+              )}
             </button>
           ))}
         </div>
@@ -120,15 +153,15 @@ function QuestionCard({
         <div className="question-card__hint-actions">
           <button
             className="question-card__hint-button"
-            data-active={hintType === "flag"}
+            data-active={hintType === primaryHintType}
             type="button"
-            onClick={onFlagHint}
+            onClick={onPrimaryHint}
             aria-describedby="hint-cost-tooltip"
           >
             <span className="question-card__hint-icon" aria-hidden="true">
-              ⚐
+              {primaryHintType === "capital" ? "C" : "⚐"}
             </span>
-            Flag - 1 p
+            {primaryHintLabel}
           </button>
 
           <button

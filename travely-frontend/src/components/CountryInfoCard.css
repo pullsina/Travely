@@ -80,10 +80,10 @@
 
 .country-info-card__flag {
   width: 160px;
-  height: 110px;
+  aspect-ratio: 4 / 3;
   border: 2px solid var(--color-primary);
   border-radius: 4px;
-  object-fit: cover;
+  object-fit: contain;
   position: relative;
   z-index: 1;
 }

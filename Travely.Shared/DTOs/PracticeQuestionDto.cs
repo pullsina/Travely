@@ -6,7 +6,7 @@ namespace Travely.Shared.DTOs
     {
         public int QuestionId { get; set; }
 
-        public PracticeQuestionType Type { get; set; }
+        public QuestionType Type { get; set; }
 
         public string QuestionText { get; set; } = string.Empty;
 

@@ -104,7 +104,7 @@ namespace Travely.Application.Services
         // Method to retrieve the next practice question based on continent, practice type, and excluded question IDs
         public async Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
             Continent continent,
-            PracticeQuestionType type,
+            QuestionType type,
             List<int> excludedQuestionIds)
         {
             var question = await _quizRepo.GetNextPracticeQuestionAsync(

@@ -32,7 +32,7 @@ namespace Travely.Application.Interfaces
         // Abstraction to method for retrieving the next practice question based on continent and practice type
         Task<PracticeQuestionDto?> GetNextPracticeQuestionAsync(
             Continent continent,
-            PracticeQuestionType type,
+            QuestionType type,
             int numberOfOptions,
             List<int> excludedQuestionIds);
 
