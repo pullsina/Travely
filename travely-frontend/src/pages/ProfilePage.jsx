@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getProgress, getQuestionCount, getUserPoints } from "../api/quizApi";
 import { getCurrentUser } from "../api/authApi";
+import CardOverlay from "../components/CardOverlay";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 import "./ProfilePage.css";
@@ -23,8 +24,8 @@ function ProfilePage() {
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const { user, updateCurrentUser } = useAuth();
-  const navigate = useNavigate();
+  const { user, updateCurrentUser } = useAuth(); // returnerar ett user-objekt
+  const navigate = useNavigate(); // returnerar navigate-funktion
 
   // Function for loading user points
   useEffect(() => {
@@ -167,19 +168,23 @@ function ProfilePage() {
         </div>
         {/* CARDS */}
         {showUserInfoCard ? (
-          <UserInfoCard
-            key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
-            userInfo={userInfo ?? user}
-            onUpdate={handleUpdateUserInfo}
-            onClose={() => setShowUserInfoCard(false)}
-          />
+          <CardOverlay onClose={() => setShowUserInfoCard(false)}>
+            <UserInfoCard
+              key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
+              userInfo={userInfo ?? user}
+              onUpdate={handleUpdateUserInfo}
+              onClose={() => setShowUserInfoCard(false)}
+            />
+          </CardOverlay>
         ) : null}
         {showUserResultsCard ? (
-          <UserResultsCard
-            results={results}
-            // user={user}
-            onClose={() => setShowUserResultsCard(false)}
-          />
+          <CardOverlay onClose={() => setShowUserResultsCard(false)}>
+            <UserResultsCard
+              results={results}
+              // user={user}
+              onClose={() => setShowUserResultsCard(false)}
+            />
+          </CardOverlay>
         ) : null}
       </section>
     </main>

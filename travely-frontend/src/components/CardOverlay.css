@@ -1,0 +1,15 @@
+.card-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+.card-overlay__content {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+}
