@@ -23,7 +23,7 @@ function ProfilePage() {
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const { user } = useAuth();
+  const { user, updateCurrentUser } = useAuth();
   const navigate = useNavigate();
 
   // Function for loading user points
@@ -161,7 +161,9 @@ function ProfilePage() {
         {/* CARDS */}
         {showUserInfoCard ? (
           <UserInfoCard
+            key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
             userInfo={userInfo ?? user}
+            onUpdate={updateCurrentUser}
             onClose={() => setShowUserInfoCard(false)}
           />
         ) : null}

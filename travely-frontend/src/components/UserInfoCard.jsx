@@ -22,41 +22,41 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
     }
   }
 
-  function handleCancel() {
+  async function handleCancel() {
     setUsernameInput(username);
     setEmailInput(email);
     setIsEditing(false);
-    setError();
+    setError("");
   }
 
-  // function handleDelete() {
+  // async function handleDelete() {
 
   // }
 
   return (
     <section className="user-info-card" aria-labelledby="user-info-card-title">
-      {isEditing ? (
+      {/* Header with title and close button */}
+      <div className="user-info-card__header">
+        <div
+          className="user-info-card__header__title"
+          aria-labelledby="user-info-card-title"
+        >
+          <h2 className="user-info-card__title" id="user-info-card-title">
+            User Details
+          </h2>
+        </div>
+        <div className="user-info-card__header__actions">
+          <button
+            className="primary-button user-info-card__actions__close-button"
+            type="button"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+      {!isEditing ? (
         <>
-          {/* Header with title and close button */}
-          <div className="user-info-card__header">
-            <div
-              className="user-info-card__header__title"
-              aria-labelledby="user-info-card-title"
-            >
-              <h2 className="user-info-card__title" id="user-info-card-title">
-                User Details
-              </h2>
-            </div>
-            <div className="user-info-card__header__actions">
-              <button
-                className="primary-button user-info-card__actions__close-button"
-                type="button"
-                onClick={onClose}
-              >
-                Close
-              </button>
-            </div>
-          </div>
           {/* Card main content */}
           <div className="user-info-card__main">
             <div className="user-info-card__main__info">
@@ -128,7 +128,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
           </button>
 
           <button
-            className="secondary-button"
+            className="primary-button"
             type="button"
             onClick={handleCancel}
           >
