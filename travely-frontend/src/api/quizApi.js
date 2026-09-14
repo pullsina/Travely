@@ -3,7 +3,7 @@
 // ---------------------------------------------
 //const API_BASE = "https://travely-api-2026-a6auametbjgfddb9.germanywestcentral-01.azurewebsites.net";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/+$/, "");
 // ---------------------------------------------
 // GENERIC REQUEST FUNCTION (to communicate with the backend API)
 // ---------------------------------------------
