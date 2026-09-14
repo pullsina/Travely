@@ -10,7 +10,7 @@ namespace Travely.Application.Interfaces
         Task<AuthResultDto> RegisterAsync(RegisterDto dto);
         Task<AuthResultDto> LoginAsync(LoginDto dto);
         Task LogoutAsync();
-        Task<AuthResultDto> UpdateAsync(UpdateUserInfoDto dto);
+        Task<AuthResultDto> UpdateAsync(string userId, UpdateUserInfoDto dto);
         Task<bool> DeleteAsync(string userId);
     }
 }

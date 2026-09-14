@@ -136,10 +136,10 @@ namespace Travely.Infrastructure.Services
         }
 
         // Task to handle user info updates
-        public async Task<AuthResultDto> UpdateAsync(UpdateUserInfoDto dto)
+        public async Task<AuthResultDto> UpdateAsync(string userId, UpdateUserInfoDto dto)
         {
             //find user to update by id
-            var existingUser = await _userManager.FindByIdAsync(dto.Username);
+            var existingUser = await _userManager.FindByIdAsync(userId);
             if (existingUser == null)
             {
                 return new AuthResultDto
@@ -165,7 +165,8 @@ namespace Travely.Infrastructure.Services
             {
                 Success = true,
                 UserId = existingUser.Id,
-                Username = existingUser.UserName
+                Username = existingUser.UserName,
+                Email = existingUser.Email
             };
         }
 
