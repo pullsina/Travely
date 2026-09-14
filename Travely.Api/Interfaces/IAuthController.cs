@@ -3,12 +3,13 @@ using Travely.Shared.DTOs;
 
 namespace Travely.Api.Interfaces
 {
-        public interface IAuthController
-        {
-            Task<IActionResult> Delete();
-            Task<IActionResult> Login(LoginDto dto);
-            Task<IActionResult> Logout();
-            IActionResult Me();
-            Task<IActionResult> Register([FromBody] RegisterDto dto);
-        }
+    public interface IAuthController
+    {
+        Task<IActionResult> Delete();
+        Task<IActionResult> Login(LoginDto dto);
+        Task<IActionResult> Logout();
+        Task<IActionResult> Me();
+        Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDto dto);
+        Task<IActionResult> Register([FromBody] RegisterDto dto);
+    }
 }
