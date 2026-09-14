@@ -139,7 +139,7 @@ namespace Travely.Infrastructure.Services
         public async Task<AuthResultDto> UpdateAsync(UpdateUserInfoDto dto)
         {
             //find user to update by id
-            var existingUser = await _userManager.FindByIdAsync(dto.UserId);
+            var existingUser = await _userManager.FindByIdAsync(dto.Username);
             if (existingUser == null)
             {
                 return new AuthResultDto
