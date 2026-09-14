@@ -60,9 +60,11 @@ export function AuthProvider({ children }) {
 
   // Function for updating user info
   async function updateCurrentUser(userInfo) {
-    const updatedUser = await updateUserInfo(userInfo);
-    setUser(updatedUser);
-    return updatedUser;
+    await updateUserInfo(userInfo);
+
+    const currentUser = await getCurrentUser();
+    setUser(currentUser);
+    return currentUser;
   }
 
   return (
