@@ -127,7 +127,7 @@ namespace Travely.Api.Controllers
             user.Email = dto.Email;
 
             // And, call the service to update the user information
-            var result = await _authService.UpdateUserInfoAsync(user);
+            var result = await _authService.UpdateAsync(dto);
 
             if (!result.Success)
             {
