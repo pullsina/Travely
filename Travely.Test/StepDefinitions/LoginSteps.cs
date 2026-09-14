@@ -96,4 +96,21 @@ public class LoginSteps
         await _hooks.Page.GetByLabel("Password").FillAsync("");
     }
 
+    //for tests that require the user to be logged in (uses test user values)
+    [Given("I am logged in")]
+    public async Task GivenIAmLoggedIn()
+    {
+        await _hooks.Page.GotoAsync("http://localhost:5173/login");
+
+        await _hooks.Page.GetByLabel("Email").FillAsync("test@login.com");
+        await _hooks.Page.GetByLabel("Password").FillAsync("Test123!");
+
+        await _hooks.Page.GetByRole(AriaRole.Button, new()
+        {
+            Name = "Log in"
+        }).ClickAsync();
+
+        await _hooks.Page.WaitForURLAsync("**/continents");
+    }
+
 }
