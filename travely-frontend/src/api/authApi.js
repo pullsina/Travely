@@ -31,7 +31,9 @@ async function request(path, options = {}) {
       data = JSON.parse(text);
     }
   } catch {
-    throw new Error("The server returned an unexpected response. Please try again later.");
+    throw new Error(
+      "The server returned an unexpected response. Please try again later.",
+    );
   }
 
   if (!response.ok) {
@@ -42,7 +44,9 @@ async function request(path, options = {}) {
   }
 
   if (response.status !== 204 && (!data || typeof data !== "object")) {
-    throw new Error("The server returned an unexpected response. Please try again later.");
+    throw new Error(
+      "The server returned an unexpected response. Please try again later.",
+    );
   }
 
   return data;
@@ -90,6 +94,18 @@ export async function getCurrentUser() {
   });
 }
 
+// CHANGE USER INFO
+// PUT /api/auth/update
+export async function updateUserInfo({ username, email }) {
+  return request("/api/auth/update", {
+    method: "PUT",
+    body: JSON.stringify({
+      username,
+      email,
+    }),
+  });
+}
+
 // DELETE ACCOUNT
 // DELETE /api/auth/delete
 export async function deleteAccount() {
@@ -103,5 +119,6 @@ export default {
   login,
   logout,
   getCurrentUser,
+  updateUserInfo,
   deleteAccount,
 };
