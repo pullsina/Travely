@@ -97,6 +97,31 @@ namespace Travely.Api.Controllers
             return Ok(new { userId, username = user.UserName, email = user.Email });
         }
 
+        // Endpoint for changing user information (username, email)
+
+        [Authorize]
+        [HttpPost("change-info")]
+        public async Task<IActionResult> ChangeInfo([FromBody] ChangeInfoDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+            var result = await _authService.ChangeInfoAsync(userId, dto);
+            if (!result.Success)
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = result.Error ?? "Failed to change user information."
+                });
+            }
+            return Ok(new { Message = "User information changed successfully." });
+        }
+
         [Authorize]
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete()
