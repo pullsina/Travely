@@ -50,8 +50,9 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
             className="primary-button user-info-card__actions__close-button"
             type="button"
             onClick={onClose}
+            aria-label="Close user info card"
           >
-            Close
+            X
           </button>
         </div>
       </div>
