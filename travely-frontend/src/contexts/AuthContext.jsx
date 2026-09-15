@@ -67,6 +67,12 @@ export function AuthProvider({ children }) {
     setUser(currentUser);
     return currentUser;
   }
+  // Function to delete the current user account
+  async function deleteCurrentUser() {
+    await deleteAccount();
+
+    setUser(null);
+  }
 
   return (
     <AuthContext.Provider
@@ -77,7 +83,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         updateCurrentUser,
-        deleteAccount,
+        deleteCurrentUser,
         logout,
       }}
     >

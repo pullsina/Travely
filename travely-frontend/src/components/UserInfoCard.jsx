@@ -105,9 +105,9 @@ async function handleDelete() {
               >
                 Delete Profile
               </button>
-              <p className="user-info-card__footer__text-small">
+              {/* <p className="user-info-card__footer__text-small">
                 To be implemented!
-              </p>
+              </p> */}
             </div>
           </div>
         </>

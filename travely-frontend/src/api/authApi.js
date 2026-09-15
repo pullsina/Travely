@@ -95,9 +95,9 @@ export async function getCurrentUser() {
 }
 
 // CHANGE USER INFO
-// PUT /api/auth/me/update
+// PUT /api/auth/update
 export async function updateUserInfo({ username, email }) {
-  return request("/api/auth/me/update", {
+  return request("/api/auth/update", {
     method: "PUT",
     body: JSON.stringify({
       username,
