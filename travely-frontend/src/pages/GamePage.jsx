@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import ContinentCompleteCard from "../components/ContinentCompleteCard";
@@ -75,6 +75,7 @@ const questionPromptTexts = {
 const capitalHintQuestionTypes = new Set(["FlagToCountry", "CountryToFlag"]);
 
 const QUESTION_TIME_LIMIT = 15;
+const INFO_CARD_TIME_LIMIT = 5;
 
 // ---------------------------
 // Small helpers
@@ -128,9 +129,13 @@ function GamePage() {
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
+  const [infoTimeLeft, setInfoTimeLeft] = useState(INFO_CARD_TIME_LIMIT);
 
   // Current question is saved so refresh does not change the active question.
   const currentQuestionStorageKey = `travely-current-question-${currentContinent.apiValue}`;
+
+  // Prevent the next button and info-card timer from moving twice at the same time.
+  const isMovingToNextQuestion = useRef(false);
 
   // ---------------------------
   // Derived values for rendering
@@ -372,6 +377,33 @@ function GamePage() {
   }, [answerResult]);
 
   // ---------------------------
+  // Automatically continue after showing country info
+  // ---------------------------
+  useEffect(() => {
+    if (!showCountryInfo || !question || isContinentComplete) {
+      return undefined;
+    }
+
+    if (infoTimeLeft <= 0) {
+      handleNextQuestion();
+      return undefined;
+    }
+
+    const timerId = window.setTimeout(() => {
+      setInfoTimeLeft((currentTime) => Math.max(currentTime - 1, 0));
+    }, 1000);
+
+    return () => window.clearTimeout(timerId);
+  }, [showCountryInfo, question, isContinentComplete, infoTimeLeft]);
+
+  // ---------------------------
+  // Allow next-question action again after a new question has loaded
+  // ---------------------------
+  useEffect(() => {
+    isMovingToNextQuestion.current = false;
+  }, [question?.questionId]);
+
+  // ---------------------------
   // Event handlers
   // ---------------------------
   function handleHint(nextHintType) {
@@ -423,9 +455,15 @@ function GamePage() {
   }
 
   function handleNextQuestion() {
+    if (isMovingToNextQuestion.current) {
+      return;
+    }
+
     if (!question) {
       return;
     }
+
+    isMovingToNextQuestion.current = true;
 
     // Reset active-question state before loading the next one.
     window.sessionStorage.removeItem(currentQuestionStorageKey);
@@ -437,6 +475,7 @@ function GamePage() {
     setAnswerResult(null);
     setShowCountryInfo(false);
     setTimeLeft(QUESTION_TIME_LIMIT);
+    setInfoTimeLeft(INFO_CARD_TIME_LIMIT);
     setIsContinentComplete(false);
     setSubmitError("");
   }
@@ -513,6 +552,7 @@ function GamePage() {
           }}
           isCorrect={isCorrect}
           pointsEarned={answerResult?.score || 0}
+          secondsLeft={infoTimeLeft}
           onNext={handleNextQuestion}
         />
       ) : null}
