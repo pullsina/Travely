@@ -76,8 +76,8 @@ function UserResultsCard({ results, onClose }) {
           >
             <div className="user-results-card__continent-grid">
               {/* Show results for each continent - as a progress bar */}
-              <div className="user-results-card__progressbar-title">
-                <h3 className="user-results-card__title">
+              <div className="user-results-card__progressbar-heading">
+                <h3 className="user-results-card__progressbar-title">
                   {progress.continent}
                 </h3>
               </div>

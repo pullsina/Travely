@@ -5,26 +5,27 @@
   background: var(--color-bg);
   color: var(--color-text);
   text-align: center;
-  padding: 24px;
+  padding: 36px;
   text-align: center;
 }
 
+.user-results-card__continent {
+  margin-bottom: 0px;
+}
 /* Grid */
 .user-results-card__continent-grid {
   display: grid;
   /* Three columns where the first and second is smaller than the third */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2fr;
   /* Make the AND where the first column spans over two rows */
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 12px 0;
-  /* Ensure the h2 comes higher up in the cell */
-
+  /* grid-template-rows: repeat(2, minmax(0, 1fr)); */
+  /* gap: 12px; */
   text-align: left;
   /* ensure the text and the progressbars are on the same level */
   align-items: center;
+  margin-bottom: 24px;
   p {
-    margin-bottom: 50px;
+    margin-bottom: 12px;
   }
 }
 
@@ -45,6 +46,7 @@
   color: var(--color-primary);
   font-family: "Actor", system-ui, sans-serif;
   text-align: left;
+  margin-bottom: 12px;
 }
 
 /* Header button */
@@ -73,7 +75,25 @@ h3 {
   font-size: clamp(24px, 3vw, 32px);
 }
 
+.user-results-card__total-result-overview {
+  padding-bottom: 24px;
+}
+
 /* Progress bars */
+.user-results-card__progressbar-heading {
+  margin: 0px;
+  padding: 0px;
+}
+.user-results-card__progressbar-title {
+  margin: 0px;
+  padding: 0px;
+}
+
+.user-results-card__progressbar-label {
+  margin: 0px;
+  padding: 0px;
+}
+
 .user-results-card__progressbar-background {
   width: 100%;
   height: 24px;
