@@ -47,16 +47,6 @@ namespace Travely.Application.Services
                 ? Math.Max(question.Points - hintPenalty, 0)
                 : 0;
 
-            await _quizRepo.SaveUserResultAsync(
-                userId,
-                question.QuestionId,
-                question.Continent,
-                question.Difficulty,
-                isCorrect,
-                dto.UsedHintsCount,
-                finalScore,
-                1);
-
             return new SubmitAnswerResultDto
             {
                 QuestionId = question.QuestionId,
@@ -64,6 +54,50 @@ namespace Travely.Application.Services
                 CorrectAnswerId = question.QuestionId,
                 Score = finalScore
             };
+        }
+
+        // Method to save a completed challenge attempt
+        public async Task<QuizProgressDto?> CompleteChallengeAsync(
+            CompleteChallengeDto dto,
+            string userId)
+        {
+            if (dto.Answers.Count == 0)
+                return null;
+
+            var resultsToSave = new List<UserResultSaveDto>();
+
+            foreach (var answer in dto.Answers)
+            {
+                var question = await _quizRepo.GetQuestionAsync(answer.QuestionId, 8);
+
+                if (question == null || question.Continent != dto.Continent)
+                    return null;
+
+                var isCorrect = await _quizRepo.IsCorrectAnswerAsync(
+                    answer.QuestionId,
+                    answer.AnswerId);
+
+                var hintPenalty = Math.Max(answer.UsedHintsCount, 0);
+                var finalScore = isCorrect
+                    ? Math.Max(question.Points - hintPenalty, 0)
+                    : 0;
+
+                resultsToSave.Add(new UserResultSaveDto
+                {
+                    UserId = userId,
+                    QuestionId = question.QuestionId,
+                    Continent = question.Continent,
+                    Difficulty = question.Difficulty,
+                    IsCorrect = isCorrect,
+                    UsedHintsCount = answer.UsedHintsCount,
+                    Score = finalScore,
+                    TotalQuestions = dto.Answers.Count
+                });
+            }
+
+            await _quizRepo.SaveUserResultsAsync(resultsToSave);
+
+            return await _quizRepo.GetUserProgressAsync(userId, dto.Continent);
         }
 
         // Method to retrieve a random quiz question based on continent, difficulty, and excluded question IDs
@@ -153,16 +187,7 @@ namespace Travely.Application.Services
 
         public async Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent)
         {
-            var results = await _quizRepo.GetUserResultsAsync(userId, continent);
-
-            return results
-                .Select(result => new UserResultsDto
-                {
-                    Continent = result.Continent,
-                    Correct = result.Correct,
-                    Total = result.Total
-                })
-                .ToList();
+            return await _quizRepo.GetUserResultsAsync(userId, continent);
         }
     }
 }

@@ -7,7 +7,7 @@ import asiaImage from "../assets/continents/asia.png";
 import oceaniaImage from "../assets/continents/oceania.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProgress, getQuestionCount, getUserPoints } from "../api/quizApi";
+import { getQuestionCount, getUserPoints } from "../api/quizApi";
 import "./ContinentPage.css";
 
 const continents = [
@@ -22,7 +22,7 @@ const continents = [
 function ContinentPage() {
   const navigate = useNavigate();
   const [points, setPoints] = useState(null);
-  const [continentProgress, setContinentProgress] = useState({});
+  const [continentQuestionCounts, setContinentQuestionCounts] = useState({});
 
   useEffect(() => {
     let ignore = false;
@@ -49,34 +49,28 @@ function ContinentPage() {
   useEffect(() => {
     let ignore = false;
 
-    async function loadContinentProgress() {
+    async function loadContinentQuestionCounts() {
       try {
-        const progressEntries = await Promise.all(
+        const countEntries = await Promise.all(
           continents.map(async (continent) => {
-            const [progress, totalQuestions] = await Promise.all([
-              getProgress(continent.apiValue),
-              getQuestionCount(continent.apiValue),
-            ]);
+            const totalQuestions = await getQuestionCount(continent.apiValue);
 
             return [
               continent.name,
-              {
-                answered: progress?.answeredQuestions || 0,
-                total: totalQuestions || 0,
-              },
+              totalQuestions || 0,
             ];
           }),
         );
 
         if (!ignore) {
-          setContinentProgress(Object.fromEntries(progressEntries));
+          setContinentQuestionCounts(Object.fromEntries(countEntries));
         }
       } catch (error) {
-        console.error("Could not load continent progress:", error);
+        console.error("Could not load continent question counts:", error);
       }
     }
 
-    loadContinentProgress();
+    loadContinentQuestionCounts();
 
     return () => {
       ignore = true;
@@ -104,8 +98,7 @@ function ContinentPage() {
           >
             <span className="continent-page__card-name">{continent.name}</span>
             <span className="continent-page__card-progress">
-              {continentProgress[continent.name]?.answered || 0}/
-              {continentProgress[continent.name]?.total || 0}
+              {continentQuestionCounts[continent.name] || 0} questions
             </span>
           </button>
         ))}

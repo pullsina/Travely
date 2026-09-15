@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { getUserPointsSummary } from "../api/quizApi";
+import PointsChart from "./PointsChart";
 
 const continentLabels = {
   0: "Europe",
@@ -23,6 +24,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [isPointsOpen, setIsPointsOpen] = useState(false);
+  const [isPointsChartOpen, setIsPointsChartOpen] = useState(false);
   const [pointsSummary, setPointsSummary] = useState(null);
   const [pointsError, setPointsError] = useState("");
 
@@ -41,12 +43,12 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   }
 
   useEffect(() => {
-    if (!isPointsOpen) {
+    if (!isPointsOpen && !isPointsChartOpen) {
       return;
     }
 
     loadPointsSummary();
-  }, [isPointsOpen, points]);
+  }, [isPointsChartOpen, isPointsOpen, points]);
 
   async function handleLogout() {
     try {
@@ -59,6 +61,12 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
   async function openPointsSummary() {
     setIsPointsOpen(true);
+  }
+
+  async function togglePointsChart() {
+    setIsPointsChartOpen((currentValue) => !currentValue);
+    setIsPointsOpen(false);
+    await loadPointsSummary();
   }
 
   return (
@@ -96,26 +104,24 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
             <div
               className="navbar__points-menu"
-              onMouseEnter={openPointsSummary}
+              onMouseEnter={() => {
+                if (!isPointsChartOpen) {
+                  openPointsSummary();
+                }
+              }}
               onMouseLeave={() => setIsPointsOpen(false)}
             >
               <button
                 className="navbar__points"
                 type="button"
-                onClick={() => {
-                  if (isPointsOpen) {
-                    setIsPointsOpen(false);
-                  } else {
-                    openPointsSummary();
-                  }
-                }}
-                aria-expanded={isPointsOpen}
+                onClick={togglePointsChart}
+                aria-expanded={isPointsOpen || isPointsChartOpen}
                 aria-label="Show points by continent"
               >
                 {displayPoints} p
               </button>
 
-              {isPointsOpen ? (
+              {isPointsOpen || isPointsChartOpen ? (
                 <div className="navbar__points-dropdown">
                   <p className="navbar__points-total">
                     Total: {pointsSummary?.totalPoints ?? displayPoints} p
@@ -123,6 +129,8 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
                   {pointsError ? (
                     <p className="navbar__points-error">{pointsError}</p>
+                  ) : isPointsChartOpen ? (
+                    <PointsChart pointsSummary={pointsSummary} />
                   ) : (
                     <ul className="navbar__points-list">
                       {(pointsSummary?.continents || []).map((continent) => (

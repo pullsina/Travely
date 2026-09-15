@@ -85,6 +85,117 @@
   color: var(--color-text);
 }
 
+.continent-complete-card__details {
+  margin-top: 30px;
+  border: 2px solid rgba(105, 224, 0, 0.7);
+  border-radius: 6px;
+  background: rgba(11, 35, 112, 0.56);
+  padding: 22px;
+  text-align: left;
+}
+
+.continent-complete-card__details-title {
+  margin: 0 0 16px;
+  color: var(--color-primary);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.continent-complete-card__details-error,
+.continent-complete-card__details-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 18px;
+}
+
+.continent-complete-card__details-error {
+  color: var(--color-error);
+}
+
+.continent-complete-card__score-bar {
+  margin-bottom: 18px;
+}
+
+.continent-complete-card__score-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  color: var(--color-text-muted);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 18px;
+}
+
+.continent-complete-card__score-bar-header strong {
+  color: var(--color-warning);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.continent-complete-card__score-bar-track {
+  height: 16px;
+  border: 1px solid rgba(105, 224, 0, 0.7);
+  border-radius: 999px;
+  background: rgba(6, 22, 74, 0.72);
+  overflow: hidden;
+}
+
+.continent-complete-card__score-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-primary);
+}
+
+.continent-complete-card__details-list {
+  display: grid;
+  gap: 10px;
+  max-height: 340px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.continent-complete-card__details-item {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(105, 224, 0, 0.5);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.continent-complete-card__details-result {
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.continent-complete-card__details-result--correct {
+  color: var(--color-primary);
+}
+
+.continent-complete-card__details-result--wrong {
+  color: var(--color-error);
+}
+
+.continent-complete-card__details-country {
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.continent-complete-card__details-meta {
+  color: var(--color-text-muted);
+  font-size: 16px;
+  white-space: nowrap;
+}
+
 @media (max-width: 760px) {
   .continent-complete-card {
     padding: 30px 20px;
@@ -101,5 +212,13 @@
   .continent-complete-card__button,
   .continent-complete-card__profile-link {
     width: 100%;
+  }
+
+  .continent-complete-card__details-item {
+    grid-template-columns: 1fr;
+  }
+
+  .continent-complete-card__details-meta {
+    white-space: normal;
   }
 }

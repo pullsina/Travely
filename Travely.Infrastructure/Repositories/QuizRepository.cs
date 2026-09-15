@@ -549,6 +549,30 @@ namespace Travely.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        // Method to save all submitted answer results from a completed challenge
+        public async Task SaveUserResultsAsync(List<UserResultSaveDto> results)
+        {
+            var completedAt = DateTime.UtcNow;
+
+            var userResults = results
+                .Select(result => new UserResult
+                {
+                    UserId = result.UserId,
+                    QuestionId = result.QuestionId,
+                    Continent = result.Continent,
+                    Difficulty = result.Difficulty,
+                    IsCorrect = result.IsCorrect,
+                    UsedHintsCount = result.UsedHintsCount,
+                    Score = result.Score,
+                    TotalQuestions = result.TotalQuestions,
+                    CompletedAt = completedAt
+                })
+                .ToList();
+
+            _context.UserResults.AddRange(userResults);
+            await _context.SaveChangesAsync();
+        }
+
         // Method to retrieve quiz results for a user by continent
         public async Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent)
         {
@@ -556,12 +580,40 @@ namespace Travely.Infrastructure.Repositories
                 .Where(result => result.UserId == userId)
                 .Where(result => result.Continent == continent)
                 .ToListAsync();
-            return results
-                .Select(result => new UserResultsDto
+
+            var latestResultsByQuestion = results
+                .GroupBy(result => result.QuestionId)
+                .Select(group => group
+                    .OrderByDescending(result => result.CompletedAt)
+                    .First())
+                .ToList();
+
+            var questionIds = latestResultsByQuestion
+                .Select(result => result.QuestionId)
+                .ToList();
+
+            var countriesById = await _context.Countries
+                .Where(country => questionIds.Contains(country.Id))
+                .ToDictionaryAsync(country => country.Id);
+
+            return latestResultsByQuestion
+                .Select(result =>
                 {
-                    Continent = continent.ToString(),
-                    Correct = result.IsCorrect ? 1 : 0,
-                    Total = result.TotalQuestions,
+                    countriesById.TryGetValue(result.QuestionId, out var country);
+
+                    return new UserResultsDto
+                    {
+                        Continent = continent.ToString(),
+                        Correct = result.IsCorrect ? 1 : 0,
+                        Total = result.TotalQuestions,
+                        QuestionId = result.QuestionId,
+                        Country = country?.Name ?? string.Empty,
+                        Capital = country?.Capital ?? string.Empty,
+                        IsCorrect = result.IsCorrect,
+                        UsedHintsCount = result.UsedHintsCount,
+                        Score = result.Score,
+                        Difficulty = result.Difficulty.ToString()
+                    };
                 })
                 .ToList();
         }

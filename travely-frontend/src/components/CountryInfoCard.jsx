@@ -6,6 +6,7 @@ function CountryInfoCard({
   country = {},
   isCorrect = false,
   pointsEarned = 0,
+  secondsLeft = 0,
   onNext,
 }) {
   const countryName = country.name || "Unknown country";
@@ -74,6 +75,10 @@ function CountryInfoCard({
       </div>
 
       <div className="country-info-card__actions">
+        <p className="country-info-card__timer">
+          Next question in {secondsLeft}s
+        </p>
+
         <button
           className="primary-button country-info-card__button"
           type="button"

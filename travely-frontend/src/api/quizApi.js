@@ -199,17 +199,41 @@ export async function getUserPointsSummary() {
 // ---------------------------------------------
 // POST answers
 // ---------------------------------------------
+const continentEnumValues = {
+  Europe: 0,
+  Asia: 1,
+  Africa: 2,
+  NorthAmerica: 3,
+  SouthAmerica: 4,
+  Oceania: 5,
+};
+
 export async function submitAnswers(questionId, answerId, usedHintsCount = 0) {
   return request("/api/quiz/answer", {
     method: "POST",
     body: JSON.stringify({ questionId, answerId, usedHintsCount }),
   });
 }
+
+export async function completeChallenge(continent, answers = []) {
+  return request("/api/quiz/challenge/complete", {
+    method: "POST",
+    body: JSON.stringify({
+      continent: continentEnumValues[continent] ?? continent,
+      answers,
+    }),
+  });
+}
+
 // ---------------------------------------------
 // GET results
 // ---------------------------------------------
-export async function getResults() {
-  return request("/api/quiz/results");
+export async function getResults(continent) {
+  const params = new URLSearchParams({
+    continent,
+  });
+
+  return request(`/api/quiz/results?${params.toString()}`);
 }
 // ---------------------------------------------
 // EXPORTS
@@ -225,6 +249,7 @@ export default {
   getUserPoints,
   getUserPointsSummary,
   submitAnswers,
+  completeChallenge,
   getResults,
 };
 // ---------------------------------------------

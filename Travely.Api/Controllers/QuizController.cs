@@ -64,6 +64,34 @@ namespace Travely.Api.Controllers
             return Ok(result);
         }
 
+        // Endpoint to save a completed challenge attempt
+        [Authorize]
+        [HttpPost("challenge/complete")]
+        public async Task<ActionResult<QuizProgressDto>> CompleteChallenge([FromBody] CompleteChallengeDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var result = await _quizService.CompleteChallengeAsync(dto, userId);
+
+            if (result == null)
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = "Challenge could not be saved."
+                });
+            }
+
+            return Ok(result);
+        }
+
         // Endpoint to retrieve a random quiz question by continent and difficulty
         [HttpGet("question/random")]
         public async Task<ActionResult<QuizQuestionDto>> GetRandomQuestion(

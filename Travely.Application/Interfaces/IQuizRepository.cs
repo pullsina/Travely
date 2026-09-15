@@ -64,6 +64,10 @@ namespace Travely.Application.Interfaces
             int score,
             int totalQuestions);
 
+        // Abstraction to method for saving a completed challenge attempt
+        Task SaveUserResultsAsync(
+            List<UserResultSaveDto> results);
+
         // Abstraction to method for retrieving quiz results for a user by continent
         Task<List<UserResultsDto>> GetUserResultsAsync(string userId, Continent continent);
 
