@@ -24,7 +24,7 @@ function ProfilePage() {
   const [results, setResults] = useState([]);
   const [points, setPoints] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
-  const { user, updateCurrentUser } = useAuth(); // returnerar ett user-objekt
+  const { user, updateCurrentUser, deleteCurrentUser } = useAuth(); // returnerar ett user-objekt
   const navigate = useNavigate(); // returnerar navigate-funktion
 
   // Function for loading user points
@@ -81,6 +81,17 @@ function ProfilePage() {
     const updatedUser = await updateCurrentUser(userInfoUpdate);
     setUserInfo(updatedUser);
     return updatedUser;
+  }
+
+  // Function for deleting the current user account
+  async function handleDeleteUser() {
+    try {
+      await deleteCurrentUser();
+      setShowUserInfoCard(false);
+      navigate("/");
+    } catch (error) {
+      console.error("Could not delete account:", error);
+    }
   }
 
   // Function for loading user results
@@ -174,6 +185,7 @@ function ProfilePage() {
               userInfo={userInfo ?? user}
               onUpdate={handleUpdateUserInfo}
               onClose={() => setShowUserInfoCard(false)}
+              onDelete={handleDeleteUser}
             />
           </CardOverlay>
         ) : null}

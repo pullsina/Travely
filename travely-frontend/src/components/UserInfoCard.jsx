@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./UserInfoCard.css";
 
-function UserInfoCard({ userInfo, onClose, onUpdate }) {
+function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
   const username = userInfo?.name ?? userInfo?.username;
   const email = userInfo?.email ?? userInfo?.emailAddress;
   const [isEditing, setIsEditing] = useState(false);
@@ -29,10 +29,18 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
     setError("");
   }
 
-  // async function handleDelete() {
+async function handleDelete() {
 
-  // }
+  const confirmed = window.confirm(
+    "Are you sure you want to delete your Travely account? This action cannot be undone."
+  );
 
+  if (!confirmed) {
+    return;
+  }
+
+  await onDelete();
+}
   return (
     <section className="user-info-card" aria-labelledby="user-info-card-title">
       {/* Header with title and close button */}
@@ -93,6 +101,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate }) {
                 className="primary-button user-info-card__delete-profile-button"
                 type="button"
                 aria-labelledby="user-info-card-delete-profile-button"
+                onClick={handleDelete}
               >
                 Delete Profile
               </button>
