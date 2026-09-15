@@ -11,9 +11,11 @@ import northAmericaOutline from "../assets/continent-outlines/north-america.png"
 import oceaniaOutline from "../assets/continent-outlines/oceania.png";
 import southAmericaOutline from "../assets/continent-outlines/south-america.png";
 import {
+  completeChallenge,
   getNextQuestion,
   getProgress,
   getQuestionCount,
+  getResults,
   getUserPoints,
   submitAnswers,
 } from "../api/quizApi";
@@ -76,6 +78,8 @@ const capitalHintQuestionTypes = new Set(["FlagToCountry", "CountryToFlag"]);
 
 const QUESTION_TIME_LIMIT = 15;
 const INFO_CARD_TIME_LIMIT = 5;
+const LEAVE_CHALLENGE_WARNING =
+  "Are you sure you want to leave? Your current challenge progress and unsaved points will be lost.";
 
 // ---------------------------
 // Small helpers
@@ -109,6 +113,7 @@ function GamePage() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [question, setQuestion] = useState(null);
   const [usedQuestionIds, setUsedQuestionIds] = useState([]);
+  const [challengeAnswers, setChallengeAnswers] = useState([]);
 
   // ---------------------------
   // Hint and answer state
@@ -128,14 +133,18 @@ function GamePage() {
   const [isProgressLoaded, setIsProgressLoaded] = useState(false);
   const [gameError, setGameError] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [resultDetails, setResultDetails] = useState([]);
+  const [resultDetailsError, setResultDetailsError] = useState("");
   const [timeLeft, setTimeLeft] = useState(QUESTION_TIME_LIMIT);
   const [infoTimeLeft, setInfoTimeLeft] = useState(INFO_CARD_TIME_LIMIT);
 
   // Current question is saved so refresh does not change the active question.
   const currentQuestionStorageKey = `travely-current-question-${currentContinent.apiValue}`;
+  const challengeAttemptStorageKey = `travely-challenge-attempt-${currentContinent.apiValue}`;
 
   // Prevent the next button and info-card timer from moving twice at the same time.
   const isMovingToNextQuestion = useRef(false);
+  const challengeAnswersRef = useRef([]);
 
   // ---------------------------
   // Derived values for rendering
@@ -146,6 +155,9 @@ function GamePage() {
     : 0;
   const isSubmitted = Boolean(answerResult);
   const isCorrect = Boolean(answerResult?.isCorrect);
+  const hasActiveChallengeAttempt =
+    !isContinentComplete &&
+    (challengeAnswers.length > 0 || Boolean(question) || Boolean(answerResult));
 
   // ---------------------------
   // Load total question count
@@ -185,6 +197,7 @@ function GamePage() {
       setQuestion(null);
       setQuestionNumber(1);
       setUsedQuestionIds([]);
+      setChallengeAnswers([]);
       setHintType("map");
       setUsedHints([]);
       setSelectedAnswerId(null);
@@ -195,6 +208,8 @@ function GamePage() {
       setIsContinentComplete(false);
       setGameError("");
       setSubmitError("");
+      setResultDetails([]);
+      setResultDetailsError("");
 
       try {
         const progress = await getProgress(currentContinent.apiValue);
@@ -202,9 +217,24 @@ function GamePage() {
 
         if (!ignore) {
           const answeredQuestionIds = progress?.answeredQuestionIds || [];
+          const savedAttemptText = window.sessionStorage.getItem(
+            challengeAttemptStorageKey,
+          );
+          const savedAttempt = savedAttemptText
+            ? JSON.parse(savedAttemptText)
+            : null;
+          const savedAnswers = savedAttempt?.answers || [];
+          const pendingQuestionIds = savedAnswers.map(
+            (answer) => answer.questionId,
+          );
+          const allAnsweredQuestionIds = [
+            ...new Set([...answeredQuestionIds, ...pendingQuestionIds]),
+          ];
 
-          setUsedQuestionIds(answeredQuestionIds);
-          setQuestionNumber(answeredQuestionIds.length + 1);
+          setUsedQuestionIds(allAnsweredQuestionIds);
+          challengeAnswersRef.current = savedAnswers;
+          setChallengeAnswers(savedAnswers);
+          setQuestionNumber(allAnsweredQuestionIds.length + 1);
           setPoints(pointsResponse?.points ?? null);
           setSavedProgress(progress);
         }
@@ -224,7 +254,7 @@ function GamePage() {
     return () => {
       ignore = true;
     };
-  }, [currentContinent.apiValue]);
+  }, [challengeAttemptStorageKey, currentContinent.apiValue]);
 
   // ---------------------------
   // Load or restore the current question
@@ -275,9 +305,22 @@ function GamePage() {
 
         if (!ignore) {
           if (!nextQuestion) {
-            const latestProgress = await getProgress(currentContinent.apiValue);
+            const answersToSave = challengeAnswersRef.current;
+            const latestProgress =
+              answersToSave.length > 0
+                ? await completeChallenge(
+                    currentContinent.apiValue,
+                    answersToSave,
+                  )
+                : await getProgress(currentContinent.apiValue);
+            const pointsResponse = await getUserPoints();
+
+            window.sessionStorage.removeItem(challengeAttemptStorageKey);
+            window.sessionStorage.removeItem(currentQuestionStorageKey);
 
             setSavedProgress(latestProgress);
+            setPoints(pointsResponse?.points ?? null);
+            setChallengeAnswers([]);
             setIsContinentComplete(true);
             setQuestion(null);
             return;
@@ -305,10 +348,43 @@ function GamePage() {
     };
   }, [
     currentContinent.apiValue,
+    challengeAttemptStorageKey,
     currentQuestionStorageKey,
     isProgressLoaded,
     usedQuestionIds,
   ]);
+
+  // ---------------------------
+  // Load detailed results after completing a continent
+  // ---------------------------
+  useEffect(() => {
+    let ignore = false;
+
+    if (!isContinentComplete) {
+      return undefined;
+    }
+
+    async function loadResultDetails() {
+      try {
+        const details = await getResults(currentContinent.apiValue);
+
+        if (!ignore) {
+          setResultDetails(details || []);
+          setResultDetailsError("");
+        }
+      } catch (error) {
+        if (!ignore) {
+          setResultDetailsError(error.message);
+        }
+      }
+    }
+
+    loadResultDetails();
+
+    return () => {
+      ignore = true;
+    };
+  }, [currentContinent.apiValue, isContinentComplete]);
 
   // ---------------------------
   // Save current question state for refresh
@@ -342,6 +418,27 @@ function GamePage() {
   ]);
 
   // ---------------------------
+  // Save pending challenge answers for refresh
+  // ---------------------------
+  useEffect(() => {
+    if (!isProgressLoaded) {
+      return;
+    }
+
+    challengeAnswersRef.current = challengeAnswers;
+
+    if (challengeAnswers.length === 0) {
+      window.sessionStorage.removeItem(challengeAttemptStorageKey);
+      return;
+    }
+
+    window.sessionStorage.setItem(
+      challengeAttemptStorageKey,
+      JSON.stringify({ answers: challengeAnswers }),
+    );
+  }, [challengeAnswers, challengeAttemptStorageKey, isProgressLoaded]);
+
+  // ---------------------------
   // Question timer
   // ---------------------------
   useEffect(() => {
@@ -349,8 +446,9 @@ function GamePage() {
       return undefined;
     }
 
+    // Automatically submit the answer when the timer reaches zero
     if (timeLeft <= 0) {
-      handleSubmit(-1);
+      handleSubmit(selectedAnswerId ?? -1);
       return undefined;
     }
 
@@ -404,6 +502,26 @@ function GamePage() {
   }, [question?.questionId]);
 
   // ---------------------------
+  // Warn before leaving an active challenge
+  // ---------------------------
+  useEffect(() => {
+    if (!hasActiveChallengeAttempt) {
+      return undefined;
+    }
+
+    function handleBeforeUnload(event) {
+      event.preventDefault();
+      event.returnValue = LEAVE_CHALLENGE_WARNING;
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hasActiveChallengeAttempt]);
+
+  // ---------------------------
   // Event handlers
   // ---------------------------
   function handleHint(nextHintType) {
@@ -423,6 +541,16 @@ function GamePage() {
 
     setSelectedAnswerId(answerId);
     setSubmitError("");
+  }
+
+  function handleLeaveChallenge() {
+    if (hasActiveChallengeAttempt && !window.confirm(LEAVE_CHALLENGE_WARNING)) {
+      return;
+    }
+
+    window.sessionStorage.removeItem(currentQuestionStorageKey);
+    window.sessionStorage.removeItem(challengeAttemptStorageKey);
+    navigate("/continents");
   }
 
   async function handleSubmit(answerIdOverride) {
@@ -448,7 +576,22 @@ function GamePage() {
       );
       window.sessionStorage.removeItem(currentQuestionStorageKey);
       setAnswerResult(result);
-      setPoints((currentPoints) => currentPoints + result.score);
+      setChallengeAnswers((currentAnswers) => {
+        const nextAnswers = [
+          ...currentAnswers.filter(
+            (answer) => answer.questionId !== question.questionId,
+          ),
+          {
+            questionId: question.questionId,
+            answerId: answerIdToSubmit,
+            usedHintsCount: usedHints.length,
+          },
+        ];
+
+        challengeAnswersRef.current = nextAnswers;
+
+        return nextAnswers;
+      });
     } catch (error) {
       setSubmitError(error.message);
     }
@@ -513,7 +656,7 @@ function GamePage() {
       <button
         className="game-page__back"
         type="button"
-        onClick={() => navigate("/continents")}
+        onClick={handleLeaveChallenge}
         aria-label="Go back to continents"
       >
         ←
@@ -531,8 +674,9 @@ function GamePage() {
         <ContinentCompleteCard
           continent={currentContinent.label}
           progress={savedProgress}
+          details={resultDetails}
+          detailsError={resultDetailsError}
           onBackToContinents={() => navigate("/continents")}
-          onViewProfile={() => navigate("/profile")}
         />
       ) : null}
 

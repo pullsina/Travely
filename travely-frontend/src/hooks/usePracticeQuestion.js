@@ -39,6 +39,16 @@ function usePracticeQuestion(continent, practiceType) {
     savedState?.questionNumber || 1,
   );
 
+  // Stores questions the user got wrong, so they can appear again at the end
+  const [retryQuestions, setRetryQuestions] = useState(
+    savedState?.retryQuestions || [],
+  );
+
+  // Shows if the current question comes from the retry queue
+  const [isRetrying, setIsRetrying] = useState(
+    savedState?.isRetrying || false,
+  );
+
   // Stores the answer that the user clicked
   const [selectedAnswerId, setSelectedAnswerId] = useState(
     savedState?.selectedAnswerId || null,
@@ -78,6 +88,8 @@ function usePracticeQuestion(continent, practiceType) {
     setUsedQuestionIds(nextSavedState?.usedQuestionIds || []);
     setTotalQuestions(nextSavedState?.totalQuestions || 0);
     setQuestionNumber(nextSavedState?.questionNumber || 1);
+    setRetryQuestions(nextSavedState?.retryQuestions || []);
+    setIsRetrying(nextSavedState?.isRetrying || false);
     setSelectedAnswerId(nextSavedState?.selectedAnswerId || null);
     setIsAnswered(nextSavedState?.isAnswered || false);
     setIsRevealed(nextSavedState?.isRevealed || false);
@@ -107,9 +119,10 @@ function usePracticeQuestion(continent, practiceType) {
       }
 
       // Add the current question to used IDs before loading the next one
-      const nextUsedQuestionIds = question
-        ? [...usedQuestionIds, question.questionId]
-        : usedQuestionIds;
+      const nextUsedQuestionIds =
+        question && !usedQuestionIds.includes(question.questionId)
+          ? [...usedQuestionIds, question.questionId]
+          : usedQuestionIds;
 
       // Ask backend for a question from this continent,
       // but skip questions we already practiced
@@ -120,19 +133,56 @@ function usePracticeQuestion(continent, practiceType) {
       );
 
       if (!nextQuestion) {
+        const [retryQuestion, ...remainingRetryQuestions] = retryQuestions;
+
+        if (retryQuestion) {
+          setQuestion(retryQuestion);
+          setUsedQuestionIds(nextUsedQuestionIds);
+          setRetryQuestions(remainingRetryQuestions);
+          setQuestionNumber(nextUsedQuestionIds.length + 1);
+          setSelectedAnswerId(null);
+          setIsAnswered(false);
+          setIsRevealed(false);
+          setShowInfo(false);
+          setIsComplete(false);
+          setIsRetrying(true);
+
+          window.sessionStorage.setItem(
+            storageKey,
+            JSON.stringify({
+              question: retryQuestion,
+              usedQuestionIds: nextUsedQuestionIds,
+              retryQuestions: remainingRetryQuestions,
+              totalQuestions: currentTotalQuestions,
+              questionNumber: nextUsedQuestionIds.length + 1,
+              selectedAnswerId: null,
+              isAnswered: false,
+              isRevealed: false,
+              showInfo: false,
+              isComplete: false,
+              isRetrying: true,
+            }),
+          );
+
+          return;
+        }
+
         setQuestion(null);
         setUsedQuestionIds(nextUsedQuestionIds);
+        setRetryQuestions([]);
         setQuestionNumber(nextUsedQuestionIds.length);
         setIsAnswered(false);
         setIsRevealed(false);
         setShowInfo(false);
         setIsComplete(true);
+        setIsRetrying(false);
 
         window.sessionStorage.setItem(
           storageKey,
           JSON.stringify({
             question: null,
             usedQuestionIds: nextUsedQuestionIds,
+            retryQuestions: [],
             totalQuestions: currentTotalQuestions,
             questionNumber: nextUsedQuestionIds.length,
             selectedAnswerId: null,
@@ -140,6 +190,7 @@ function usePracticeQuestion(continent, practiceType) {
             isRevealed: false,
             showInfo: false,
             isComplete: true,
+            isRetrying: false,
           }),
         );
 
@@ -175,6 +226,7 @@ function usePracticeQuestion(continent, practiceType) {
         JSON.stringify({
           question: nextQuestion,
           usedQuestionIds: nextUsedQuestionIds,
+          retryQuestions,
           totalQuestions: currentTotalQuestions,
           questionNumber: nextUsedQuestionIds.length + 1,
           selectedAnswerId: null,
@@ -182,6 +234,7 @@ function usePracticeQuestion(continent, practiceType) {
           isRevealed: false,
           showInfo: false,
           isComplete: false,
+          isRetrying: false,
         }),
       );
     } catch (error) {
@@ -198,17 +251,30 @@ function usePracticeQuestion(continent, practiceType) {
       return;
     }
 
+    const isCorrectAnswer = question && answerId === question.correctAnswerId;
+    const nextRetryQuestions =
+      question && !isCorrectAnswer
+        ? [
+            ...retryQuestions.filter(
+              (retryQuestion) => retryQuestion.questionId !== question.questionId,
+            ),
+            question,
+          ]
+        : retryQuestions;
+
     // Save which answer the user clicked
     setSelectedAnswerId(answerId);
 
     // Lock the question after the user answers
     setIsAnswered(true);
+    setRetryQuestions(nextRetryQuestions);
 
     window.sessionStorage.setItem(
       storageKey,
       JSON.stringify({
         question,
         usedQuestionIds,
+        retryQuestions: nextRetryQuestions,
         totalQuestions,
         questionNumber,
         selectedAnswerId: answerId,
@@ -216,20 +282,32 @@ function usePracticeQuestion(continent, practiceType) {
         isRevealed,
         showInfo,
         isComplete,
+        isRetrying,
       }),
     );
   }
 
   function revealAnswer() {
+    const nextRetryQuestions = question
+      ? [
+          ...retryQuestions.filter(
+            (retryQuestion) => retryQuestion.questionId !== question.questionId,
+          ),
+          question,
+        ]
+      : retryQuestions;
+
     // Show the correct answer when the user does not know
     setIsAnswered(true);
     setIsRevealed(true);
+    setRetryQuestions(nextRetryQuestions);
 
     window.sessionStorage.setItem(
       storageKey,
       JSON.stringify({
         question,
         usedQuestionIds,
+        retryQuestions: nextRetryQuestions,
         totalQuestions,
         questionNumber,
         selectedAnswerId,
@@ -237,6 +315,7 @@ function usePracticeQuestion(continent, practiceType) {
         isRevealed: true,
         showInfo,
         isComplete,
+        isRetrying,
       }),
     );
   }
@@ -250,6 +329,7 @@ function usePracticeQuestion(continent, practiceType) {
       JSON.stringify({
         question,
         usedQuestionIds,
+        retryQuestions,
         totalQuestions,
         questionNumber,
         selectedAnswerId,
@@ -257,6 +337,7 @@ function usePracticeQuestion(continent, practiceType) {
         isRevealed,
         showInfo: true,
         isComplete,
+        isRetrying,
       }),
     );
   }
@@ -278,6 +359,7 @@ function usePracticeQuestion(continent, practiceType) {
 
       setQuestion(firstQuestion);
       setUsedQuestionIds([]);
+      setRetryQuestions([]);
       setTotalQuestions(nextTotalQuestions);
       setQuestionNumber(1);
       setSelectedAnswerId(null);
@@ -285,12 +367,14 @@ function usePracticeQuestion(continent, practiceType) {
       setIsRevealed(false);
       setShowInfo(false);
       setIsComplete(false);
+      setIsRetrying(false);
 
       window.sessionStorage.setItem(
         storageKey,
         JSON.stringify({
           question: firstQuestion,
           usedQuestionIds: [],
+          retryQuestions: [],
           totalQuestions: nextTotalQuestions,
           questionNumber: 1,
           selectedAnswerId: null,
@@ -298,6 +382,7 @@ function usePracticeQuestion(continent, practiceType) {
           isRevealed: false,
           showInfo: false,
           isComplete: false,
+          isRetrying: false,
         }),
       );
     } catch (error) {
@@ -316,6 +401,7 @@ function usePracticeQuestion(continent, practiceType) {
     isAnswered,
     isCorrect,
     isRevealed,
+    isRetrying,
     showInfo,
     isComplete,
     isLoading,

@@ -14,6 +14,11 @@ namespace Travely.Application.Interfaces
             SubmitAnswerDto dto,
             string userId);
 
+        // Save a completed challenge attempt for the logged-in user.
+        Task<QuizProgressDto?> CompleteChallengeAsync(
+            CompleteChallengeDto dto,
+            string userId);
+
         // Get a random question based on the specified continent and difficulty, excluding the provided question IDs.
         Task<QuizQuestionDto?> GetRandomQuestionAsync(
             Continent continent,

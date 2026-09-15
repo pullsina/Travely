@@ -7,9 +7,9 @@ import europeBackground from "../assets/continent-backgrounds/europe_bg.png";
 import northAmericaBackground from "../assets/continent-backgrounds/north_america_bg.png";
 import oceaniaBackground from "../assets/continent-backgrounds/oceania_bg.png";
 import southAmericaBackground from "../assets/continent-backgrounds/south_amerca_bg.png";
-import correctFeedbackIcon from "../assets/feddback-icons/travely-correct-feedback.svg";
-import wrongFeedbackIcon from "../assets/feddback-icons/travely-wrong-feedback.svg";
 import "./PracticePage.css";
+
+const fallbackFactImageUrl = "/images/countries/hints/fallback.png";
 
 // Configuration for each continent, including the label, API value, and background image
 // it makes it easier to manage and update continent-related data in one place.
@@ -110,6 +110,7 @@ function PracticePage() {
     selectedAnswerId,
     isAnswered,
     isCorrect,
+    isRetrying,
     showInfo,
     isComplete,
     isLoading,
@@ -338,7 +339,9 @@ function PracticePage() {
         {practiceMode && !isComplete && question && (
           <section className="practice-question">
             <p className="practice-question__count">
-              {questionNumber} / {totalQuestions || questionNumber}
+              {isRetrying
+                ? "Retry question"
+                : `${questionNumber} / ${totalQuestions || questionNumber}`}
             </p>
 
             {question.questionImageUrl ? (
@@ -348,26 +351,12 @@ function PracticePage() {
                   src={question.questionImageUrl}
                   alt={`${question.country} flag`}
                 />
-                {isAnswered && (
-                  <img
-                    className="practice-question__feedback-icon"
-                    src={isCorrect ? correctFeedbackIcon : wrongFeedbackIcon}
-                    alt={isCorrect ? "Correct answer" : "Wrong answer"}
-                  />
-                )}
               </div>
             ) : (
               <div className="practice-question__question-row">
                 <p className="practice-question__text-question">
                   {question.questionText}
                 </p>
-                {isAnswered && (
-                  <img
-                    className="practice-question__feedback-icon"
-                    src={isCorrect ? correctFeedbackIcon : wrongFeedbackIcon}
-                    alt={isCorrect ? "Correct answer" : "Wrong answer"}
-                  />
-                )}
               </div>
             )}
             <p className="practice-question__prompt">
@@ -456,13 +445,16 @@ function PracticePage() {
                 </div>
 
                 <div className="practice-info__body">
-                  {question.factUrl ? (
-                    <img
-                      className="practice-info__image"
-                      src={question.factUrl}
-                      alt={`${question.country} fun fact`}
-                    />
-                  ) : null}
+                  <img
+                    className="practice-info__image"
+                    src={question.factUrl || fallbackFactImageUrl}
+                    alt={`${question.country} fun fact`}
+                    onError={(event) => {
+                      if (event.currentTarget.src !== fallbackFactImageUrl) {
+                        event.currentTarget.src = fallbackFactImageUrl;
+                      }
+                    }}
+                  />
 
                   <div className="practice-info__fact">
                     <h3>DID YOU KNOW?</h3>
