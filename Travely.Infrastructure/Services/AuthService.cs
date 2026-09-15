@@ -187,7 +187,7 @@ namespace Travely.Infrastructure.Services
 
             await _signInManager.SignOutAsync();
 
-            return true;
+            return result.Succeeded;
         }
 
     }
