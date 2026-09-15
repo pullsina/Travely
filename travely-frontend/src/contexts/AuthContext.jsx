@@ -5,6 +5,7 @@ import {
   logout as apiLogout,
   getCurrentUser,
   updateUserInfo,
+  deleteAccount,
 } from "../api/authApi";
 
 //context shares user's state globally throughout the app. useState is used for local state
@@ -66,6 +67,12 @@ export function AuthProvider({ children }) {
     setUser(currentUser);
     return currentUser;
   }
+  // Function to delete the current user account
+  async function deleteCurrentUser() {
+    await deleteAccount();
+
+    setUser(null);
+  }
 
   return (
     <AuthContext.Provider
@@ -76,6 +83,7 @@ export function AuthProvider({ children }) {
         login,
         register,
         updateCurrentUser,
+        deleteCurrentUser,
         logout,
       }}
     >
