@@ -66,6 +66,10 @@
   justify-content: center;
 }
 
+.profile-page__card-slot--results {
+  width: min(100%, 1100px);
+}
+
 @media (max-width: 640px) {
   .profile-page {
     min-height: auto;

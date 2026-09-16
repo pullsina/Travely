@@ -62,6 +62,7 @@
   margin: 0;
   font-size: clamp(30px, 5vw, 48px);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 /* Card header actions */
@@ -298,6 +299,10 @@
   .user-info-card__header:not(.user-info-card__header--editing)
     .user-info-card__header__title {
     grid-column: 1;
+    width: auto;
+    margin-inline: 0;
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .user-info-card__header:not(.user-info-card__header--editing)
@@ -314,6 +319,10 @@
     height: 42px;
   }
 
+  .user-info-card__title {
+    font-size: clamp(28px, 9vw, 42px);
+  }
+
   .user-info-card__footer .primary-button,
   .user-info-card__edit-actions .primary-button {
     width: 100%;
@@ -323,6 +332,10 @@
 @media (max-width: 380px) {
   .user-info-card {
     padding: 16px;
+  }
+
+  .user-info-card__title {
+    font-size: 34px;
   }
 
   .user-info-card__main__info {

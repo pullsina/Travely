@@ -38,6 +38,10 @@
   font-size: 18px;
 }
 
+.navbar__menu-button {
+  display: none;
+}
+
 .navbar__link:hover {
   color: var(--color-text);
 }
@@ -60,7 +64,7 @@
 }
 
 .navbar__points {
-  min-width: 56px;
+  min-width: 70px;
   height: 36px;
   border: 0;
   border-radius: 999px;
@@ -131,6 +135,10 @@
   font-size: 15px;
 }
 
+.navbar__mobile-menu {
+  display: none;
+}
+
 .points-chart__title {
   margin: 0 0 10px;
   color: var(--color-text);
@@ -186,28 +194,107 @@
   font-size: 15px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 900px) {
   .navbar {
     height: 68px;
-    padding: 0 20px;
+    padding: 0 24px;
   }
 
   .navbar__brand {
-    font-size: 15px;
+    font-size: 22px;
   }
 
   .navbar__links {
-    gap: 6px;
+    position: relative;
+    gap: 14px;
   }
 
-  .navbar__link {
-    font-size: 16px;
-    min-width: 44px;
+  .navbar__links > .navbar__link {
+    display: none;
+  }
+
+  .navbar__menu-button {
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-primary);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+  }
+
+  .navbar__menu-button span {
+    width: 22px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .navbar__menu-button:hover,
+  .navbar__menu-button:focus-visible {
+    background: var(--color-primary);
+    color: var(--color-bg);
+  }
+
+  .navbar__mobile-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 180px;
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    background: var(--color-bg);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .navbar__mobile-link {
     min-height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    font-family: "Actor", system-ui, sans-serif;
+    font-size: 18px;
+    text-align: left;
+    padding: 0 12px;
+  }
+
+  .navbar__mobile-link:hover,
+  .navbar__mobile-link:focus-visible {
+    background: var(--color-primary);
+    color: var(--color-bg);
   }
 
   .navbar__points-dropdown {
-    right: -72px;
+    right: -58px;
     width: min(250px, calc(100vw - 40px));
+  }
+}
+
+@media (max-width: 380px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .navbar__brand {
+    font-size: 18px;
+  }
+
+  .navbar__links {
+    gap: 10px;
+  }
+
+  .navbar__points {
+    min-width: 70px;
+    padding: 0 12px;
   }
 }

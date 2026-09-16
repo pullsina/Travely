@@ -25,6 +25,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   const { logout } = useAuth();
   const [isPointsOpen, setIsPointsOpen] = useState(false);
   const [isPointsChartOpen, setIsPointsChartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pointsSummary, setPointsSummary] = useState(null);
   const [pointsError, setPointsError] = useState("");
 
@@ -52,6 +53,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
   async function handleLogout() {
     try {
+      setIsMobileMenuOpen(false);
       await logout();
       navigate("/");
     } catch (error) {
@@ -66,6 +68,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   async function togglePointsChart() {
     setIsPointsChartOpen((currentValue) => !currentValue);
     setIsPointsOpen(false);
+    setIsMobileMenuOpen(false);
     await loadPointsSummary();
   }
 
@@ -97,7 +100,10 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
             <button
               className="navbar__link"
               type="button"
-              onClick={() => navigate("/profile")}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                navigate("/profile");
+              }}
             >
               Profile
             </button>
@@ -155,6 +161,45 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
             >
               Log out
             </button>
+
+            <button
+              className="navbar__menu-button"
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen((currentValue) => !currentValue);
+                setIsPointsOpen(false);
+                setIsPointsChartOpen(false);
+              }}
+              aria-label="Open navigation menu"
+              aria-expanded={isMobileMenuOpen}
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+
+            {isMobileMenuOpen ? (
+              <div className="navbar__mobile-menu">
+                <button
+                  className="navbar__mobile-link"
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate("/profile");
+                  }}
+                >
+                  Profile
+                </button>
+
+                <button
+                  className="navbar__mobile-link"
+                  type="button"
+                  onClick={handleLogout}
+                >
+                  Log out
+                </button>
+              </div>
+            ) : null}
           </>
         )}
 

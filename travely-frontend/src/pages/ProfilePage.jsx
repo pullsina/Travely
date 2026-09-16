@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getProgress, getQuestionCount, getUserPoints } from "../api/quizApi";
 import { getCurrentUser } from "../api/authApi";
-import CardOverlay from "../components/CardOverlay";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 import "./ProfilePage.css";
@@ -163,14 +162,20 @@ function ProfilePage() {
           <button
             className="primary-button profile-page__show-info-button"
             // user={user}
-            onClick={() => setShowUserInfoCard(true)}
+            onClick={() => {
+              setShowUserInfoCard(true);
+              setShowUserResultsCard(false);
+            }}
           >
             User details
           </button>
           <button
             className="primary-button profile-page__show-results-button"
             // user={user}
-            onClick={() => setShowUserResultsCard(true)}
+            onClick={() => {
+              setShowUserResultsCard(true);
+              setShowUserInfoCard(false);
+            }}
           >
             Results
           </button>
@@ -188,13 +193,13 @@ function ProfilePage() {
           </div>
         ) : null}
         {showUserResultsCard ? (
-          <CardOverlay onClose={() => setShowUserResultsCard(false)}>
+          <div className="profile-page__card-slot profile-page__card-slot--results">
             <UserResultsCard
               results={results}
               // user={user}
               onClose={() => setShowUserResultsCard(false)}
             />
-          </CardOverlay>
+          </div>
         ) : null}
       </section>
     </main>
