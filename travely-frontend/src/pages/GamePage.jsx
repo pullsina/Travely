@@ -485,7 +485,12 @@ function GamePage() {
   // Automatically continue after showing country info
   // ---------------------------
   useEffect(() => {
-    if (!showCountryInfo || !question || isContinentComplete) {
+    if (
+      PAUSE_TIMER_FOR_DESIGN ||
+      !showCountryInfo ||
+      !question ||
+      isContinentComplete
+    ) {
       return undefined;
     }
 
