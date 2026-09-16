@@ -56,7 +56,7 @@
 .practice-card__title {
   margin: 0;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   font-weight: 400;
 }
 
@@ -78,12 +78,12 @@
 
 .practice-card__continent-select {
   max-width: min(100%, 620px);
-  margin: 10px 0 0;
+  margin: 3px;
   border: 0;
   background: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(48px, 6vw, 72px);
+  font-size: clamp(38px, 3vw, 72px);
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
@@ -118,9 +118,9 @@
 }
 
 .practice-card__text {
-  margin: 24px 0 0;
+  margin: 6px 0 0;
   color: var(--color-text-muted);
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .practice-card__switch-row {
@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  margin-top: 44px;
+  margin-top: 8px;
 }
 
 .practice-card__options {
@@ -146,18 +146,21 @@
 }
 
 .practice-card__button {
-  min-height: 58px;
+  height: 40px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--color-primary);
   cursor: pointer;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: clamp(22px, 3vw, 28px);
+  font-size: clamp(18px, 1vw, 26px);
   font-weight: 700;
   line-height: 1;
   padding: 12px 18px;
-  text-align: center;
+  /* text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition:
     box-shadow 0.2s ease,
     transform 0.2s ease,
@@ -204,18 +207,17 @@
 }
 
 .practice-card__direction-button {
-  width: 32px;
-  height: 32px;
-  min-height: 0;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
+  width: 136px;
+  min-height: 20px;
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  background: rgba(6, 22, 74, 0.62);
   color: var(--color-primary);
   cursor: pointer;
   display: inline-grid;
   place-items: center;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1;
   padding: 0;
@@ -270,9 +272,9 @@
 }
 
 .practice-question {
-  width: min(100%, 980px);
-  margin-top: 42px;
-  padding: 28px;
+  width: min(100%, 760px);
+  margin-top: 22px;
+  padding: 18px;
   border: 2px solid var(--color-primary);
   border-radius: 8px;
   background: rgba(12, 31, 99, 0.88);
@@ -280,10 +282,10 @@
 }
 
 .practice-question__count {
-  margin: 0 0 18px;
+  margin: 0;
   color: var(--color-warning);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1;
   text-align: right;
 }
@@ -310,31 +312,24 @@
   max-width: 620px;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(46px, 8vw, 82px);
+  font-size: clamp(36px, 3vw, 82px);
   font-weight: 700;
   line-height: 0.95;
 }
 
 .practice-question__prompt {
-  margin: 14px 0 0;
+  margin: 8px 0 0;
   color: var(--color-text);
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(22px, 3vw, 30px);
+  font-size: clamp(18px, 1vw, 30px);
 }
 
 .practice-question__answers {
   width: min(100%, calc(4 * 140px + 3 * 18px));
   display: grid;
-  grid-template-columns: repeat(4, 140px);
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 224px));
+  gap: 10px 44px;
   justify-content: center;
-  justify-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 32px;
+  margin-top: 16px;
 }
 
 .practice-question__answers:has(.practice-question__answer-image) {
@@ -344,8 +339,7 @@
 }
 
 .practice-question__answer {
-  width: 100%;
-  min-height: 64px;
+  min-height: 44px;
   border: 1px solid var(--color-primary);
   border-radius: 6px;
   background: rgba(6, 22, 74, 0.62);
@@ -355,7 +349,7 @@
   align-items: center;
   justify-content: center;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(20px, 1vw, 32px);
   font-weight: 700;
   line-height: 1;
   overflow-wrap: anywhere;
@@ -413,7 +407,7 @@
 
 .practice-question__dont-know {
   min-width: 190px;
-  min-height: 52px;
+  min-height: 44px;
   margin-top: 28px;
   border: 2px solid var(--color-primary);
   border-radius: 6px;
@@ -421,7 +415,7 @@
   color: var(--color-primary);
   cursor: pointer;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
 }
 
@@ -601,7 +595,7 @@
 
 @media (max-width: 760px) {
   .practice-page {
-    padding: 88px 20px 84px;
+    padding: 10px 20px 84px;
   }
 
   .practice-page__back {
@@ -613,19 +607,38 @@
     margin-top: 48px;
   }
 
-  .practice-card__switch-row {
-    width: 100%;
-    grid-template-areas:
-      "main main"
-      "left right";
-    grid-template-columns: 1fr 1fr;
-    gap: 10px 14px;
+  .practice-card__text {
+    font-size: 18px;
+    margin-top: 15px;
   }
 
+.practice-card__switch-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.practice-card__switch-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
   .practice-card__options {
+    height: auto;
+    align-items: center;
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .practice-card__button {
     width: 100%;
     grid-area: main;
     order: 1;
+    height: 20px;
+    align-items: center;
   }
 
   .practice-card__direction-switch {
@@ -636,29 +649,45 @@
     justify-content: center;
   }
 
+   .practice-card__direction-button {
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   }
+
   .practice-card__direction-switch--left {
-    grid-area: left;
-    justify-self: end;
-  }
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+}
 
-  .practice-card__direction-switch--right {
-    grid-area: right;
-    justify-self: start;
-  }
+.practice-card__direction-switch--right {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+}
 
-  .practice-question__answers,
-  .practice-question__answers:has(.practice-question__answer-image) {
-    width: min(100%, calc(3 * 140px + 2 * 16px));
-    grid-template-columns: repeat(3, 140px);
-    gap: 16px;
+ .practice-question {
+  padding: 20px;
+ }
+
+  .practice-question__text-question {
+    font-size: 30px;
   }
 
   .practice-question__answer {
     font-size: clamp(18px, 6vw, 26px);
   }
+   .practice-question__prompt {
+    font-size: 14px;
+   }
 
-  .practice-card__button {
-    min-height: 54px;
+  .practice-question__answers {
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
   }
 
   .practice-question__question-row {

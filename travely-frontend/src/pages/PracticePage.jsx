@@ -1,6 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
 import usePracticeQuestion from "../hooks/usePracticeQuestion";
+import { getUserPoints } from "../api/quizApi";
 import africaBackground from "../assets/continent-backgrounds/africa_bg.png";
 import asiaBackground from "../assets/continent-backgrounds/asia_bg.png";
 import europeBackground from "../assets/continent-backgrounds/europe_bg.png";
@@ -85,6 +87,7 @@ const practicePromptTexts = {
 function PracticePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
+  const [points, setPoints] = useState(null);
   const selectedContinent = decodeURIComponent(continent || "Europe");
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
@@ -140,6 +143,28 @@ function PracticePage() {
     window.sessionStorage.removeItem(practiceDirectionStorageKey);
   }
 
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadPoints() {
+      try {
+        const response = await getUserPoints();
+
+        if (!ignore) {
+          setPoints(response?.points ?? null);
+        }
+      } catch (error) {
+        console.error("Could not load user points:", error);
+      }
+    }
+
+    loadPoints();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   // Load the next question when the continent changes or when there is no current question
   useEffect(() => {
     if (practiceType && !question && !isComplete) {
@@ -177,6 +202,7 @@ function PracticePage() {
         "--continent-background": `url(${currentContinent.backgroundImage})`,
       }}
     >
+      <Navbar variant="app" points={points} />
       <button
         className="practice-page__back"
         type="button"
