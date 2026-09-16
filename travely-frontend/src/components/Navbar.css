@@ -193,15 +193,17 @@
   }
 
   .navbar__brand {
-    font-size: 22px;
+    font-size: 15px;
   }
 
   .navbar__links {
-    gap: 16px;
+    gap: 6px;
   }
 
   .navbar__link {
     font-size: 16px;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .navbar__points-dropdown {

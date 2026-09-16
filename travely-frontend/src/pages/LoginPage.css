@@ -143,7 +143,7 @@
 
 @media (max-width: 640px) {
   .login-page {
-    align-items: flex-start;
+    align-items: center;
     padding: 88px 20px 28px;
   }
 

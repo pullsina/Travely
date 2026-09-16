@@ -17,6 +17,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 32px 40px 76px;
   position: relative;
 }
@@ -45,7 +46,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 50px;
 }
 
 .mode-card__header {
@@ -64,7 +64,7 @@
   margin: 10px 0 0;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(48px, 6vw, 72px);
+  font-size: clamp(38px, 6vw, 72px);
   font-weight: 700;
   line-height: 0.95;
 }
@@ -72,7 +72,7 @@
 .mode-card__text {
   margin: 24px 0 0;
   color: var(--color-text-muted);
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .mode-card__options {
@@ -80,7 +80,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 
 .mode-card__button {
@@ -124,7 +124,7 @@
 .mode-card__button-title {
   color: var(--color-primary);
   font-family: "Actor", system-ui, sans-serif;
-  font-size: clamp(26px, 3vw, 34px);
+  font-size: clamp(22px, 3vw, 34px);
   font-weight: 700;
 }
 
@@ -137,13 +137,17 @@
 }
 
 @media (max-width: 760px) {
-  .mode-page {
-    padding: 88px 20px 84px;
-  }
-
   .mode-page__back {
     top: 78px;
     left: 20px;
+  }
+
+  .mode-card__title {
+    font-size: 24px;
+  }
+
+  .mode-card__text {
+    font-size: 18px;
   }
 
   .mode-card {
@@ -159,10 +163,8 @@
   .mode-card__button {
     min-height: 140px;
   }
-}
 
-@media (max-width: 640px) {
-  .mode-card__text {
-    font-size: 20px;
+  .mode-card__button-description {
+    font-size: 14px;
   }
 }
