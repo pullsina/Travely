@@ -17,6 +17,15 @@
   gap: 16px;
 }
 
+.user-info-card__header--editing {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+
+.user-info-card__header:not(.user-info-card__header--editing) {
+  grid-template-columns: minmax(0, 1fr) auto;
+  justify-content: center;
+}
+
 /* Card header title */
 
 .user-info-card__header__title {
@@ -24,6 +33,29 @@
   justify-content: flex-start;
   font-family: "Actor", system-ui, sans-serif;
   color: var(--color-primary);
+}
+
+.user-info-card__header--editing .user-info-card__header__title {
+  grid-column: 2;
+  justify-content: center;
+  text-align: center;
+}
+
+.user-info-card__header:not(.user-info-card__header--editing)
+  .user-info-card__header__title {
+  width: 60%;
+  margin-inline: auto;
+  grid-column: 1 / -1;
+}
+
+.user-info-card__header--editing .user-info-card__header__actions {
+  grid-column: 3;
+}
+
+.user-info-card__header:not(.user-info-card__header--editing)
+  .user-info-card__header__actions {
+  grid-column: 2;
+  grid-row: 1;
 }
 
 .user-info-card__title {
@@ -103,9 +135,31 @@
 .user-info-card__main__info {
   display: flex;
   flex-direction: column;
+  width: 60%;
+  margin-inline: auto;
   align-items: flex-start;
   gap: 16px;
   padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px);
+}
+
+@media (min-width: 1021px) {
+  .user-info-card__header:not(.user-info-card__header--editing) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .user-info-card__header:not(.user-info-card__header--editing)
+    .user-info-card__header__title {
+    width: 100%;
+    margin-inline: auto;
+    grid-column: 1 / -1;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .user-info-card__main__info {
+    width: 100%;
+    margin-inline: 0;
+  }
 }
 
 .user-info-card__main__info-text {
@@ -144,19 +198,79 @@
   font-size: clamp(16px, 1.5vw, 20px);
 }
 
+/* Edit form */
+
+.user-info-card__edit {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  margin-inline: auto;
+  gap: 18px;
+  padding: clamp(20px, 4vw, 36px) 0 0;
+}
+
+.user-info-card__edit-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700;
+  text-align: left;
+}
+
+.user-info-card__edit-input {
+  width: 100%;
+  min-height: 52px;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  background: var(--color-card);
+  color: var(--color-text);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: clamp(18px, 2vw, 24px);
+  padding: 10px 14px;
+}
+
+.user-info-card__edit-input:focus {
+  outline: 3px solid var(--color-warning);
+  outline-offset: 2px;
+}
+
+.user-info-card__edit-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.user-info-card__edit-actions .primary-button {
+  width: 100%;
+  min-width: 0;
+}
+
+.user-info-card__error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 18px;
+}
+
 @media (max-width: 1020px) {
   .user-info-card__main__info {
-    width: min(100%, 640px);
+    width: 60%;
   }
 
-  .user-info-card__footer {
+  .user-info-card__footer,
+  .user-info-card__edit-actions {
     grid-template-columns: 1fr;
     gap: 12px;
     justify-items: center;
   }
 
-  .user-info-card__footer .primary-button {
-    width: 50%;
+  .user-info-card__footer .primary-button,
+  .user-info-card__edit-actions .primary-button {
+    width: 60%;
   }
 }
 
@@ -165,8 +279,30 @@
     width: min(100%, 420px);
   }
 
+  .user-info-card__edit {
+    width: 100%;
+  }
+
+  .user-info-card__main__info {
+    width: 100%;
+  }
+
   .user-info-card__header {
     grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .user-info-card__header:not(.user-info-card__header--editing) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .user-info-card__header:not(.user-info-card__header--editing)
+    .user-info-card__header__title {
+    grid-column: 1;
+  }
+
+  .user-info-card__header:not(.user-info-card__header--editing)
+    .user-info-card__header__actions {
+    grid-column: 2;
   }
 
   .user-info-card__header__actions {
@@ -178,7 +314,8 @@
     height: 42px;
   }
 
-  .user-info-card__footer .primary-button {
+  .user-info-card__footer .primary-button,
+  .user-info-card__edit-actions .primary-button {
     width: 100%;
   }
 }

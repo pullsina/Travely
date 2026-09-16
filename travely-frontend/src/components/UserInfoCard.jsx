@@ -44,7 +44,11 @@ async function handleDelete() {
   return (
     <section className="user-info-card" aria-labelledby="user-info-card-title">
       {/* Header with title and close button */}
-      <div className="user-info-card__header">
+      <div
+        className={`user-info-card__header${
+          isEditing ? " user-info-card__header--editing" : ""
+        }`}
+      >
         <div
           className="user-info-card__header__title"
           aria-labelledby="user-info-card-title"
@@ -114,18 +118,20 @@ async function handleDelete() {
         </>
       ) : (
         <div className="user-info-card__edit">
-          <label>
-            Name
+          <label className="user-info-card__edit-label">
+            <span>Name</span>
             <input
+              className="user-info-card__edit-input"
               type="text"
               value={usernameInput}
               onChange={(event) => setUsernameInput(event.target.value)}
             />
           </label>
 
-          <label>
-            Email
+          <label className="user-info-card__edit-label">
+            <span>Email</span>
             <input
+              className="user-info-card__edit-input"
               type="email"
               value={emailInput}
               onChange={(event) => setEmailInput(event.target.value)}
@@ -134,17 +140,23 @@ async function handleDelete() {
 
           {error && <p className="user-info-card__error">{error}</p>}
 
-          <button className="primary-button" type="button" onClick={handleSave}>
-            Save
-          </button>
+          <div className="user-info-card__edit-actions">
+            <button
+              className="primary-button"
+              type="button"
+              onClick={handleSave}
+            >
+              Save
+            </button>
 
-          <button
-            className="primary-button"
-            type="button"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </section>
