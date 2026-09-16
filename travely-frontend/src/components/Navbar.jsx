@@ -1,7 +1,7 @@
 import "./Navbar.css";
 import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getUserPointsSummary } from "../api/quizApi";
 import PointsChart from "./PointsChart";
 
@@ -20,18 +20,56 @@ const continentLabels = {
   Oceania: "Oceania",
 };
 
+const continentLinks = [
+  "Europe",
+  "Asia",
+  "Africa",
+  "North America",
+  "South America",
+  "Oceania",
+].map((label) => ({
+  label,
+  path: `/mode/${encodeURIComponent(label)}`,
+}));
+
+const modeRoutes = [
+  { label: "Learning", pathPrefix: "/learning" },
+  { label: "Practice", pathPrefix: "/practice" },
+  { label: "Challenge", pathPrefix: "/game" },
+];
+
+const LEAVE_CHALLENGE_WARNING =
+  "Are you sure you want to leave? Your current challenge progress and unsaved points will be lost.";
+
+function getContinentApiValue(continentLabel) {
+  return continentLabel.replace(/\s/g, "");
+}
+
 function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const location = useLocation();
+  const { user, logout } = useAuth();
   const [isPointsOpen, setIsPointsOpen] = useState(false);
   const [isPointsChartOpen, setIsPointsChartOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isContinentsOpen, setIsContinentsOpen] = useState(false);
   const [pointsSummary, setPointsSummary] = useState(null);
   const [pointsError, setPointsError] = useState("");
 
   const isGuest = variant === "guest";
   const isApp = variant === "app";
   const displayPoints = points ?? "...";
+  const profileLabel = user?.name || user?.username || "Profile";
+  const currentPathParts = location.pathname.split("/").filter(Boolean);
+  const currentSection = currentPathParts[0] || "";
+  const currentContinent = currentPathParts[1]
+    ? decodeURIComponent(currentPathParts[1])
+    : "";
+  const shouldShowModeLinks =
+    isApp &&
+    currentContinent &&
+    ["mode", "learning", "practice", "game"].includes(currentSection);
+  const encodedCurrentContinent = encodeURIComponent(currentContinent);
 
   async function loadPointsSummary() {
     try {
@@ -54,6 +92,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
   async function handleLogout() {
     try {
       setIsMobileMenuOpen(false);
+      setIsContinentsOpen(false);
       await logout();
       navigate("/");
     } catch (error) {
@@ -69,7 +108,47 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
     setIsPointsChartOpen((currentValue) => !currentValue);
     setIsPointsOpen(false);
     setIsMobileMenuOpen(false);
+    setIsContinentsOpen(false);
     await loadPointsSummary();
+  }
+
+  function clearChallengeSession(continentLabel) {
+    const continentApiValue = getContinentApiValue(continentLabel);
+
+    window.sessionStorage.removeItem(
+      `travely-current-question-${continentApiValue}`,
+    );
+    window.sessionStorage.removeItem(
+      `travely-challenge-attempt-${continentApiValue}`,
+    );
+  }
+
+  function navigateFromMenu(path) {
+    if (path === location.pathname) {
+      setIsMobileMenuOpen(false);
+      setIsPointsOpen(false);
+      setIsPointsChartOpen(false);
+      setIsContinentsOpen(false);
+      return;
+    }
+
+    if (
+      currentSection === "game" &&
+      currentContinent &&
+      !window.confirm(LEAVE_CHALLENGE_WARNING)
+    ) {
+      return;
+    }
+
+    if (currentSection === "game" && currentContinent) {
+      clearChallengeSession(currentContinent);
+    }
+
+    setIsMobileMenuOpen(false);
+    setIsPointsOpen(false);
+    setIsPointsChartOpen(false);
+    setIsContinentsOpen(false);
+    navigate(path);
   }
 
   return (
@@ -85,7 +164,11 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
       <div className="navbar__links">
         {isGuest && (
           <>
-            <button className="navbar__link" type="button">
+            <button
+              className="navbar__link"
+              type="button"
+              onClick={() => navigate("/about")}
+            >
               About
             </button>
 
@@ -97,15 +180,77 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
 
         {isApp && (
           <>
+            {shouldShowModeLinks ? (
+              <div className="navbar__modes" aria-label="Game modes">
+                {modeRoutes.map((mode) => {
+                  const modePath = `${mode.pathPrefix}/${encodedCurrentContinent}`;
+                  const isActiveMode =
+                    currentSection === mode.pathPrefix.replace("/", "");
+
+                  return (
+                    <button
+                      className={`navbar__mode-link${
+                        isActiveMode ? " navbar__mode-link--active" : ""
+                      }`}
+                      key={mode.label}
+                      type="button"
+                      onClick={() => navigateFromMenu(modePath)}
+                    >
+                      {mode.label}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
+
             <button
               className="navbar__link"
               type="button"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                navigate("/profile");
-              }}
+              onClick={() => navigateFromMenu("/about")}
             >
-              Profile
+              About
+            </button>
+
+            <div
+              className="navbar__continents-menu"
+              onMouseEnter={() => setIsContinentsOpen(true)}
+              onMouseLeave={() => setIsContinentsOpen(false)}
+            >
+              <button
+                className="navbar__link"
+                type="button"
+                onClick={() => {
+                  setIsContinentsOpen((currentValue) => !currentValue);
+                  setIsPointsOpen(false);
+                  setIsPointsChartOpen(false);
+                }}
+                aria-expanded={isContinentsOpen}
+              >
+                Continents
+              </button>
+
+              {isContinentsOpen ? (
+                <div className="navbar__continents-dropdown">
+                  {continentLinks.map((continent) => (
+                    <button
+                      className="navbar__dropdown-link"
+                      key={continent.label}
+                      type="button"
+                      onClick={() => navigateFromMenu(continent.path)}
+                    >
+                      {continent.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            <button
+              className="navbar__link"
+              type="button"
+              onClick={() => navigateFromMenu("/profile")}
+            >
+              {profileLabel}
             </button>
 
             <div
@@ -183,12 +328,63 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                 <button
                   className="navbar__mobile-link"
                   type="button"
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate("/profile");
-                  }}
+                  onClick={() => navigateFromMenu("/continents")}
                 >
-                  Profile
+                  Continents
+                </button>
+
+                <div className="navbar__mobile-continent-list">
+                  {continentLinks.map((continent) => (
+                    <button
+                      className="navbar__mobile-continent-link"
+                      key={continent.label}
+                      type="button"
+                      onClick={() => navigateFromMenu(continent.path)}
+                    >
+                      {continent.label}
+                    </button>
+                  ))}
+                </div>
+
+                {shouldShowModeLinks ? (
+                  <div className="navbar__mobile-mode-list">
+                    {modeRoutes.map((mode) => {
+                      const modePath = `${mode.pathPrefix}/${encodedCurrentContinent}`;
+                      const isActiveMode =
+                        currentSection === mode.pathPrefix.replace("/", "");
+
+                      return (
+                        <button
+                          className={`navbar__mobile-mode-link${
+                            isActiveMode
+                              ? " navbar__mobile-mode-link--active"
+                              : ""
+                          }`}
+                          key={mode.label}
+                          type="button"
+                          onClick={() => navigateFromMenu(modePath)}
+                        >
+                          {mode.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
+                <button
+                  className="navbar__mobile-link"
+                  type="button"
+                  onClick={() => navigateFromMenu("/about")}
+                >
+                  About
+                </button>
+
+                <button
+                  className="navbar__mobile-link"
+                  type="button"
+                  onClick={() => navigateFromMenu("/profile")}
+                >
+                  {profileLabel}
                 </button>
 
                 <button
