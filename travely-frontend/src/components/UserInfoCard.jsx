@@ -55,12 +55,13 @@ async function handleDelete() {
         </div>
         <div className="user-info-card__header__actions">
           <button
-            className="primary-button user-info-card__actions__close-button"
+            className="user-info-card__actions__close-button"
             type="button"
             onClick={onClose}
             aria-label="Close user info card"
+            title="Close"
           >
-            Close
+            <span aria-hidden="true" />
           </button>
         </div>
       </div>

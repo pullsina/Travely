@@ -141,19 +141,17 @@ function ProfilePage() {
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
       <Navbar variant="app" points={points} />
-      {/* BACK BUTTON */}
-      <button
-        className="profile-page__back"
-        type="button"
-        onClick={() => navigate("/continents")}
-        aria-label="Go back to continents"
-      >
-        ←
-      </button>
-
       {/* SECTION with Title, subtext and buttons to show cards */}
       <section className="profile-page__content">
-        <h1 className="profile-page__logo">TRAVELY</h1>
+        {/* BACK BUTTON */}
+        <button
+          className="profile-page__back"
+          type="button"
+          onClick={() => navigate("/continents")}
+          aria-label="Go back to continents"
+        >
+          ←
+        </button>
         <p className="profile-page__tagline">
           Hi {user.name}! Welcome to your profile page.
         </p>
@@ -179,7 +177,7 @@ function ProfilePage() {
         </div>
         {/* CARDS */}
         {showUserInfoCard ? (
-          <CardOverlay onClose={() => setShowUserInfoCard(false)}>
+          <div className="profile-page__card-slot">
             <UserInfoCard
               key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
               userInfo={userInfo ?? user}
@@ -187,7 +185,7 @@ function ProfilePage() {
               onClose={() => setShowUserInfoCard(false)}
               onDelete={handleDeleteUser}
             />
-          </CardOverlay>
+          </div>
         ) : null}
         {showUserResultsCard ? (
           <CardOverlay onClose={() => setShowUserResultsCard(false)}>
