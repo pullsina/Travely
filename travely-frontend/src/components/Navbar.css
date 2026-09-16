@@ -46,6 +46,15 @@
   color: var(--color-text);
 }
 
+.navbar__link--active {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.navbar__link--active:hover {
+  color: var(--color-primary-hover);
+}
+
 .navbar__modes {
   display: flex;
   align-items: center;
@@ -344,7 +353,8 @@
   }
 
   .navbar__mobile-link:hover,
-  .navbar__mobile-link:focus-visible {
+  .navbar__mobile-link:focus-visible,
+  .navbar__mobile-link--active {
     background: var(--color-primary);
     color: var(--color-bg);
   }

@@ -70,6 +70,11 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
     currentContinent &&
     ["mode", "learning", "practice", "game"].includes(currentSection);
   const encodedCurrentContinent = encodeURIComponent(currentContinent);
+  const isAboutPage = currentSection === "about";
+  const isContinentsPage =
+    currentSection === "continents" ||
+    ["mode", "learning", "practice", "game"].includes(currentSection);
+  const isProfilePage = currentSection === "profile";
 
   async function loadPointsSummary() {
     try {
@@ -165,9 +170,12 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
         {isGuest && (
           <>
             <button
-              className="navbar__link"
+              className={`navbar__link${
+                isAboutPage ? " navbar__link--active" : ""
+              }`}
               type="button"
               onClick={() => navigate("/about")}
+              aria-current={isAboutPage ? "page" : undefined}
             >
               About
             </button>
@@ -204,9 +212,12 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
             ) : null}
 
             <button
-              className="navbar__link"
+              className={`navbar__link${
+                isAboutPage ? " navbar__link--active" : ""
+              }`}
               type="button"
               onClick={() => navigateFromMenu("/about")}
+              aria-current={isAboutPage ? "page" : undefined}
             >
               About
             </button>
@@ -217,7 +228,9 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
               onMouseLeave={() => setIsContinentsOpen(false)}
             >
               <button
-                className="navbar__link"
+                className={`navbar__link${
+                  isContinentsPage ? " navbar__link--active" : ""
+                }`}
                 type="button"
                 onClick={() => {
                   setIsContinentsOpen((currentValue) => !currentValue);
@@ -225,6 +238,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                   setIsPointsChartOpen(false);
                 }}
                 aria-expanded={isContinentsOpen}
+                aria-current={isContinentsPage ? "page" : undefined}
               >
                 Continents
               </button>
@@ -246,9 +260,14 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
             </div>
 
             <button
-              className="navbar__link"
+              className={`navbar__link${
+                isProfilePage ? " navbar__link--active" : ""
+              }`}
               type="button"
               onClick={() => navigateFromMenu("/profile")}
+              aria-current={isProfilePage ? "page" : undefined}
+              aria-label="Profile"
+              title="Profile"
             >
               {profileLabel}
             </button>
@@ -326,9 +345,12 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
             {isMobileMenuOpen ? (
               <div className="navbar__mobile-menu">
                 <button
-                  className="navbar__mobile-link"
+                  className={`navbar__mobile-link${
+                    isContinentsPage ? " navbar__mobile-link--active" : ""
+                  }`}
                   type="button"
                   onClick={() => navigateFromMenu("/continents")}
+                  aria-current={isContinentsPage ? "page" : undefined}
                 >
                   Continents
                 </button>
@@ -372,19 +394,27 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                 ) : null}
 
                 <button
-                  className="navbar__mobile-link"
+                  className={`navbar__mobile-link${
+                    isAboutPage ? " navbar__mobile-link--active" : ""
+                  }`}
                   type="button"
                   onClick={() => navigateFromMenu("/about")}
+                  aria-current={isAboutPage ? "page" : undefined}
                 >
                   About
                 </button>
 
                 <button
-                  className="navbar__mobile-link"
+                  className={`navbar__mobile-link${
+                    isProfilePage ? " navbar__mobile-link--active" : ""
+                  }`}
                   type="button"
                   onClick={() => navigateFromMenu("/profile")}
+                  aria-current={isProfilePage ? "page" : undefined}
+                  aria-label="Profile"
+                  title="Profile"
                 >
-                  {profileLabel}
+                  Profile
                 </button>
 
                 <button
