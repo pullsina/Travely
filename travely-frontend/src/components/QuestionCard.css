@@ -47,10 +47,10 @@
 }
 
 .question-card__timer {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   color: var(--color-warning);
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
 }
 
@@ -190,6 +190,7 @@
 
 .question-card__answer {
   height: 50px;
+  width: 200px;
   border: 1px solid var(--color-primary);
   border-radius: 6px;
   background: rgba(6, 22, 74, 0.62);
@@ -361,7 +362,7 @@
 
 .question-card__feedback {
   min-height: 30px;
-  margin: 0;
+  margin: 10px;
   grid-column: 2;
   justify-self: center;
   text-align: center;
