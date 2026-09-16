@@ -198,15 +198,40 @@
 
 @media (max-width: 760px) {
   .continent-complete-card {
-    padding: 30px 20px;
+    padding: 22px 16px;
+  }
+
+  .continent-complete-card__eyebrow {
+    margin-bottom: 6px;
+    font-size: 18px;
+  }
+
+  .continent-complete-card__title {
+    font-size: clamp(42px, 15vw, 62px);
   }
 
   .continent-complete-card__stats {
     grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 22px 0;
+  }
+
+  .continent-complete-card__stat {
+    padding: 12px;
+  }
+
+  .continent-complete-card__stat-value {
+    font-size: 28px;
+  }
+
+  .continent-complete-card__stat-label {
+    margin-top: 4px;
+    font-size: 16px;
   }
 
   .continent-complete-card__actions {
     flex-direction: column;
+    gap: 10px;
   }
 
   .continent-complete-card__button,
@@ -214,8 +239,28 @@
     width: 100%;
   }
 
+  .continent-complete-card__details {
+    margin-top: 20px;
+    padding: 16px;
+  }
+
+  .continent-complete-card__details-title {
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+
+  .continent-complete-card__score-bar-header {
+    font-size: 16px;
+  }
+
+  .continent-complete-card__score-bar-track {
+    height: 12px;
+  }
+
   .continent-complete-card__details-item {
     grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 10px 12px;
   }
 
   .continent-complete-card__details-meta {
