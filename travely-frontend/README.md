@@ -1,16 +1,31 @@
-# React + Vite
+# Travely frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Travely is a school project created as part of our studies at [Newton](https://www.newton.se/).
 
-Currently, two official plugins are available:
+The app is built for learning and practicing countries, flags and capitals through Learning, Practice and Challenge modes.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project note
 
-## React Compiler
+Travely is an educational project. Some country facts, hints and descriptions may be AI-assisted and should be treated as learning material rather than an official fact database or travel guide.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Rewards, discounts and travel offers shown in the app are not real. They are part of the project story and are included to demonstrate how Travely could work together with a travel company.
 
-## Expanding the ESLint configuration
+## Image and flag sources
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Country images are mainly sourced from:
+
+- [Unsplash](https://unsplash.com/)
+- [Pixabay](https://pixabay.com/)
+
+Detailed country image source links are listed in [CREDITS.md](public/CREDITS.md).
+
+Flag images are based on:
+
+- [flag-icons](https://github.com/lipis/flag-icons)
+
+## Tech stack
+
+- React
+- Vite
+- JavaScript
+- CSS

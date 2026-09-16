@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { getProgress, getQuestionCount, getUserPoints } from "../api/quizApi";
 import { getCurrentUser } from "../api/authApi";
-import CardOverlay from "../components/CardOverlay";
 import UserInfoCard from "../components/UserInfoCard";
 import UserResultsCard from "../components/UserResultsCard";
 import "./ProfilePage.css";
@@ -141,19 +140,17 @@ function ProfilePage() {
     <main className="profile-page">
       {/* Visa meny för inloggat läge */}
       <Navbar variant="app" points={points} />
-      {/* BACK BUTTON */}
-      <button
-        className="profile-page__back"
-        type="button"
-        onClick={() => navigate("/continents")}
-        aria-label="Go back to continents"
-      >
-        ←
-      </button>
-
       {/* SECTION with Title, subtext and buttons to show cards */}
       <section className="profile-page__content">
-        <h1 className="profile-page__logo">TRAVELY</h1>
+        {/* BACK BUTTON */}
+        <button
+          className="profile-page__back"
+          type="button"
+          onClick={() => navigate("/continents")}
+          aria-label="Go back to continents"
+        >
+          ←
+        </button>
         <p className="profile-page__tagline">
           Hi {user.name}! Welcome to your profile page.
         </p>
@@ -165,21 +162,27 @@ function ProfilePage() {
           <button
             className="primary-button profile-page__show-info-button"
             // user={user}
-            onClick={() => setShowUserInfoCard(true)}
+            onClick={() => {
+              setShowUserInfoCard(true);
+              setShowUserResultsCard(false);
+            }}
           >
             User details
           </button>
           <button
             className="primary-button profile-page__show-results-button"
             // user={user}
-            onClick={() => setShowUserResultsCard(true)}
+            onClick={() => {
+              setShowUserResultsCard(true);
+              setShowUserInfoCard(false);
+            }}
           >
             Results
           </button>
         </div>
         {/* CARDS */}
         {showUserInfoCard ? (
-          <CardOverlay onClose={() => setShowUserInfoCard(false)}>
+          <div className="profile-page__card-slot">
             <UserInfoCard
               key={userInfo?.id ?? userInfo?.email ?? user?.id ?? user?.email}
               userInfo={userInfo ?? user}
@@ -187,16 +190,16 @@ function ProfilePage() {
               onClose={() => setShowUserInfoCard(false)}
               onDelete={handleDeleteUser}
             />
-          </CardOverlay>
+          </div>
         ) : null}
         {showUserResultsCard ? (
-          <CardOverlay onClose={() => setShowUserResultsCard(false)}>
+          <div className="profile-page__card-slot profile-page__card-slot--results">
             <UserResultsCard
               results={results}
               // user={user}
               onClose={() => setShowUserResultsCard(false)}
             />
-          </CardOverlay>
+          </div>
         ) : null}
       </section>
     </main>

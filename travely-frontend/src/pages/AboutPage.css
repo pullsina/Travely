@@ -1,0 +1,136 @@
+.about-page {
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--color-text);
+  padding: 126px 32px 56px;
+}
+
+.about-page__back {
+  position: absolute;
+  top: 116px;
+  left: 48px;
+  border: 0;
+  background: transparent;
+  color: var(--color-warning);
+  cursor: pointer;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.about-page__back:hover,
+.about-page__back:focus-visible {
+  color: var(--color-text);
+}
+
+.about-card {
+  width: min(100%, 980px);
+  margin: 0 auto;
+  border: 2px solid var(--color-primary);
+  border-radius: 8px;
+  background: rgba(6, 22, 74, 0.9);
+  padding: 48px;
+}
+
+.about-card__eyebrow {
+  margin: 0 0 12px;
+  color: var(--color-warning);
+  font-family: "Actor", system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.about-card__title {
+  max-width: 780px;
+  margin: 0;
+  color: var(--color-primary);
+  font-family: "Asimovian", system-ui, sans-serif;
+  font-size: 52px;
+  line-height: 1.1;
+}
+
+.about-card__sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 42px;
+}
+
+.about-card__section {
+  border: 1px solid rgba(105, 224, 0, 0.75);
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.about-card__section h2 {
+  margin: 0 0 12px;
+  color: var(--color-primary);
+  font-size: 26px;
+}
+
+.about-card__section p {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.about-card__section a {
+  color: var(--color-warning);
+  font-weight: 700;
+}
+
+.about-card__section a:hover,
+.about-card__section a:focus-visible {
+  color: var(--color-text);
+}
+
+@media (max-width: 760px) {
+  .about-page {
+    padding: 104px 20px 40px;
+  }
+
+  .about-page__back {
+    top: 88px;
+    left: 24px;
+    font-size: 36px;
+  }
+
+  .about-card {
+    padding: 32px 22px;
+  }
+
+  .about-card__title {
+    font-size: 34px;
+  }
+
+  .about-card__sections {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .about-card__section {
+    padding: 18px;
+  }
+
+  .about-card__section h2 {
+    font-size: 23px;
+  }
+
+  .about-card__section p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .about-card {
+    padding: 28px 16px;
+  }
+
+  .about-card__title {
+    font-size: 30px;
+  }
+}
