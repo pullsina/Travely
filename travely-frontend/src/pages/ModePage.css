@@ -24,7 +24,7 @@
 
 .mode-page__back {
   position: absolute;
-  top: 92px;
+  top: 78px;
   left: 36px;
   width: 48px;
   height: 48px;
@@ -46,6 +46,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 44px;
 }
 
 .mode-card__header {
@@ -54,19 +55,67 @@
 }
 
 .mode-card__title {
-  margin: 0;
+  margin: 26px 0 0;
   font-family: "Actor", system-ui, sans-serif;
   font-size: 30px;
   font-weight: 400;
 }
 
-.mode-card__continent {
-  margin: 10px 0 0;
+.mode-card__continent-picker {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+
+.mode-card__select-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mode-card__continent-select {
+  width: auto;
+  max-width: min(100%, 520px);
+  border: 0;
+  background: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(38px, 6vw, 72px);
+  font-size: clamp(38px, 5vw, 78px);
   font-weight: 700;
   line-height: 0.95;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  appearance: none;
+  padding: 0 18px 0 0;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-warning) 50%),
+    linear-gradient(135deg, var(--color-warning) 50%, transparent 50%);
+  background-position:
+    calc(100% - 9px) 50%,
+    calc(100% - 1px) 50%;
+  background-size:
+    10px 10px,
+    10px 10px;
+  background-repeat: no-repeat;
+}
+
+.mode-card__continent-select:focus-visible {
+  outline: none;
+}
+
+.mode-card__continent-select option {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.mode-card__continent-select option:hover {
+  background: var(--color-warning);
+  color: var(--color-bg);
 }
 
 .mode-card__text {
@@ -137,8 +186,13 @@
 }
 
 @media (max-width: 760px) {
+  .mode-page {
+    justify-content: flex-start;
+    padding-top: 128px;
+  }
+
   .mode-page__back {
-    top: 78px;
+    top: 70px;
     left: 20px;
   }
 
@@ -151,7 +205,7 @@
   }
 
   .mode-card {
-    margin-top: 48px;
+    margin-top: 0;
   }
 
   .mode-card__options {

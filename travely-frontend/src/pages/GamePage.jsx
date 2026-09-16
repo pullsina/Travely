@@ -546,6 +546,10 @@ function GamePage() {
     setUsedHints((currentHints) => [...currentHints, nextHintType]);
   }
 
+  function handleCloseHint() {
+    setHintType("map");
+  }
+
   function handleSelectAnswer(answerId) {
     if (isSubmitted) {
       return;
@@ -746,6 +750,7 @@ function GamePage() {
           onSelectAnswer={handleSelectAnswer}
           onPrimaryHint={() => handleHint(primaryHintType)}
           onFactHint={() => handleHint("fact")}
+          onCloseHint={handleCloseHint}
           onSubmit={() => handleSubmit()}
         />
       ) : null}

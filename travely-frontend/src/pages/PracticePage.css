@@ -557,7 +557,7 @@
 
 @media (max-width: 760px) {
   .practice-page {
-    padding: 10px 20px 84px;
+    padding: 128px 20px 84px;
   }
 
   .practice-page__back {
@@ -566,7 +566,7 @@
   }
 
   .practice-card {
-    margin-top: 48px;
+    margin-top: 0;
   }
 
   .practice-card__text {
@@ -578,6 +578,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  justify-items: center;
   gap: 10px;
 }
 
@@ -586,6 +587,7 @@
     align-items: center;
     grid-column: 1 / -1;
     grid-row: 1;
+    justify-self: center;
   }
 
   .practice-card__button {
@@ -647,6 +649,14 @@
   .practice-question__primary-action,
   .practice-complete__actions {
     width: 100%;
+  }
+
+  .practice-question__primary-action {
+    order: 1;
+  }
+
+  .practice-question__secondary-action {
+    order: 2;
   }
 
   .practice-complete__actions {

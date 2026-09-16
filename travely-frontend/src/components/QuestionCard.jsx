@@ -42,11 +42,14 @@ function QuestionCard({
   onSelectAnswer,
   onPrimaryHint,
   onFactHint,
+  onCloseHint,
   onSubmit,
 }) {
   const progressPercent = (questionNumber / totalQuestions) * 100;
   const factHintImageUrl = factImageUrl || fallbackFactImageUrl;
   const mainQuestionText = questionText || capital;
+  const hasQuestionImage = Boolean(questionImageUrl);
+  const shouldShowQuestionImage = hasQuestionImage && hintType === "map";
   const displayedImage =
     hintType === "flag"
       ? flagUrl
@@ -55,6 +58,10 @@ function QuestionCard({
         : hintType === "capital"
           ? ""
           : mapImage;
+  const mediaPanelType = shouldShowQuestionImage ? "question-image" : hintType;
+  const mediaImage = shouldShowQuestionImage ? questionImageUrl : displayedImage;
+  const mediaAlt = shouldShowQuestionImage ? mainQuestionText : `${hintType} hint`;
+  const canCloseHint = hasQuestionImage && hintType !== "map";
 
   return (
     <section className="question-card" aria-labelledby="question-card-title">
@@ -76,76 +83,97 @@ function QuestionCard({
         </p>
       </header>
 
-      <div className="question-card__prompt">
-        {questionImageUrl ? (
-          <img
-            className="question-card__question-image"
-            src={questionImageUrl}
-            alt={mainQuestionText}
-          />
-        ) : (
-          <p className="question-card__capital">{mainQuestionText}</p>
-        )}
-        <p className="question-card__text">{promptText}</p>
-      </div>
-
-      <div className="question-card__body">
-        <div className="question-card__media-panel" data-hint-type={hintType}>
-          <div className="question-card__image-frame">
-            {hintType === "capital" ? (
-              <p className="question-card__capital-hint">
-                Capital: {capitalHint}
-              </p>
-            ) : displayedImage ? (
-              <img
-                src={displayedImage}
-                alt={`${hintType} hint`}
-                onError={(event) => {
-                  if (
-                    hintType === "fact" &&
-                    event.currentTarget.src !== fallbackFactImageUrl
-                  ) {
-                    event.currentTarget.src = fallbackFactImageUrl;
-                  }
-                }}
-              />
-            ) : (
-              <span>No hint selected</span>
-            )}
-          </div>
-
-          {hintType === "fact" && (
-            <p className="question-card__fact">{factText}</p>
+      <div
+        className="question-card__body"
+        data-has-question-image={hasQuestionImage}
+      >
+        <div className="question-card__prompt">
+          {!hasQuestionImage && (
+            <p className="question-card__capital">{mainQuestionText}</p>
           )}
+          <p className="question-card__text">{promptText}</p>
         </div>
 
-        <div className="question-card__answers" aria-label="Answer options">
-          {answers.map((answer) => (
-            <button
-              className="question-card__answer"
-              data-selected={selectedAnswerId === answer.id}
-              data-correct={isSubmitted && answer.id === correctAnswerId}
-              data-incorrect={
-                isSubmitted &&
-                selectedAnswerId === answer.id &&
-                answer.id !== correctAnswerId
-              }
-              disabled={isSubmitted}
-              key={answer.id}
-              type="button"
-              onClick={() => onSelectAnswer?.(answer.id)}
+        <div className="question-card__content">
+          <div
+            className="question-card__visual"
+            data-has-question-image={hasQuestionImage}
+          >
+            <div
+              className="question-card__media-panel"
+              data-hint-type={mediaPanelType}
             >
-              {answer.imageUrl ? (
-                <img
-                  className="question-card__answer-image"
-                  src={answer.imageUrl}
-                  alt={answer.label}
-                />
-              ) : (
-                answer.label
+              {canCloseHint && (
+                <button
+                  className="question-card__close-hint"
+                  type="button"
+                  aria-label="Close hint and show question flag"
+                  onClick={onCloseHint}
+                >
+                  ×
+                </button>
               )}
-            </button>
-          ))}
+
+              <div className="question-card__image-frame">
+                {hintType === "capital" ? (
+                  <p className="question-card__capital-hint">
+                    Capital: {capitalHint}
+                  </p>
+                ) : mediaImage ? (
+                  <img
+                    className={
+                      hasQuestionImage ? "question-card__question-image" : ""
+                    }
+                    src={mediaImage}
+                    alt={mediaAlt}
+                    onError={(event) => {
+                      if (
+                        hintType === "fact" &&
+                        event.currentTarget.src !== fallbackFactImageUrl
+                      ) {
+                        event.currentTarget.src = fallbackFactImageUrl;
+                      }
+                    }}
+                  />
+                ) : (
+                  <span>No hint selected</span>
+                )}
+              </div>
+
+              {hintType === "fact" && (
+                <p className="question-card__fact">{factText}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="question-card__answers" aria-label="Answer options">
+            {answers.map((answer) => (
+              <button
+                className="question-card__answer"
+                data-selected={selectedAnswerId === answer.id}
+                data-correct={isSubmitted && answer.id === correctAnswerId}
+                data-incorrect={
+                  isSubmitted &&
+                  selectedAnswerId === answer.id &&
+                  answer.id !== correctAnswerId
+                }
+                disabled={isSubmitted}
+                key={answer.id}
+                type="button"
+                onClick={() => onSelectAnswer?.(answer.id)}
+              >
+                {answer.imageUrl ? (
+                  <img
+                    className="question-card__answer-image"
+                    src={answer.imageUrl}
+                    alt={answer.label}
+                  />
+                ) : (
+                  answer.label
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
