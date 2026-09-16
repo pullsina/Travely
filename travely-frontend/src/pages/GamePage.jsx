@@ -78,6 +78,7 @@ const capitalHintQuestionTypes = new Set(["FlagToCountry", "CountryToFlag"]);
 
 const QUESTION_TIME_LIMIT = 15;
 const INFO_CARD_TIME_LIMIT = 5;
+const PAUSE_TIMER_FOR_DESIGN = false;
 const LEAVE_CHALLENGE_WARNING =
   "Are you sure you want to leave? Your current challenge progress and unsaved points will be lost.";
 
@@ -442,7 +443,13 @@ function GamePage() {
   // Question timer
   // ---------------------------
   useEffect(() => {
-    if (!question || answerResult || showCountryInfo || isContinentComplete) {
+    if (
+      PAUSE_TIMER_FOR_DESIGN ||
+      !question ||
+      answerResult ||
+      showCountryInfo ||
+      isContinentComplete
+    ) {
       return undefined;
     }
 
@@ -478,7 +485,12 @@ function GamePage() {
   // Automatically continue after showing country info
   // ---------------------------
   useEffect(() => {
-    if (!showCountryInfo || !question || isContinentComplete) {
+    if (
+      PAUSE_TIMER_FOR_DESIGN ||
+      !showCountryInfo ||
+      !question ||
+      isContinentComplete
+    ) {
       return undefined;
     }
 
