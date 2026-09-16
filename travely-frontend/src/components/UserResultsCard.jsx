@@ -14,26 +14,26 @@ function UserResultsCard({ results, onClose }) {
       <div className="user-results-card__header">
         <div className="user-results-card__heading">
           <h1 id="user-results-card" className="user-results-card__title">
-            User results
+            User Result
           </h1>
         </div>
         <div className="user-results-card__actions">
           <button
-            className="primary-button user-results-card__actions__close-button"
+            className="user-results-card__actions__close-button"
             type="button"
             onClick={onClose}
             aria-label="Close user results card"
+            title="Close"
           >
-            Close
+            <span aria-hidden="true" />
           </button>
         </div>
       </div>
-      <div>
-        <h2 className="user-results-card__title">Total result overview</h2>
-      </div>
 
       <section className="user-results-card__total-result-overview">
-        <div className="user-results-card__progressbar-label"></div>
+        <h2 className="user-results-card__section-title">
+          Total result overview
+        </h2>
         <div className="user-results-card__progressbar-background">
           <div
             className="user-results-card__progressbar-fill"
@@ -42,16 +42,17 @@ function UserResultsCard({ results, onClose }) {
             }}
           />
         </div>
-        <p>*** Will be replaced by donut chart ***</p>
+        <p className="user-results-card__placeholder">
+          Donut chart will be added later.
+        </p>
       </section>
 
-      <div>
-        <h2 className="user-results-card__title">
+      <section className="user-results-card__continent-results">
+        <h2 className="user-results-card__section-title">
           Result overview per continent
         </h2>
-      </div>
 
-      {resultEntries.map((progress) => {
+        {resultEntries.map((progress) => {
         const correctAnswers = progress?.correctAnswers || 0;
         // const answeredQuestions = progress?.answeredQuestions || 0;
         const totalQuestions = progress?.totalQuestions || 0;
@@ -74,65 +75,37 @@ function UserResultsCard({ results, onClose }) {
             className="user-results-card__continent"
             key={progress.continent}
           >
-            <div className="user-results-card__continent-grid">
-              {/* Show results for each continent - as a progress bar */}
-              <div className="user-results-card__progressbar-heading">
-                <h3 className="user-results-card__progressbar-title">
-                  {progress.continent}
-                </h3>
-              </div>
-              {/* <div className="user-results-card__continent-subgrid"> */}
-              <div className="user-results-card__progressbar-label">
-                <p>Percentage correct answers* </p>
-              </div>
+            <h3 className="user-results-card__continent-title">
+              {progress.continent}
+            </h3>
+
+            <div className="user-results-card__metric">
+              <p className="user-results-card__progressbar-label">
+                Correct answers
+              </p>
               <div className="user-results-card__progressbar-background">
                 <div
                   className="user-results-card__progressbar-fill"
                   style={{ width: `${percentageCorrects}%` }}
                 />
               </div>
-              <div> </div>
-              <div className="user-results-card__progressbar-label">
-                <p>Percentage scores*</p>
-              </div>
+            </div>
+
+            <div className="user-results-card__metric">
+              <p className="user-results-card__progressbar-label">Score</p>
               <div className="user-results-card__progressbar-background">
                 <div
                   className="user-results-card__progressbar-fill"
                   style={{ width: `${percentageScores}%` }}
                 />
               </div>
-              {/* </div> */}
-            </div>
-            <div className="user-results-card__progressbar">
-              {/* Show results for each continent - as a progress bar */}
-              {/* <h2 className="user-results-card__title">{progress.continent}</h2>
-              <div className="user-results-card__list-result__progressbar-background">
-                <div
-                  className="user-results-card__list-result__progressbar-fill"
-                  style={{ width: `${percentage}%` }}
-                />
-              </div> */}
-            </div>
-            {/* Show results for each continent - as a list */}
-            <div className="user-results-card__list">
-              {/* {stats.map((stat) => (
-                <div
-                  className="user-results-card__list-result"
-                  key={stat.label}
-                >
-                  <span className="user-results-card__list-result-label">
-                    {stat.label}
-                  </span>
-                  <span className="user-results-card__list-result-value">
-                    {stat.value}
-                  </span>
-                </div>
-              ))} */}
             </div>
           </section>
         );
-      })}
-      <div>
+        })}
+      </section>
+
+      <div className="user-results-card__note">
         <p>
           *Percentages are calculated based on the number of correct answers out
           of the total number of questions and earned scores out of total
