@@ -712,7 +712,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .learning-page {
     min-height: calc(100svh - 64px);
     padding-top: 84px;
@@ -799,13 +799,13 @@
   }
 }
 
-@media (min-width: 761px) and (max-width: 1007px) {
+@media (min-width: 600px) and (max-width: 1007px) {
   .learning-country-list-toggle {
     padding-block: 10px;
   }
 }
 
-@media (min-width: 481px) and (max-width: 760px) {
+@media (min-width: 600px) and (max-width: 760px) {
   .learning-card__image-navigation {
     inset: 0 -68px;
   }
