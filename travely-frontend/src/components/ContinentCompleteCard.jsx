@@ -15,7 +15,9 @@ function ContinentCompleteCard({
   onBackToContinents,
 }) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [isRewardClaimed, setIsRewardClaimed] = useState(false);
+  const [claimedRewardCode, setClaimedRewardCode] = useState(() => {
+    return localStorage.getItem(`travely-reward-${continent}`);
+  });
   const [isCodeCopied, setIsCodeCopied] = useState(false);
   const answeredQuestions = progress?.answeredQuestions || 0;
   const correctAnswers = progress?.correctAnswers || 0;
@@ -92,7 +94,7 @@ function ContinentCompleteCard({
 
       {rewardDiscount > 0 ? (
         <div className="continent-complete-card__reward">
-          {!isRewardClaimed ? (
+          {!claimedRewardCode ? (
             <>
               <p className="continent-complete-card__reward-title">
                 Reward unlocked!
@@ -106,7 +108,16 @@ function ContinentCompleteCard({
               <button
                 className="primary-button continent-complete-card__reward-button"
                 type="button"
-                onClick={() => setIsRewardClaimed(true)}
+                onClick={() => {
+                  const rewardCode = `TRAVELY-${continent}-${rewardDiscount}`;
+
+                  setClaimedRewardCode(rewardCode);
+
+                  localStorage.setItem(
+                    `travely-reward-${continent}`,
+                    rewardCode,
+                  );
+                }}
               >
                 Claim reward
               </button>
@@ -118,21 +129,19 @@ function ContinentCompleteCard({
               </p>
 
               <p className="continent-complete-card__reward-text">
-                You unlocked a {rewardDiscount}% travel discount.
+                Your reward is ready to use.
               </p>
 
               <div className="continent-complete-card__reward-code-container">
                 <span className="continent-complete-card__reward-code">
-                  TRAVELY-{continent}-{rewardDiscount}
+                  {claimedRewardCode}
                 </span>
 
                 <button
                   className="continent-complete-card__copy-button"
                   type="button"
                   onClick={() => {
-                    navigator.clipboard.writeText(
-                      `TRAVELY-${continent}-${rewardDiscount}`,
-                    );
+                    navigator.clipboard.writeText(claimedRewardCode);
                     setIsCodeCopied(true);
                   }}
                 >
