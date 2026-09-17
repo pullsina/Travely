@@ -16,6 +16,7 @@ function ContinentCompleteCard({
 }) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isRewardClaimed, setIsRewardClaimed] = useState(false);
+  const [isCodeCopied, setIsCodeCopied] = useState(false);
   const answeredQuestions = progress?.answeredQuestions || 0;
   const correctAnswers = progress?.correctAnswers || 0;
   const rewardDiscount = getRewardDiscount(correctAnswers, answeredQuestions);
@@ -120,9 +121,24 @@ function ContinentCompleteCard({
                 You unlocked a {rewardDiscount}% travel discount.
               </p>
 
-              <p className="continent-complete-card__reward-code">
-                TRAVELY-{continent}-{rewardDiscount}
-              </p>
+              <div className="continent-complete-card__reward-code-container">
+                <span className="continent-complete-card__reward-code">
+                  TRAVELY-{continent}-{rewardDiscount}
+                </span>
+
+                <button
+                  className="continent-complete-card__copy-button"
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `TRAVELY-${continent}-${rewardDiscount}`,
+                    );
+                    setIsCodeCopied(true);
+                  }}
+                >
+                  {isCodeCopied ? "Copied!" : "Copy code"}
+                </button>
+              </div>
             </>
           )}
         </div>

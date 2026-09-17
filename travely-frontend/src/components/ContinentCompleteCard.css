@@ -90,12 +90,29 @@
   font-weight: 800;
 }
 
+.continent-complete-card__copy-button {
+    padding: 5px 10px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
 .continent-complete-card__button, 
 .continent-complete-card__reward-button {
   width: 250px;
   max-height: 40px;
   font-size: 18px;
   margin: 5px;
+}
+
+.continent-complete-card__reward-code-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 5px;
 }
 
 .continent-complete-card__profile-link {
