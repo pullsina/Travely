@@ -40,6 +40,8 @@ const continentConfig = {
 };
 
 const fallbackFactImageUrl = "/images/countries/hints/fallback.png";
+const continentOptions = Object.values(continentConfig);
+
 function LearningPage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -53,9 +55,12 @@ function LearningPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardHeight, setCardHeight] = useState(null);
   const [isCountryListOpen, setIsCountryListOpen] = useState(false);
+  const [enlargedImage, setEnlargedImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pageError, setPageError] = useState("");
   const cardRef = useRef(null);
+  const cardSwipeStartRef = useRef(null);
+  const lastCardSwipeAtRef = useRef(0);
 
   const currentCountry = countries[currentIndex];
   const isFirstCard = currentIndex === 0;
@@ -170,11 +175,77 @@ function LearningPage() {
     setCurrentIndex((index) => Math.min(index + 1, countries.length - 1));
   }
 
+  function handleCardTouchStart(event) {
+    const interactiveButton = event.target.closest("button");
+
+    if (interactiveButton && !interactiveButton.dataset.swipeSurface) {
+      cardSwipeStartRef.current = null;
+      return;
+    }
+
+    const touch = event.touches[0];
+    cardSwipeStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+    };
+  }
+
+  function handleCardTouchEnd(event) {
+    const swipeStart = cardSwipeStartRef.current;
+    cardSwipeStartRef.current = null;
+
+    if (!swipeStart) {
+      return;
+    }
+
+    const touch = event.changedTouches[0];
+    const horizontalDistance = touch.clientX - swipeStart.x;
+    const verticalDistance = touch.clientY - swipeStart.y;
+
+    if (
+      Math.abs(horizontalDistance) < 50 ||
+      Math.abs(horizontalDistance) <= Math.abs(verticalDistance)
+    ) {
+      return;
+    }
+
+    if (horizontalDistance < 0) {
+      handleNextCard();
+    } else {
+      handlePreviousCard();
+    }
+
+    lastCardSwipeAtRef.current = Date.now();
+  }
+
+  function openEnlargedImage(image) {
+    if (Date.now() - lastCardSwipeAtRef.current < 400) {
+      return;
+    }
+
+    setEnlargedImage(image);
+  }
+
   function handleImageError(event) {
     if (!event.currentTarget.src.endsWith(fallbackFactImageUrl)) {
       event.currentTarget.src = fallbackFactImageUrl;
     }
   }
+
+  useEffect(() => {
+    if (!enlargedImage) {
+      return undefined;
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setEnlargedImage(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [enlargedImage]);
 
   return (
     <main
@@ -185,17 +256,39 @@ function LearningPage() {
     >
       <Navbar variant="app" points={points} />
 
-      <button
-        className="learning-page__back"
-        type="button"
-        onClick={() => navigate(`/mode/${currentContinent.label}`)}
-        aria-label="Go back to mode selection"
-      >
-        ←
-      </button>
-
       <section className="learning-page__content">
-        <h1 className="learning-page__continent">{currentContinent.label}</h1>
+        <div className="learning-page__heading-row">
+          <button
+            className="learning-page__back"
+            type="button"
+            onClick={() => navigate(`/mode/${currentContinent.label}`)}
+            aria-label="Go back to mode selection"
+          >
+            ←
+          </button>
+
+          <label className="learning-page__continent-picker">
+            <span className="learning-page__select-label">
+              Choose continent
+            </span>
+            <select
+              className="learning-page__continent"
+              value={currentContinent.label}
+              onChange={(event) =>
+                navigate(`/learning/${encodeURIComponent(event.target.value)}`)
+              }
+            >
+              {continentOptions.map((continentOption) => (
+                <option
+                  key={continentOption.label}
+                  value={continentOption.label}
+                >
+                  {continentOption.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         <p className="learning-page__text">
           Learn countries, capitals, flags and facts before you start the quiz.
         </p>
@@ -232,7 +325,18 @@ function LearningPage() {
               aria-expanded={isCountryListOpen}
               aria-controls="learning-country-list"
             >
-              <span aria-hidden="true">☰</span>
+              <span
+                className={`learning-country-list-toggle__icon${
+                  isCountryListOpen
+                    ? " learning-country-list-toggle__icon--open"
+                    : ""
+                }`}
+                aria-hidden="true"
+              >
+                <span />
+                <span />
+                <span />
+              </span>
               Countries
               <strong>{currentIndex + 1} / {countries.length}</strong>
             </button>
@@ -286,18 +390,36 @@ function LearningPage() {
               </div>
             </aside>
 
-            <article className="learning-card" ref={cardRef}>
+            <article
+              className="learning-card"
+              ref={cardRef}
+              onTouchStart={handleCardTouchStart}
+              onTouchEnd={handleCardTouchEnd}
+            >
               <p className="learning-card__progress">
                 {currentIndex + 1} / {countries.length}
               </p>
 
               <div className="learning-card__top">
                 {currentCountry.flagUrl ? (
-                  <img
-                    className="learning-card__flag"
-                    src={currentCountry.flagUrl}
-                    alt={`${currentCountry.country} flag`}
-                  />
+                  <button
+                    className="learning-card__image-open learning-card__flag-open"
+                    type="button"
+                    data-swipe-surface="true"
+                    onClick={() =>
+                      openEnlargedImage({
+                        src: currentCountry.flagUrl,
+                        alt: `${currentCountry.country} flag`,
+                      })
+                    }
+                    aria-label={`Enlarge ${currentCountry.country} flag`}
+                  >
+                    <img
+                      className="learning-card__flag"
+                      src={currentCountry.flagUrl}
+                      alt={`${currentCountry.country} flag`}
+                    />
+                  </button>
                 ) : null}
 
                 <div>
@@ -311,21 +433,59 @@ function LearningPage() {
               </div>
 
               <div className="learning-card__body">
-                <img
-                  className="learning-card__image"
-                  src={currentCountry.factUrl || fallbackFactImageUrl}
-                  alt={`${currentCountry.country} fun fact`}
-                  onError={handleImageError}
-                />
+                <div className="learning-card__image-wrap">
+                  <button
+                    className="learning-card__image-open"
+                    type="button"
+                    data-swipe-surface="true"
+                    onClick={() =>
+                      openEnlargedImage({
+                        src:
+                          currentCountry.factUrl || fallbackFactImageUrl,
+                        alt: `${currentCountry.country} fun fact`,
+                      })
+                    }
+                    aria-label={`Enlarge ${currentCountry.country} image`}
+                  >
+                    <img
+                      className="learning-card__image"
+                      src={currentCountry.factUrl || fallbackFactImageUrl}
+                      alt={`${currentCountry.country} fun fact`}
+                      onError={handleImageError}
+                    />
+                  </button>
+
+                  <div className="learning-card__image-navigation">
+                    <button
+                      className="learning-card__image-button"
+                      type="button"
+                      onClick={handlePreviousCard}
+                      disabled={isFirstCard}
+                      aria-label="Previous country"
+                    >
+                      <span aria-hidden="true">←</span>
+                    </button>
+
+                    <button
+                      className="learning-card__image-button"
+                      type="button"
+                      onClick={handleNextCard}
+                      disabled={isLastCard}
+                      aria-label="Next country"
+                    >
+                      <span aria-hidden="true">→</span>
+                    </button>
+                  </div>
+                </div>
 
                 <div className="learning-card__fact">
                   <h3>DID YOU KNOW?</h3>
                   <p>{currentCountry.fact || "More facts are coming soon."}</p>
                 </div>
-            </div>
+              </div>
 
             <div className="learning-card__actions">
-              <div className="learning-card__action-group">
+              <div className="learning-card__action-group learning-card__action-group--navigation">
                 <button
                   className="learning-card__button learning-card__button--secondary"
                   type="button"
@@ -351,7 +511,7 @@ function LearningPage() {
                   type="button"
                   onClick={() => navigate(`/practice/${currentContinent.label}`)}
                 >
-                  Start practice
+                  Practice
                 </button>
 
                 <button
@@ -359,7 +519,7 @@ function LearningPage() {
                   type="button"
                   onClick={() => navigate(`/game/${currentContinent.label}`)}
                 >
-                  Start challenge
+                  Challenge
                 </button>
               </div>
             </div>
@@ -367,6 +527,40 @@ function LearningPage() {
           </div>
         ) : null}
       </section>
+
+      {enlargedImage ? (
+        <div
+          className="learning-image-viewer"
+          role="dialog"
+          aria-modal="true"
+          aria-label={enlargedImage.alt}
+          onClick={() => setEnlargedImage(null)}
+        >
+          <div
+            className="learning-image-viewer__content"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="learning-image-viewer__close"
+              type="button"
+              onClick={() => setEnlargedImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+
+            <button
+              className="learning-image-viewer__image-button"
+              type="button"
+              onClick={() => setEnlargedImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <img src={enlargedImage.src} alt={enlargedImage.alt} />
+            </button>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
