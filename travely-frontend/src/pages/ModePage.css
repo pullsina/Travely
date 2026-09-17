@@ -154,7 +154,7 @@
   .mode-page {
     min-height: calc(100svh - 64px);
     justify-content: flex-start;
-    padding: 72px 20px 36px;
+    padding: 72px 30px 36px;
   }
 
   .mode-card__title {
@@ -162,13 +162,14 @@
   }
 
   .mode-card__text {
-    margin-top: 12px;
+    margin-top: 20px;
     font-size: 16px;
     line-height: 1.35;
   }
 
   .mode-card__continent {
     font-size: 24px;
+    padding-top: 20px;
   }
 
   .mode-card {
@@ -177,7 +178,7 @@
 
   .mode-card__options {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 25px;
     margin-top: 24px;
   }
 
