@@ -13,6 +13,7 @@ function ContinentCompleteCard({
   details = [],
   detailsError = "",
   onBackToContinents,
+  onDoChallengeAgain,
 }) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [claimedRewardCode, setClaimedRewardCode] = useState(() => {
@@ -160,6 +161,13 @@ function ContinentCompleteCard({
           onClick={onBackToContinents}
         >
           Back to continents
+        </button>
+        <button
+          className="primary-button continent-complete-card__button"
+          type="button"
+          onClick={onDoChallengeAgain}
+        >
+          Do challenge again
         </button>
         <button
           className="continent-complete-card__profile-link"

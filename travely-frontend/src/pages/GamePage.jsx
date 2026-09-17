@@ -569,6 +569,28 @@ function GamePage() {
     navigate("/continents");
   }
 
+  //function for user to redo a challenge, clears previous challenge attempt
+  function handleDoChallengeAgain() {
+    window.sessionStorage.removeItem(currentQuestionStorageKey);
+    window.sessionStorage.removeItem(challengeAttemptStorageKey);
+
+    challengeAnswersRef.current = [];
+    setChallengeAnswers([]);
+    setUsedQuestionIds([]);
+    setQuestionNumber(1);
+    setQuestion(null);
+    setHintType("map");
+    setUsedHints([]);
+    setSelectedAnswerId(null);
+    setAnswerResult(null);
+    setShowCountryInfo(false);
+    setTimeLeft(QUESTION_TIME_LIMIT);
+    setInfoTimeLeft(INFO_CARD_TIME_LIMIT);
+    setIsContinentComplete(false);
+    setSubmitError("");
+    setGameError("");
+  }
+
   async function handleSubmit(answerIdOverride) {
     if (!question) {
       return;
@@ -693,6 +715,7 @@ function GamePage() {
           details={resultDetails}
           detailsError={resultDetailsError}
           onBackToContinents={() => navigate("/continents")}
+          onDoChallengeAgain={handleDoChallengeAgain}
         />
       ) : null}
 
