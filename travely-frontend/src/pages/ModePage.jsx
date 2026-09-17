@@ -25,6 +25,8 @@ const continentConfig = {
   },
 };
 
+const continentOptions = Object.values(continentConfig);
+
 function ModePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -48,15 +50,15 @@ function ModePage() {
   }, []);
 
   const handleLearning = () => {
-    navigate(`/learning/${continent}`);
+    navigate(`/learning/${encodeURIComponent(currentContinent.label)}`);
   };
 
   const handlePractice = () => {
-    navigate(`/practice/${continent}`);
+    navigate(`/practice/${encodeURIComponent(currentContinent.label)}`);
   };
 
   const handleChallenge = () => {
-    navigate(`/game/${continent}`);
+    navigate(`/game/${encodeURIComponent(currentContinent.label)}`);
   };
 
   return (
@@ -79,15 +81,33 @@ function ModePage() {
 
       <section className="mode-card" aria-labelledby="mode-title">
         <header className="mode-card__header">
-          <h1 id="mode-title" className="mode-card__title">
-            Choose your mode
-          </h1>
-
-          <p className="mode-card__continent">{currentContinent.label}</p>
+          <label className="mode-card__continent-picker">
+            <span className="mode-card__select-label">Choose continent</span>
+            <select
+              className="mode-card__continent-select"
+              value={currentContinent.label}
+              onChange={(event) =>
+                navigate(`/mode/${encodeURIComponent(event.target.value)}`)
+              }
+            >
+              {continentOptions.map((continentOption) => (
+                <option
+                  key={continentOption.label}
+                  value={continentOption.label}
+                >
+                  {continentOption.label}
+                </option>
+              ))}
+            </select>
+          </label>
 
           <p className="mode-card__text">
             Are you learning, practicing or testing your skills?
           </p>
+
+          <h1 id="mode-title" className="mode-card__title">
+            Choose your mode
+          </h1>
         </header>
 
         <div className="mode-card__options">

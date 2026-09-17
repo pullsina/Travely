@@ -399,7 +399,7 @@
 
 @media (max-width: 1007px) {
   .learning-page {
-    padding: 40px 20px 84px;
+    padding: 128px 20px 84px;
   }
 
   .learning-page__back {
@@ -408,7 +408,7 @@
   }
 
   .learning-page__content {
-    margin-top: 44px;
+    margin-top: 0;
   }
 
   .learning-page__study {
