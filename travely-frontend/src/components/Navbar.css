@@ -106,6 +106,26 @@
   position: relative;
 }
 
+.navbar__continents-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__continents-trigger::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid var(--color-warning);
+  transition: transform 0.2s ease;
+}
+
+.navbar__continents-trigger[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
 .navbar__continents-dropdown {
   position: absolute;
   top: 100%;
@@ -137,6 +157,11 @@
 .navbar__dropdown-link:focus-visible {
   background: var(--color-primary);
   color: var(--color-bg);
+}
+
+.navbar__dropdown-link--active {
+  color: var(--color-warning);
+  font-weight: 700;
 }
 
 .navbar__points {
@@ -383,6 +408,11 @@
   .navbar__mobile-continent-link:focus-visible {
     background: var(--color-primary);
     color: var(--color-bg);
+  }
+
+  .navbar__mobile-continent-link--active {
+    color: var(--color-warning);
+    font-weight: 700;
   }
 
   .navbar__mobile-mode-list {

@@ -40,8 +40,6 @@ const continentConfig = {
 };
 
 const fallbackFactImageUrl = "/images/countries/hints/fallback.png";
-const continentOptions = Object.values(continentConfig);
-
 function LearningPage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -55,7 +53,6 @@ function LearningPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardHeight, setCardHeight] = useState(null);
   const [isCountryListOpen, setIsCountryListOpen] = useState(false);
-  const [isContinentPickerOpen, setIsContinentPickerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pageError, setPageError] = useState("");
   const cardRef = useRef(null);
@@ -198,31 +195,7 @@ function LearningPage() {
       </button>
 
       <section className="learning-page__content">
-        <label className="learning-page__continent-picker">
-          <span className="learning-page__select-label">
-            Choose continent
-          </span>
-          <select
-            className="learning-page__continent-select"
-            value={currentContinent.label}
-            onFocus={() => setIsContinentPickerOpen(true)}
-            onBlur={() => setIsContinentPickerOpen(false)}
-            onMouseDown={() => setIsContinentPickerOpen(true)}
-            onChange={(event) => {
-              setIsContinentPickerOpen(false);
-              navigate(`/learning/${encodeURIComponent(event.target.value)}`);
-            }}
-          >
-            {continentOptions.map((continentOption) => (
-              <option
-                key={continentOption.label}
-                value={continentOption.label}
-              >
-                {continentOption.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <h1 className="learning-page__continent">{currentContinent.label}</h1>
         <p className="learning-page__text">
           Learn countries, capitals, flags and facts before you start the quiz.
         </p>
@@ -245,11 +218,7 @@ function LearningPage() {
 
         {!isLoading && !pageError && currentCountry ? (
           <div
-            className={
-              isContinentPickerOpen
-                ? "learning-page__study learning-page__study--muted"
-                : "learning-page__study"
-            }
+            className="learning-page__study"
             style={
               cardHeight
                 ? { "--learning-card-height": `${cardHeight}px` }

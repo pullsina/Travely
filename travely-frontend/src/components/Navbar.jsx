@@ -228,7 +228,7 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
               onMouseLeave={() => setIsContinentsOpen(false)}
             >
               <button
-                className={`navbar__link${
+                className={`navbar__link navbar__continents-trigger${
                   isContinentsPage ? " navbar__link--active" : ""
                 }`}
                 type="button"
@@ -247,10 +247,19 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                 <div className="navbar__continents-dropdown">
                   {continentLinks.map((continent) => (
                     <button
-                      className="navbar__dropdown-link"
+                      className={`navbar__dropdown-link${
+                        currentContinent === continent.label
+                          ? " navbar__dropdown-link--active"
+                          : ""
+                      }`}
                       key={continent.label}
                       type="button"
                       onClick={() => navigateFromMenu(continent.path)}
+                      aria-current={
+                        currentContinent === continent.label
+                          ? "page"
+                          : undefined
+                      }
                     >
                       {continent.label}
                     </button>
@@ -358,10 +367,19 @@ function Navbar({ variant = "guest", showAuthLinks = false, points }) {
                 <div className="navbar__mobile-continent-list">
                   {continentLinks.map((continent) => (
                     <button
-                      className="navbar__mobile-continent-link"
+                      className={`navbar__mobile-continent-link${
+                        currentContinent === continent.label
+                          ? " navbar__mobile-continent-link--active"
+                          : ""
+                      }`}
                       key={continent.label}
                       type="button"
                       onClick={() => navigateFromMenu(continent.path)}
+                      aria-current={
+                        currentContinent === continent.label
+                          ? "page"
+                          : undefined
+                      }
                     >
                       {continent.label}
                     </button>

@@ -52,61 +52,14 @@
   font-size: 22px;
 }
 
-.learning-page__continent-picker {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
+.learning-page__continent {
   margin: 0;
-}
-
-.learning-page__select-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.learning-page__continent-select {
-  max-width: min(100%, 620px);
-  /* margin: 10px 0 0; */
-  border: 0;
-  background: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
   font-size: clamp(38px, 5vw, 78px);
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
-  text-align-last: center;
-  cursor: pointer;
-  appearance: none;
-  padding: 0 42px 0 0;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-warning) 50%),
-    linear-gradient(135deg, var(--color-warning) 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 10px) 50%;
-  background-size:
-    10px 10px,
-    10px 10px;
-  background-repeat: no-repeat;
-}
-
-.learning-page__continent-select:focus-visible {
-  outline: none;
-}
-
-.learning-page__continent-select option {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.learning-page__continent-select option:hover {
-  background: var(--color-warning);
-  color: var(--color-bg);
 }
 
 .learning-page__text {
@@ -137,12 +90,6 @@
   transition:
     filter 0.18s ease,
     opacity 0.18s ease;
-}
-
-.learning-page__study--muted {
-  filter: blur(2px);
-  opacity: 0.42;
-  pointer-events: none;
 }
 
 .learning-country-list-toggle {
@@ -355,8 +302,8 @@
   font-size: 18px;
   font-weight: 700;
   display: flex;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .learning-card__button--secondary {
@@ -562,5 +509,11 @@
   .learning-card__action-group {
     width: 100%;
     flex-direction: row;
+  }
+}
+
+@media (max-width: 760px) {
+  .learning-page__continent {
+    font-size: 24px;
   }
 }

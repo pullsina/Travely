@@ -60,61 +60,14 @@
   font-weight: 400;
 }
 
-.practice-card__continent-picker {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0;
-}
-
-.practice-card__select-label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
-.practice-card__continent-select {
-  max-width: min(100%, 620px);
+.practice-card__continent {
   margin: 3px;
-  border: 0;
-  background: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
   font-size: clamp(38px, 3vw, 72px);
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
-  text-align-last: center;
-  cursor: pointer;
-  appearance: none;
-  padding: 0 42px 0 0;
-  background-image:
-    linear-gradient(45deg, transparent 50%, var(--color-warning) 50%),
-    linear-gradient(135deg, var(--color-warning) 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 10px) 50%;
-  background-size:
-    10px 10px,
-    10px 10px;
-  background-repeat: no-repeat;
-}
-
-.practice-card__continent-select:focus-visible {
-  outline: none;
-}
-
-.practice-card__continent-select option {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.practice-card__continent-select option:hover {
-  background: var(--color-warning);
-  color: var(--color-bg);
 }
 
 .practice-card__text {
@@ -574,13 +527,17 @@
     margin-top: 15px;
   }
 
-.practice-card__switch-row {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-  gap: 10px;
-}
+  .practice-card__continent {
+    font-size: 24px;
+  }
+
+  .practice-card__switch-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    gap: 10px;
+  }
 
   .practice-card__options {
     height: auto;
@@ -603,42 +560,42 @@
     align-items: stretch;
   }
 
-   .practice-card__direction-button {
+  .practice-card__direction-button {
     height: 25px;
     display: flex;
     justify-content: center;
     align-items: center;
-   }
+  }
 
   .practice-card__direction-switch--left {
-  grid-column: 1;
-  grid-row: 2;
-  display: flex;
-  align-items: center;
-}
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+  }
 
-.practice-card__direction-switch--right {
-  grid-column: 2;
-  grid-row: 2;
-  display: flex;
-  align-items: center;
-}
+  .practice-card__direction-switch--right {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    align-items: center;
+  }
 
- .practice-question {
-  padding: 20px;
- }
+  .practice-question {
+    padding: 20px;
+  }
 
- .practice-question__flag {
-  width: min(100%, 150px);
- }
+  .practice-question__flag {
+    width: min(100%, 150px);
+  }
 
   .practice-question__text-question {
     font-size: 30px;
   }
 
-   .practice-question__prompt {
+  .practice-question__prompt {
     font-size: 14px;
-   }
+  }
 
   .practice-question__answers {
     grid-template-columns: 1fr 1fr;

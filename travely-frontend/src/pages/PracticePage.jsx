@@ -46,10 +46,6 @@ const continentConfig = {
   },
 };
 
-// Create an array of continent options for the dropdown, derived from the continentConfig object
-
-const continentOptions = Object.values(continentConfig);
-
 const practiceTypes = {
   capitals: "CapitalToCountry",
   flags: "FlagToCountry",
@@ -217,27 +213,7 @@ function PracticePage() {
           <h1 id="practice-title" className="practice-card__title">
             Practice Mode
           </h1>
-          <label className="practice-card__continent-picker">
-            <span className="practice-card__select-label">
-              Choose continent
-            </span>
-            <select
-              className="practice-card__continent-select"
-              value={currentContinent.label}
-              onChange={(event) =>
-                navigate(`/practice/${encodeURIComponent(event.target.value)}`)
-              }
-            >
-              {continentOptions.map((continentOption) => (
-                <option
-                  key={continentOption.label}
-                  value={continentOption.label}
-                >
-                  {continentOption.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <p className="practice-card__continent">{currentContinent.label}</p>
           <p className="practice-card__text">
             Choose what you want to practice.
           </p>
