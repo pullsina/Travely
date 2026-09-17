@@ -46,6 +46,8 @@ const continentConfig = {
   },
 };
 
+const continentOptions = Object.values(continentConfig);
+
 const practiceTypes = {
   capitals: "CapitalToCountry",
   flags: "FlagToCountry",
@@ -84,6 +86,7 @@ function PracticePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
   const [points, setPoints] = useState(null);
+  const [enlargedImage, setEnlargedImage] = useState(null);
   const selectedContinent = decodeURIComponent(continent || "Europe");
   const currentContinent =
     continentConfig[selectedContinent] || continentConfig.Europe;
@@ -115,7 +118,7 @@ function PracticePage() {
     isLoading,
     error,
     loadNextQuestion,
-    openInfo,
+    toggleInfo,
     revealAnswer,
     restartPractice,
     selectAnswer,
@@ -188,6 +191,25 @@ function PracticePage() {
     window.sessionStorage.setItem(practiceDirectionStorageKey, nextDirection);
   }
 
+  function openEnlargedImage(image) {
+    setEnlargedImage(image);
+  }
+
+  useEffect(() => {
+    if (!enlargedImage) {
+      return undefined;
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setEnlargedImage(null);
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [enlargedImage]);
+
   const currentQuestionType =
     questionTypeLabels[question?.questionType] || practiceType;
 
@@ -199,21 +221,42 @@ function PracticePage() {
       }}
     >
       <Navbar variant="app" points={points} />
-      <button
-        className="practice-page__back"
-        type="button"
-        onClick={() => navigate(`/mode/${currentContinent.label}`)}
-        aria-label="Go back to mode selection"
-      >
-        ←
-      </button>
 
       <section className="practice-card" aria-labelledby="practice-title">
         <header className="practice-card__header">
-          <h1 id="practice-title" className="practice-card__title">
-            Practice Mode
-          </h1>
-          <p className="practice-card__continent">{currentContinent.label}</p>
+          <div className="practice-card__heading-row">
+            <button
+              className="practice-page__back"
+              type="button"
+              onClick={() => navigate(`/mode/${currentContinent.label}`)}
+              aria-label="Go back to mode selection"
+            >
+              ←
+            </button>
+
+            <label className="practice-card__continent-picker">
+              <span className="practice-card__select-label">
+                Choose continent
+              </span>
+              <select
+                id="practice-title"
+                className="practice-card__continent"
+                value={currentContinent.label}
+                onChange={(event) =>
+                  navigate(`/practice/${encodeURIComponent(event.target.value)}`)
+                }
+              >
+                {continentOptions.map((continentOption) => (
+                  <option
+                    key={continentOption.label}
+                    value={continentOption.label}
+                  >
+                    {continentOption.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
           <p className="practice-card__text">
             Choose what you want to practice.
           </p>
@@ -348,11 +391,23 @@ function PracticePage() {
 
             {question.questionImageUrl ? (
               <div className="practice-question__question-row">
-                <img
-                  className="practice-question__flag"
-                  src={question.questionImageUrl}
-                  alt={`${question.country} flag`}
-                />
+                <button
+                  className="practice-question__image-open"
+                  type="button"
+                  onClick={() =>
+                    openEnlargedImage({
+                      src: question.questionImageUrl,
+                      alt: `${question.country} flag`,
+                    })
+                  }
+                  aria-label={`Enlarge ${question.country} flag`}
+                >
+                  <img
+                    className="practice-question__flag"
+                    src={question.questionImageUrl}
+                    alt={`${question.country} flag`}
+                  />
+                </button>
               </div>
             ) : (
               <div className="practice-question__question-row">
@@ -414,9 +469,11 @@ function PracticePage() {
                 <button
                   className="practice-question__secondary-action"
                   type="button"
-                  onClick={openInfo}
+                  onClick={toggleInfo}
+                  aria-expanded={showInfo}
+                  aria-controls="practice-info"
                 >
-                  Read more
+                  {showInfo ? "Hide details" : "Read more"}
                 </button>
 
                 <button
@@ -432,14 +489,29 @@ function PracticePage() {
             {showInfo && (
               <section
                 className="practice-info"
+                id="practice-info"
                 aria-label="Country information"
               >
                 <div className="practice-info__header">
-                  <img
-                    className="practice-info__flag"
-                    src={question.flagUrl}
-                    alt={`${question.country} flag`}
-                  />
+                  {!question.questionImageUrl && (
+                    <button
+                      className="practice-info__image-open"
+                      type="button"
+                      onClick={() =>
+                        openEnlargedImage({
+                          src: question.flagUrl,
+                          alt: `${question.country} flag`,
+                        })
+                      }
+                      aria-label={`Enlarge ${question.country} flag`}
+                    >
+                      <img
+                        className="practice-info__flag"
+                        src={question.flagUrl}
+                        alt={`${question.country} flag`}
+                      />
+                    </button>
+                  )}
                   <div>
                     <h2>{question.country}</h2>
                     <p>Capital: {question.capital}</p>
@@ -447,16 +519,28 @@ function PracticePage() {
                 </div>
 
                 <div className="practice-info__body">
-                  <img
-                    className="practice-info__image"
-                    src={question.factUrl || fallbackFactImageUrl}
-                    alt={`${question.country} fun fact`}
-                    onError={(event) => {
-                      if (event.currentTarget.src !== fallbackFactImageUrl) {
-                        event.currentTarget.src = fallbackFactImageUrl;
-                      }
-                    }}
-                  />
+                  <button
+                    className="practice-info__fact-image-open"
+                    type="button"
+                    onClick={() =>
+                      openEnlargedImage({
+                        src: question.factUrl || fallbackFactImageUrl,
+                        alt: `${question.country} fun fact`,
+                      })
+                    }
+                    aria-label={`Enlarge ${question.country} image`}
+                  >
+                    <img
+                      className="practice-info__image"
+                      src={question.factUrl || fallbackFactImageUrl}
+                      alt={`${question.country} fun fact`}
+                      onError={(event) => {
+                        if (event.currentTarget.src !== fallbackFactImageUrl) {
+                          event.currentTarget.src = fallbackFactImageUrl;
+                        }
+                      }}
+                    />
+                  </button>
 
                   <div className="practice-info__fact">
                     <h3>DID YOU KNOW?</h3>
@@ -468,6 +552,40 @@ function PracticePage() {
           </section>
         )}
       </section>
+
+      {enlargedImage ? (
+        <div
+          className="practice-image-viewer"
+          role="dialog"
+          aria-modal="true"
+          aria-label={enlargedImage.alt}
+          onClick={() => setEnlargedImage(null)}
+        >
+          <div
+            className="practice-image-viewer__content"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="practice-image-viewer__close"
+              type="button"
+              onClick={() => setEnlargedImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </button>
+
+            <button
+              className="practice-image-viewer__image-button"
+              type="button"
+              onClick={() => setEnlargedImage(null)}
+              aria-label="Close enlarged image"
+            >
+              <img src={enlargedImage.src} alt={enlargedImage.alt} />
+            </button>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
