@@ -13,10 +13,16 @@ function ContinentCompleteCard({
   details = [],
   detailsError = "",
   onBackToContinents,
+  onDoChallengeAgain,
 }) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [claimedRewardCode, setClaimedRewardCode] = useState(() => {
+    return localStorage.getItem(`travely-reward-${continent}`);
+  });
+  const [isCodeCopied, setIsCodeCopied] = useState(false);
   const answeredQuestions = progress?.answeredQuestions || 0;
   const correctAnswers = progress?.correctAnswers || 0;
+  const rewardDiscount = getRewardDiscount(correctAnswers, answeredQuestions);
   const wrongAnswers = progress?.wrongAnswers || 0;
   const earnedScore = progress?.earnedScore || 0;
   const usedHintsCount = progress?.usedHintsCount || 0;
@@ -36,21 +42,117 @@ function ContinentCompleteCard({
     { label: "Hints used", value: usedHintsCount },
   ];
 
+  //function to calculate discount
+  function getRewardDiscount(correctAnswers, answeredQuestions) {
+    if (answeredQuestions === 0) {
+      return 0;
+    }
+
+    const percentage = (correctAnswers / answeredQuestions) * 100;
+
+    //if the users end result is less than 60% correct, no reward will be given
+    if (percentage < 60) {
+      return 0;
+    }
+
+    //if the users end result is less than 80% but more than 60% correct, a 5% reward will be given
+    if (percentage < 80) {
+      return 5;
+    }
+
+    //if none of the above (more than 80% correct) a 10% reward will be given
+    return 10;
+  }
+
   return (
-    <section className="continent-complete-card" aria-labelledby="continent-complete-title">
+    <section
+      className="continent-complete-card"
+      aria-labelledby="continent-complete-title"
+    >
       <p className="continent-complete-card__eyebrow">Continent completed</p>
-      <h1 id="continent-complete-title" className="continent-complete-card__title">
+      <h1
+        id="continent-complete-title"
+        className="continent-complete-card__title"
+      >
         {continent}
       </h1>
 
-      <div className="continent-complete-card__stats" aria-label="Game statistics">
+      <div
+        className="continent-complete-card__stats"
+        aria-label="Game statistics"
+      >
         {stats.map((stat) => (
           <div className="continent-complete-card__stat" key={stat.label}>
-            <span className="continent-complete-card__stat-value">{stat.value}</span>
-            <span className="continent-complete-card__stat-label">{stat.label}</span>
+            <span className="continent-complete-card__stat-value">
+              {stat.value}
+            </span>
+            <span className="continent-complete-card__stat-label">
+              {stat.label}
+            </span>
           </div>
         ))}
       </div>
+
+      {rewardDiscount > 0 || claimedRewardCode ? (
+        <div className="continent-complete-card__reward">
+          {!claimedRewardCode ? (
+            <>
+              <p className="continent-complete-card__reward-title">
+                Reward unlocked!
+              </p>
+
+              <p className="continent-complete-card__reward-text">
+                Congratulations! You completed {continent} challenge and
+                unlocked a {rewardDiscount}% travel discount.
+              </p>
+
+              <button
+                className="primary-button continent-complete-card__reward-button"
+                type="button"
+                onClick={() => {
+                  const rewardCode = `TRAVELY-${continent}-${rewardDiscount}`;
+
+                  setClaimedRewardCode(rewardCode);
+
+                  localStorage.setItem(
+                    `travely-reward-${continent}`,
+                    rewardCode,
+                  );
+                }}
+              >
+                Claim reward
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="continent-complete-card__reward-title">
+                Your reward
+              </p>
+
+              <p className="continent-complete-card__reward-text">
+                Your reward is ready to use.
+              </p>
+
+              <div className="continent-complete-card__reward-code-container">
+                <span className="continent-complete-card__reward-code">
+                  {claimedRewardCode}
+                </span>
+
+                <button
+                  className="continent-complete-card__copy-button"
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(claimedRewardCode);
+                    setIsCodeCopied(true);
+                  }}
+                >
+                  {isCodeCopied ? "Copied!" : "Copy code"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      ) : null}
 
       <div className="continent-complete-card__actions">
         <button
@@ -59,6 +161,13 @@ function ContinentCompleteCard({
           onClick={onBackToContinents}
         >
           Back to continents
+        </button>
+        <button
+          className="primary-button continent-complete-card__button"
+          type="button"
+          onClick={onDoChallengeAgain}
+        >
+          Do challenge again
         </button>
         <button
           className="continent-complete-card__profile-link"

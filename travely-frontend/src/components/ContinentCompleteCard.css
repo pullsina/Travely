@@ -5,7 +5,7 @@
   border-radius: 8px;
   background: var(--color-bg);
   color: var(--color-text);
-  padding: 42px;
+  padding: 20px 40px;
   text-align: center;
 }
 
@@ -13,7 +13,7 @@
   margin: 0 0 12px;
   color: var(--color-text-muted);
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .continent-complete-card__title {
@@ -28,7 +28,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
-  margin: 36px 0;
+  margin: 20px 0;
 }
 
 .continent-complete-card__stat {
@@ -36,7 +36,7 @@
   border-radius: 6px;
   background: rgba(11, 35, 112, 0.56);
   padding: 18px;
-  max-height: 80px;
+  max-height: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -66,15 +66,53 @@
 
 .continent-complete-card__actions {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
 }
 
-.continent-complete-card__button {
-  min-width: 260px;
+.continent-complete-card__reward-button {
+  background: var(--color-warning);
+   box-shadow: 0 0 30px var(--color-warning);
+}
+
+.continent-complete-card__reward-button:hover{
+  background: var(--color-warning);
+}
+
+.continent-complete-card__reward-title {
+  color: var(--color-warning);
+  font-size: 18px;
+}
+
+.continent-complete-card__reward-code {
+  color: var(--color-warning);
+  font-weight: 800;
+}
+
+.continent-complete-card__copy-button {
+    padding: 5px 10px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.continent-complete-card__button, 
+.continent-complete-card__reward-button {
+  width: 250px;
   max-height: 40px;
-  font-size: 20px;
+  font-size: 18px;
+  margin: 5px;
+}
+
+.continent-complete-card__reward-code-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 5px;
 }
 
 .continent-complete-card__profile-link {
@@ -83,7 +121,7 @@
   color: var(--color-text-muted);
   cursor: pointer;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .continent-complete-card__profile-link:hover,
@@ -224,11 +262,11 @@
 
   .continent-complete-card__stat {
     padding: 12px;
-    max-height: 65px;
+    max-height: 50px;
   }
 
   .continent-complete-card__stat-value {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .continent-complete-card__stat-label {
@@ -241,11 +279,13 @@
     gap: 10px;
   }
 
+  .continent-complete-card__reward-button,
   .continent-complete-card__button,
   .continent-complete-card__profile-link {
     width: 100%;
     max-height: 40px;
-    font-size: 20px;
+    font-size: 18px;
+  width: 250px;
   }
 
   .continent-complete-card__details {
