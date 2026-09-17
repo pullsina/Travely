@@ -1,5 +1,5 @@
 .continent-page {
-  min-height: 100vh;
+  min-height: calc(100svh - 64px);
   background: #173a8a;
   background: radial-gradient(
     circle,
@@ -130,8 +130,8 @@
 
 @media (max-width: 700px) {
   .continent-page {
-    min-height: 100vh;
-    padding: 72px 20px;
+    min-height: calc(100svh - 64px);
+    padding: 72px 20px 32px;
   }
 
   .continent-page__back {
@@ -148,8 +148,8 @@
     grid-template-columns: 300px;
     justify-content: center;
     gap: 14px;
-    margin-top: auto;
-   margin-bottom: auto;
+    margin-top: 32px;
+    margin-bottom: 0;
   }
 
   .continent-page__card {
@@ -165,6 +165,12 @@
 
   .continent-page__card-progress {
     font-size: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .continent-page {
+    min-height: calc(100svh - 92px);
   }
 }
 

@@ -25,8 +25,6 @@ const continentConfig = {
   },
 };
 
-const continentOptions = Object.values(continentConfig);
-
 function ModePage() {
   const navigate = useNavigate();
   const { continent } = useParams();
@@ -70,36 +68,9 @@ function ModePage() {
     >
       <Navbar variant="app" points={points} />
 
-      <button
-        className="mode-page__back"
-        type="button"
-        onClick={() => navigate("/continents")}
-        aria-label="Go back to continents"
-      >
-        ←
-      </button>
-
       <section className="mode-card" aria-labelledby="mode-title">
         <header className="mode-card__header">
-          <label className="mode-card__continent-picker">
-            <span className="mode-card__select-label">Choose continent</span>
-            <select
-              className="mode-card__continent-select"
-              value={currentContinent.label}
-              onChange={(event) =>
-                navigate(`/mode/${encodeURIComponent(event.target.value)}`)
-              }
-            >
-              {continentOptions.map((continentOption) => (
-                <option
-                  key={continentOption.label}
-                  value={continentOption.label}
-                >
-                  {continentOption.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <p className="mode-card__continent">{currentContinent.label}</p>
 
           <p className="mode-card__text">
             Are you learning, practicing or testing your skills?

@@ -342,6 +342,32 @@ function usePracticeQuestion(continent, practiceType) {
     );
   }
 
+  function toggleInfo() {
+    if (!showInfo) {
+      openInfo();
+      return;
+    }
+
+    setShowInfo(false);
+
+    window.sessionStorage.setItem(
+      storageKey,
+      JSON.stringify({
+        question,
+        usedQuestionIds,
+        retryQuestions,
+        totalQuestions,
+        questionNumber,
+        selectedAnswerId,
+        isAnswered,
+        isRevealed,
+        showInfo: false,
+        isComplete,
+        isRetrying,
+      }),
+    );
+  }
+
   async function restartPractice() {
     // Clear saved practice state and start again from the first question
     setIsLoading(true);
@@ -410,6 +436,7 @@ function usePracticeQuestion(continent, practiceType) {
     selectAnswer,
     revealAnswer,
     openInfo,
+    toggleInfo,
     restartPractice,
   };
 }
