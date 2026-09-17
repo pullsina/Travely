@@ -93,7 +93,7 @@ function ContinentCompleteCard({
         ))}
       </div>
 
-      {rewardDiscount > 0 ? (
+      {rewardDiscount > 0 || claimedRewardCode ? (
         <div className="continent-complete-card__reward">
           {!claimedRewardCode ? (
             <>
