@@ -15,6 +15,7 @@ function ContinentCompleteCard({
   onBackToContinents,
 }) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isRewardClaimed, setIsRewardClaimed] = useState(false);
   const answeredQuestions = progress?.answeredQuestions || 0;
   const correctAnswers = progress?.correctAnswers || 0;
   const rewardDiscount = getRewardDiscount(correctAnswers, answeredQuestions);
@@ -90,21 +91,40 @@ function ContinentCompleteCard({
 
       {rewardDiscount > 0 ? (
         <div className="continent-complete-card__reward">
-          <p className="continent-complete-card__reward-title">
-            Reward unlocked!
-          </p>
+          {!isRewardClaimed ? (
+            <>
+              <p className="continent-complete-card__reward-title">
+                Reward unlocked!
+              </p>
 
-          <p className="continent-complete-card__reward-text">
-            Congratulations! You completed {continent} challenge and unlocked a{" "}
-            {rewardDiscount}% travel discount.
-          </p>
+              <p className="continent-complete-card__reward-text">
+                Congratulations! You completed {continent} challenge and
+                unlocked a {rewardDiscount}% travel discount.
+              </p>
 
-          <button
-            className="primary-button continent-complete-card__reward-button"
-            type="button"
-          >
-            Claim reward
-          </button>
+              <button
+                className="primary-button continent-complete-card__reward-button"
+                type="button"
+                onClick={() => setIsRewardClaimed(true)}
+              >
+                Claim reward
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="continent-complete-card__reward-title">
+                Your reward
+              </p>
+
+              <p className="continent-complete-card__reward-text">
+                You unlocked a {rewardDiscount}% travel discount.
+              </p>
+
+              <p className="continent-complete-card__reward-code">
+                TRAVELY-{continent}-{rewardDiscount}
+              </p>
+            </>
+          )}
         </div>
       ) : null}
 

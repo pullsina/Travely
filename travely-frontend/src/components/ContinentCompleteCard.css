@@ -85,11 +85,16 @@
   font-size: 18px;
 }
 
+.continent-complete-card__reward-code {
+  color: var(--color-warning);
+  font-weight: 800;
+}
+
 .continent-complete-card__button, 
 .continent-complete-card__reward-button {
   width: 250px;
   max-height: 40px;
-  font-size: 20px;
+  font-size: 18px;
   margin: 5px;
 }
 
@@ -99,7 +104,7 @@
   color: var(--color-text-muted);
   cursor: pointer;
   font-family: "Actor", system-ui, sans-serif;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .continent-complete-card__profile-link:hover,
