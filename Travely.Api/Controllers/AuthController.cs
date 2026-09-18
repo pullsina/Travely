@@ -171,5 +171,37 @@ namespace Travely.Api.Controllers
                 Message = "Account deleted."
             });
         }
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new ApiErrorDto
+                {
+                    Message = "You are not logged in."
+                });
+            }
+
+            var success = await _authService.ChangePasswordAsync(
+                userId,
+                dto.CurrentPassword,
+                dto.NewPassword);
+
+            if (!success)
+            {
+                return BadRequest(new ApiErrorDto
+                {
+                    Message = "Could not change password."
+                });
+            }
+
+            return Ok(new
+            {
+                Message = "Password changed successfully."
+            });
+        }
     }
 }

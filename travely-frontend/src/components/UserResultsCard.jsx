@@ -53,55 +53,55 @@ function UserResultsCard({ results, onClose }) {
         </h2>
 
         {resultEntries.map((progress) => {
-        const correctAnswers = progress?.correctAnswers || 0;
-        // const answeredQuestions = progress?.answeredQuestions || 0;
-        const totalQuestions = progress?.totalQuestions || 0;
-        const earnedScore = progress?.earnedScore || 0;
-        // const usedHintsCount = progress?.usedHintsCount || 0;
-        const totalScoresUser = 5 * (44 + 23 + 48 + 54 + 12 + 14); // per continent
-        // const totalScoresPossible = totalScoresUser;
-        const percentageScores = (earnedScore / totalScoresUser) * 100;
-        const percentageCorrects = (correctAnswers / totalQuestions) * 100;
+          const correctAnswers = progress?.correctAnswers || 0;
+          // const answeredQuestions = progress?.answeredQuestions || 0;
+          const totalQuestions = progress?.totalQuestions || 0;
+          const earnedScore = progress?.earnedScore || 0;
+          // const usedHintsCount = progress?.usedHintsCount || 0;
+          const totalScoresUser = 5 * (44 + 23 + 48 + 54 + 12 + 14); // per continent
+          // const totalScoresPossible = totalScoresUser;
+          const percentageScores = (earnedScore / totalScoresUser) * 100;
+          const percentageCorrects = (correctAnswers / totalQuestions) * 100;
 
-        // const stats = [
-        //   { label: "Correct answers", value: correctAnswers },
-        //   { label: "Questions answered", value: answeredQuestions },
-        //   { label: "Hints used", value: usedHintsCount },
-        //   { label: "Score earned", value: `${earnedScore} p` },
-        // ];
+          // const stats = [
+          //   { label: "Correct answers", value: correctAnswers },
+          //   { label: "Questions answered", value: answeredQuestions },
+          //   { label: "Hints used", value: usedHintsCount },
+          //   { label: "Score earned", value: `${earnedScore} p` },
+          // ];
 
-        return (
-          <section
-            className="user-results-card__continent"
-            key={progress.continent}
-          >
-            <h3 className="user-results-card__continent-title">
-              {progress.continent}
-            </h3>
+          return (
+            <section
+              className="user-results-card__continent"
+              key={progress.continent}
+            >
+              <h3 className="user-results-card__continent-title">
+                {progress.continent}
+              </h3>
 
-            <div className="user-results-card__metric">
-              <p className="user-results-card__progressbar-label">
-                Correct answers
-              </p>
-              <div className="user-results-card__progressbar-background">
-                <div
-                  className="user-results-card__progressbar-fill"
-                  style={{ width: `${percentageCorrects}%` }}
-                />
+              <div className="user-results-card__metric">
+                <p className="user-results-card__progressbar-label">
+                  Correct answers
+                </p>
+                <div className="user-results-card__progressbar-background">
+                  <div
+                    className="user-results-card__progressbar-fill"
+                    style={{ width: `${percentageCorrects}%` }}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="user-results-card__metric">
-              <p className="user-results-card__progressbar-label">Score</p>
-              <div className="user-results-card__progressbar-background">
-                <div
-                  className="user-results-card__progressbar-fill"
-                  style={{ width: `${percentageScores}%` }}
-                />
+              <div className="user-results-card__metric">
+                <p className="user-results-card__progressbar-label">Score</p>
+                <div className="user-results-card__progressbar-background">
+                  <div
+                    className="user-results-card__progressbar-fill"
+                    style={{ width: `${percentageScores}%` }}
+                  />
+                </div>
               </div>
-            </div>
-          </section>
-        );
+            </section>
+          );
         })}
       </section>
 
