@@ -177,13 +177,11 @@ namespace Travely.Api.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-            {
-                return Unauthorized(new ApiErrorDto
-                {
-                    Message = "You are not logged in."
-                });
-            }
+            if (userId == null) return Unauthorized(new ApiErrorDto { Message = "You are not logged in." });
+
+            var user = await _userManager.FindByIdAsync(userId);
+            
+            if (user == null) return NotFound(new ApiErrorDto { Message = "User not found." });
 
             var success = await _authService.ChangePasswordAsync(
                 userId,
