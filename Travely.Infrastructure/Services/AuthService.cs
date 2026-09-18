@@ -189,6 +189,23 @@ namespace Travely.Infrastructure.Services
 
             return result.Succeeded;
         }
+        // Change password
+        public async Task<bool> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var result = await _userManager.ChangePasswordAsync(
+                user,
+                currentPassword,
+                newPassword);
+
+            return result.Succeeded;
+        }
 
     }
 }

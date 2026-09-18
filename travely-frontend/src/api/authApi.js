@@ -114,6 +114,23 @@ export async function deleteAccount() {
   });
 }
 
+// CHANGE PASSWORD
+// POST /api/auth/change-password
+export async function changePassword({
+  currentPassword,
+  newPassword,
+  confirmNewPassword,
+}) {
+  return request("/api/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify({
+      currentPassword,
+      newPassword,
+      confirmNewPassword,
+    }),
+  });
+}
+
 export default {
   register,
   login,
@@ -121,4 +138,7 @@ export default {
   getCurrentUser,
   updateUserInfo,
   deleteAccount,
+  changePassword,
 };
+
+
