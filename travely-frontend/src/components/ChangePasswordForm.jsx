@@ -22,7 +22,7 @@ export default function ChangePasswordForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="change-password-form">
       <div>
         <label>Current Password</label>
         <input
@@ -47,7 +47,9 @@ export default function ChangePasswordForm() {
           onChange={(e) => setConfirmNewPassword(e.target.value)}
         />
       </div>
-      <button type="submit">Change Password</button>
+      <button type="submit" className="change-password-button">
+        Change Password
+      </button>
     </form>
   );
 }
