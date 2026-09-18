@@ -717,7 +717,7 @@
   margin-top: 30px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .practice-page {
     padding: 84px 20px 32px;
   }
@@ -875,7 +875,7 @@
   }
 }
 
-@media (min-width: 761px) {
+@media (min-width: 600px) {
   .practice-card__text {
     margin-block: 10px;
     padding-block: 6px;
