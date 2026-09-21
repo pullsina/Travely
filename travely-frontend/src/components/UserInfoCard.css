@@ -17,6 +17,26 @@
   gap: 16px;
 }
 
+/* User card main content */
+
+.user-info-card__main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(20px, 4vw, 36px);
+}
+
+.user-info-card__main__info {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin-inline: auto;
+  gap: 16px;
+  padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px);
+}
+
+/* Card header editing state */
+
 .user-info-card__header--editing {
   grid-template-columns: 44px minmax(0, 1fr) 44px;
 }
@@ -131,18 +151,6 @@
   outline-offset: 3px;
 }
 
-/* User card main content */
-
-.user-info-card__main__info {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
-  margin-inline: auto;
-  align-items: flex-start;
-  gap: 16px;
-  padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px);
-}
-
 @media (min-width: 1021px) {
   .user-info-card__header:not(.user-info-card__header--editing) {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -165,6 +173,7 @@
 
 .user-info-card__main__info-text {
   margin: 0;
+  text-align: left;
   color: var(--color-text);
   font-family: "Actor", system-ui, sans-serif;
   font-size: clamp(20px, 3vw, 30px);
@@ -191,6 +200,8 @@
 .user-info-card__footer .primary-button {
   width: 100%;
   min-width: 0;
+  padding: 16px;
+  box-sizing: border-box;
 }
 .user-info-card__footer__text-small {
   margin: 0;
