@@ -77,10 +77,10 @@ The project is divided into a backend and a frontend:
 The goal of Travely is to combine learning and entertainment. By allowing users to study, practice and finally challenge themselves, the application aims to make learning geography more engaging while giving users an additional incentive through the reward system.
 
 ### Deployment
-Travely is deployed to Microsoft Azure. The backend is hosted using Azure App Service, while the application uses Azure SQL Database for data storage.
+Travely is deployed to Microsoft Azure. The backend and frontend are hosted using two separate Azure App Services, while the application uses Azure SQL Database for data storage.
 The project is connected to GitHub Actions for continuous deployment, allowing changes from the main branch to be automatically deployed to Azure.
 
-travely-frontend
+https://travely-frontend-2026-gta2arhfdxc9b0ck.germanywestcentral-01.azurewebsites.net/
 
 ## Future improvements
 If we had more time we would love to develop these features:
