@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ChangePasswordForm from "./ChangePasswordForm";
 import "./ChangePasswordForm.css";
+import "./UserInfoCard.css";
 
 function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
   const username = userInfo?.name ?? userInfo?.username;
@@ -80,14 +81,12 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
         <>
           {/* Card main content */}
           <div className="user-info-card__main">
-            <div className="user-info-card__main__info">
-              <p className="user-info-card__main__info-text">
-                <strong>Username:</strong> {username || "No username available"}
-              </p>
-              <p className="user-info-card__main__info-text">
-                <strong>E-mail:</strong> {email || "No email available"}
-              </p>
-            </div>
+            <p className="user-info-card__main__info-text">
+              <strong>Username:</strong> {username || "No username available"}
+            </p>
+            <p className="user-info-card__main__info-text">
+              <strong>E-mail:</strong> {email || "No email available"}
+            </p>
           </div>
           {/* Footer with action buttons to be implemented... */}
           <div
