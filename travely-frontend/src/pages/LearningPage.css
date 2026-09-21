@@ -54,12 +54,12 @@
 
 .learning-page__continent {
   margin: 0;
-  max-width: min(100%, 620px);
+  max-width: min(100%, 360px);
   border: 0;
   background-color: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(38px, 5vw, 78px);
+  font-size: 36px;
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
@@ -99,6 +99,7 @@
 }
 
 .learning-page__continent option {
+  font-size: 20px;
   background: var(--color-bg);
   color: var(--color-text);
 }

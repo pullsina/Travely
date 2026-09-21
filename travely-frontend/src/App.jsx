@@ -7,6 +7,7 @@ import ContinentPage from "./pages/ContinentPage";
 import GamePage from "./pages/GamePage";
 import ProfilePage from "./pages/ProfilePage";
 import AboutPage from "./pages/AboutPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import { useAuth } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -38,6 +39,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         {/* --------------------------------- */}
 
         {/* protected routes----------------- */}
