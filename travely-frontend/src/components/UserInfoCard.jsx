@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ChangePasswordForm from "./ChangePasswordForm";
-import "./ChangePasswordForm.css";
+// import "./ChangePasswordForm.css";
 import "./UserInfoCard.css";
 
 function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
@@ -122,6 +122,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
             </div>
             <div className="user-info-card__actions__button">
               <button
+                type="button"
                 className="primary-button user-info-card__change-password-button"
                 onClick={handleShowChangePasswordForm}
               >
