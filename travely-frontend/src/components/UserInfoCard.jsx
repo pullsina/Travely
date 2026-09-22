@@ -81,10 +81,10 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
         <>
           {/* Card main content */}
           <div className="user-info-card__main">
-            <p className="user-info-card__main__info-text">
+            <p className="user-info-card__main__info">
               <strong>Username:</strong> {username || "No username available"}
             </p>
-            <p className="user-info-card__main__info-text">
+            <p className="user-info-card__main__info">
               <strong>E-mail:</strong> {email || "No email available"}
             </p>
           </div>

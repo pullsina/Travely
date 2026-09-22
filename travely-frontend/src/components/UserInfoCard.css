@@ -12,31 +12,30 @@
 
 /* Card header with close button */
 
-.user-info-card__header {
+.user-info-card__header,
+.user-info-card__header__actions {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto; /* set up two columns with flexible main content and auto-sized actions */
   align-items: start;
   gap: 16px;
 }
 
-/* ,
-.user-info-card__header__actions */
-/* User card main content */
+/* User card main content and buttons for user info management */
 
-.user-info-card__main {
+.user-info-card__main,
+.user-info-card__actions {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: clamp(20px, 4vw, 36px);
 }
 
 .user-info-card__main__info {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
   margin-inline: auto;
   gap: 16px;
-  padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px);
+  /* padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px); */
 }
 
 /* Card header editing state */
