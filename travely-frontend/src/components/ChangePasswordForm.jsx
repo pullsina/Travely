@@ -43,7 +43,7 @@ export default function ChangePasswordForm() {
 
   return (
     <form onSubmit={handleSubmit} className="change-password-form">
-      <h2 className="change-password-form__title">Change Password</h2>
+      <h3 className="change-password-form__title">Change password</h3>
       <div className="change-password-form__field">
         <label
           className="change-password-form__label"
@@ -85,13 +85,15 @@ export default function ChangePasswordForm() {
         {error && <p className="change-password-form__error">{error}</p>}
         {message && <p className="change-password-form__message">{message}</p>}
       </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="change-password-button"
-      >
-        {loading ? "Changing..." : "Change Password"}
-      </button>
+      <div className="change-password-form__actions">
+        <button
+          type="submit"
+          disabled={loading}
+          className="primary-button change-password-button"
+        >
+          {loading ? "Changing..." : "Submit"}
+        </button>
+      </div>
     </form>
   );
 }
