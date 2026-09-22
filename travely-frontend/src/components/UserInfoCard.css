@@ -1,4 +1,7 @@
 .user-info-card {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column layout for the card */
+  grid-template-rows: auto 1fr auto; /* Header, main content, actions */
   width: min(100%, 800px);
   border: 2px solid var(--color-primary);
   border-radius: 8px;
@@ -7,32 +10,32 @@
   padding: clamp(18px, 4vw, 32px);
 }
 
-/* Card header */
+/* Card header with close button */
 
 .user-info-card__header,
-.user-info-card__footer {
+.user-info-card__header__actions {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto; /* set up two columns with flexible main content and auto-sized actions */
   align-items: start;
   gap: 16px;
 }
 
-/* User card main content */
+/* User card main content and buttons for user info management */
 
-.user-info-card__main {
+.user-info-card__main,
+.user-info-card__actions {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: clamp(20px, 4vw, 36px);
 }
 
 .user-info-card__main__info {
-  display: flex;
-  flex-direction: column;
-  width: 60%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
   margin-inline: auto;
   gap: 16px;
-  padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px);
+  /* padding: clamp(20px, 4vw, 36px) 0 clamp(18px, 3vw, 28px); */
 }
 
 /* Card header editing state */
@@ -183,27 +186,27 @@
 
 /* User card footer */
 
-.user-info-card__footer {
+.user-info-card__actions {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: center;
   gap: 16px;
 }
 
-.user-info-card__footer__button {
+.user-info-card__actions__button {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
 }
 
-.user-info-card__footer .primary-button {
+.user-info-card__actions .primary-button {
   width: 100%;
   min-width: 0;
   padding: 16px;
   box-sizing: border-box;
 }
-.user-info-card__footer__text-small {
+.user-info-card__actions__text-small {
   margin: 0;
   color: var(--color-text);
   font-family: "Actor", system-ui, sans-serif;
@@ -273,14 +276,14 @@
     width: 60%;
   }
 
-  .user-info-card__footer,
+  .user-info-card__actions,
   .user-info-card__edit-actions {
     grid-template-columns: 1fr;
     gap: 12px;
     justify-items: center;
   }
 
-  .user-info-card__footer .primary-button,
+  .user-info-card__actions .primary-button,
   .user-info-card__edit-actions .primary-button {
     width: 60%;
   }
@@ -334,7 +337,7 @@
     font-size: clamp(28px, 9vw, 42px);
   }
 
-  .user-info-card__footer .primary-button,
+  .user-info-card__actions .primary-button,
   .user-info-card__edit-actions .primary-button {
     width: 100%;
   }

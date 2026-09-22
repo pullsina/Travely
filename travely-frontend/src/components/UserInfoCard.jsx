@@ -81,20 +81,20 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
         <>
           {/* Card main content */}
           <div className="user-info-card__main">
-            <p className="user-info-card__main__info-text">
+            <p className="user-info-card__main__info">
               <strong>Username:</strong> {username || "No username available"}
             </p>
-            <p className="user-info-card__main__info-text">
+            <p className="user-info-card__main__info">
               <strong>E-mail:</strong> {email || "No email available"}
             </p>
           </div>
           {/* Footer with action buttons to be implemented... */}
           <div
-            className="user-info-card__footer"
-            aria-labelledby="user-info-card-footer"
+            className="user-info-card__actions"
+            aria-labelledby="user-info-card-actions"
           >
             {/* Buttons for actions */}
-            <div className="user-info-card__footer__button">
+            <div className="user-info-card__actions__button">
               <button
                 className="primary-button user-info-card__change-info-button"
                 type="button"
@@ -107,7 +107,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
             To be implemented!
           </p> */}
             </div>
-            <div className="user-info-card__footer__button">
+            <div className="user-info-card__actions__button">
               <button
                 className="primary-button user-info-card__delete-profile-button"
                 type="button"
@@ -120,7 +120,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
                 To be implemented!
               </p> */}
             </div>
-            <div className="user-info-card__footer__button">
+            <div className="user-info-card__actions__button">
               <button
                 className="primary-button user-info-card__change-password-button"
                 onClick={handleShowChangePasswordForm}
