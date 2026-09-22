@@ -65,14 +65,14 @@
 
 .practice-card__continent {
   width: 100%;
-  max-width: min(100%, 620px);
+  max-width: min(100%, 360px);
   margin: 0;
   padding: 0 34px 0 0;
   border: 0;
   background-color: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(38px, 3vw, 72px);
+  font-size: 36px;
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
@@ -109,6 +109,7 @@
 }
 
 .practice-card__continent option {
+  font-size: 20px;
   background: var(--color-bg);
   color: var(--color-text);
 }
@@ -717,7 +718,7 @@
   margin-top: 30px;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .practice-page {
     padding: 84px 20px 32px;
   }
@@ -875,7 +876,7 @@
   }
 }
 
-@media (min-width: 761px) {
+@media (min-width: 600px) {
   .practice-card__text {
     margin-block: 10px;
     padding-block: 6px;

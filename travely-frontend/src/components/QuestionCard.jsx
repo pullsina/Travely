@@ -44,6 +44,7 @@ function QuestionCard({
   onFactHint,
   onCloseHint,
   onSubmit,
+  onBack,
 }) {
   const progressPercent = (questionNumber / totalQuestions) * 100;
   const factHintImageUrl = factImageUrl || fallbackFactImageUrl;
@@ -66,9 +67,16 @@ function QuestionCard({
   return (
     <section className="question-card" aria-labelledby="question-card-title">
       <header className="question-card__header">
-        <h1 id="question-card-title" className="question-card__continent">
-          {continent}
-        </h1>
+        <div className="question-card__heading-row">
+          {onBack && (
+            <button className="question-card__back" type="button" onClick={onBack} aria-label="Go back to continents">
+              ←
+            </button>
+          )}
+          <h1 id="question-card-title" className="question-card__continent">
+            {continent}
+          </h1>
+        </div>
         <p className="question-card__count">
           Question {questionNumber} / {totalQuestions}
         </p>
@@ -215,7 +223,7 @@ function QuestionCard({
           type="button"
           onClick={onSubmit}
         >
-          Submit answer
+          Submit
         </button>
 
         <div className="question-card__feedback" aria-live="polite">

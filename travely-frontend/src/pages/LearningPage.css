@@ -54,12 +54,12 @@
 
 .learning-page__continent {
   margin: 0;
-  max-width: min(100%, 620px);
+  max-width: min(100%, 360px);
   border: 0;
   background-color: transparent;
   color: var(--color-primary);
   font-family: "Asimovian", system-ui, sans-serif;
-  font-size: clamp(38px, 5vw, 78px);
+  font-size: 36px;
   font-weight: 700;
   line-height: 0.95;
   text-align: center;
@@ -99,6 +99,7 @@
 }
 
 .learning-page__continent option {
+  font-size: 20px;
   background: var(--color-bg);
   color: var(--color-text);
 }
@@ -712,7 +713,7 @@
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 599px) {
   .learning-page {
     min-height: calc(100svh - 64px);
     padding-top: 84px;
@@ -799,13 +800,13 @@
   }
 }
 
-@media (min-width: 761px) and (max-width: 1007px) {
+@media (min-width: 600px) and (max-width: 1007px) {
   .learning-country-list-toggle {
     padding-block: 10px;
   }
 }
 
-@media (min-width: 481px) and (max-width: 760px) {
+@media (min-width: 600px) and (max-width: 760px) {
   .learning-card__image-navigation {
     inset: 0 -68px;
   }

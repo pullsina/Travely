@@ -12,5 +12,6 @@ namespace Travely.Application.Interfaces
         Task LogoutAsync();
         Task<AuthResultDto> UpdateAsync(string userId, UpdateUserInfoDto dto);
         Task<bool> DeleteAsync(string userId);
+        Task<bool> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
     }
 }

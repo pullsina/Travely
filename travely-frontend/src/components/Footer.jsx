@@ -1,5 +1,5 @@
 import "./Footer.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Footer() {
   const navigate = useNavigate();
@@ -18,6 +18,9 @@ function Footer() {
         <button className="footer__link" type="button">
           Contact
         </button>
+        <Link className="footer__link" to="/privacy">
+          Privacy
+        </Link>
       </div>
 
       <p className="footer__copyright">© 2026 Travely</p>

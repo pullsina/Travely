@@ -1,10 +1,13 @@
 import { useState } from "react";
+import ChangePasswordForm from "./ChangePasswordForm";
+import "./ChangePasswordForm.css";
 import "./UserInfoCard.css";
 
 function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
   const username = userInfo?.name ?? userInfo?.username;
   const email = userInfo?.email ?? userInfo?.emailAddress;
   const [isEditing, setIsEditing] = useState(false);
+  const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
   const [usernameInput, setUsernameInput] = useState(username);
   const [emailInput, setEmailInput] = useState(email);
   const [error, setError] = useState(null);
@@ -29,18 +32,23 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
     setError("");
   }
 
-async function handleDelete() {
+  async function handleDelete() {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your Travely account? This action cannot be undone.",
+    );
 
-  const confirmed = window.confirm(
-    "Are you sure you want to delete your Travely account? This action cannot be undone."
-  );
+    if (!confirmed) {
+      return;
+    }
 
-  if (!confirmed) {
-    return;
+    await onDelete();
   }
 
-  await onDelete();
-}
+  // Function to show ChangePasswordForm
+  function handleShowChangePasswordForm() {
+    setShowChangePasswordForm(true);
+  }
+
   return (
     <section className="user-info-card" aria-labelledby="user-info-card-title">
       {/* Header with title and close button */}
@@ -73,22 +81,20 @@ async function handleDelete() {
         <>
           {/* Card main content */}
           <div className="user-info-card__main">
-            <div className="user-info-card__main__info">
-              <p className="user-info-card__main__info-text">
-                <strong>Username:</strong> {username || "No username available"}
-              </p>
-              <p className="user-info-card__main__info-text">
-                <strong>E-mail:</strong> {email || "No email available"}
-              </p>
-            </div>
+            <p className="user-info-card__main__info">
+              <strong>Username:</strong> {username || "No username available"}
+            </p>
+            <p className="user-info-card__main__info">
+              <strong>E-mail:</strong> {email || "No email available"}
+            </p>
           </div>
           {/* Footer with action buttons to be implemented... */}
           <div
-            className="user-info-card__footer"
-            aria-labelledby="user-info-card-footer"
+            className="user-info-card__actions"
+            aria-labelledby="user-info-card-actions"
           >
             {/* Buttons for actions */}
-            <div className="user-info-card__footer__button">
+            <div className="user-info-card__actions__button">
               <button
                 className="primary-button user-info-card__change-info-button"
                 type="button"
@@ -101,7 +107,7 @@ async function handleDelete() {
             To be implemented!
           </p> */}
             </div>
-            <div className="user-info-card__footer__button">
+            <div className="user-info-card__actions__button">
               <button
                 className="primary-button user-info-card__delete-profile-button"
                 type="button"
@@ -114,6 +120,19 @@ async function handleDelete() {
                 To be implemented!
               </p> */}
             </div>
+            <div className="user-info-card__actions__button">
+              <button
+                className="primary-button user-info-card__change-password-button"
+                onClick={handleShowChangePasswordForm}
+              >
+                Change Password
+              </button>
+            </div>
+            {showChangePasswordForm && (
+              <ChangePasswordForm
+                onClose={() => setShowChangePasswordForm(false)}
+              />
+            )}
           </div>
         </>
       ) : (

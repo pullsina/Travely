@@ -476,7 +476,7 @@ function GamePage() {
 
     const timerId = window.setTimeout(() => {
       setShowCountryInfo(true);
-    }, 1800);
+    }, 1000);
 
     return () => window.clearTimeout(timerId);
   }, [answerResult]);
@@ -692,7 +692,7 @@ function GamePage() {
       <Navbar variant="app" points={points} />
 
       <button
-        className="game-page__back"
+        className={`game-page__back${!isLoading && !gameError && !isContinentComplete && question && !showCountryInfo ? " game-page__back--question" : ""}`}
         type="button"
         onClick={handleLeaveChallenge}
         aria-label="Go back to continents"
@@ -746,6 +746,7 @@ function GamePage() {
       question &&
       !showCountryInfo ? (
         <QuestionCard
+          onBack={handleLeaveChallenge}
           continent={currentContinent.label}
           questionNumber={questionNumber}
           totalQuestions={visibleTotalQuestions}

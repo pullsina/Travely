@@ -128,7 +128,34 @@
   font-size: 15px;
 }
 
-@media (max-width: 700px) {
+@media (min-width: 600px) and (max-width: 760px) {
+  .continent-page {
+    padding: 72px 40px 40px;
+  }
+
+  .continent-page__grid {
+    width: min(100%, 450px);
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .continent-page__card {
+    min-height: 0;
+    height: 88px;
+    padding: 12px;
+  }
+
+  .continent-page__card-name {
+    font-size: 30px;
+  }
+
+  .continent-page__card-progress {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 599px) {
   .continent-page {
     min-height: calc(100svh - 64px);
     padding: 72px 20px 32px;
@@ -168,7 +195,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 599px) {
   .continent-page {
     min-height: calc(100svh - 92px);
   }
