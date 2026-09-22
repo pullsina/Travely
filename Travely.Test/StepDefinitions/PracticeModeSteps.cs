@@ -41,13 +41,20 @@ namespace Travely.Tests.StepDefinitions
         [Then("the switch mode is capital to country")]
         public async Task ThenTheSwitchModeIsCapitalToCountry()
         {
-            //check if the "Capital → Country" button (chosen practice mode) is pressed (aria-pressed = true)
-            var capitalToCountryButton = _hooks.Page.GetByRole(AriaRole.Button, new()
+            //find the capitals group
+            var capitalsGroup = _hooks.Page.GetByRole(AriaRole.Group, new()
             {
-                Name = "Capital → Country"
+                Name = "Choose capitals practice direction"
             });
 
-            await Assertions.Expect(capitalToCountryButton)
+            //find the "Capital" button inside the group
+            var capitalButton = capitalsGroup.GetByRole(AriaRole.Button, new()
+            {
+                Name = "Switch between capital questions"
+            });
+
+            //check if the "Capital" button (chosen practice mode) is pressed (aria-pressed = true)
+            await Assertions.Expect(capitalButton)
                 .ToHaveAttributeAsync("aria-pressed", "true");
         }
 
@@ -71,22 +78,37 @@ namespace Travely.Tests.StepDefinitions
             //get the correct answer id from the sessionStorage set in the frontend
             var correctAnswerId = await _hooks.Page.EvaluateAsync<string>(
             //""" = allows us to write multi-line strings. This code is javascript, and we want to access the sessionStorage and get the correct answer id from frontend so we use EvaluateAsync to run javascript code in the browser context and return the correct answer id to the test
+
                 """
-                () => {
-                const keys = Object.keys(sessionStorage)
-                    .filter(key => key.startsWith("travely-practice-") && !key.startsWith("travely-practice-mode-"));
+        () => {
+            // Get the current continent from the URL
+            const continent = decodeURIComponent(
+                window.location.pathname.split("/").pop()
+            );
 
-                for (const key of keys) {
-                    const savedState = JSON.parse(sessionStorage.getItem(key));
+            // Get the current practice direction
+            const direction = sessionStorage.getItem(
+                `travely-practice-direction-${continent}`
+            );
 
-                    if (savedState?.question) {
-                        return savedState.question.correctAnswerId;
-                    }
-                }
+            // Get the saved practice question
+            const savedState = sessionStorage.getItem(
+                `travely-practice-${continent}-${direction}`
+            );
 
+            if (!savedState) {
                 throw new Error("No practice question found in sessionStorage.");
-                }
-                """
+            }
+
+            const state = JSON.parse(savedState);
+
+            if (!state?.question) {
+                throw new Error("No question found in sessionStorage.");
+            }
+
+            return String(state.question.correctAnswerId);
+        }
+        """
             );
 
             await _hooks.Page
@@ -97,15 +119,10 @@ namespace Travely.Tests.StepDefinitions
         [Then("I should get a correct answer message")]
         public async Task ThenIShouldGetACorrectAnswerMessage()
         {
-            //make sure the incorrect feedback is not visible (if it is visible, the test fails)
-            var incorrectFeedback = _hooks.Page
-            .Locator(".practice-question__feedback--incorrect");
+            var correctAnswer = _hooks.Page
+                .Locator(".practice-question__answer[data-correct='true']");
 
-            await Assertions.Expect(incorrectFeedback).ToHaveCountAsync(0);
-
-            var feedback = _hooks.Page.Locator(".practice-question__feedback");
-
-            await Assertions.Expect(feedback).ToBeVisibleAsync();
+            await Assertions.Expect(correctAnswer).ToBeVisibleAsync();
         }
 
         [When("I select the wrong answer option")]
@@ -150,21 +167,37 @@ namespace Travely.Tests.StepDefinitions
         [When("I click the country to flag button")]
         public async Task WhenIClickTheCountryToFlagButton()
         {
-            await _hooks.Page.GetByRole(AriaRole.Button, new()
+            //find the flags group
+            var flagsGroup = _hooks.Page.GetByRole(AriaRole.Group, new()
             {
-                Name = "Country → Flag"
-            }).ClickAsync();
+                Name = "Choose flags practice direction"
+            });
+
+            //find the "Country" button inside the group
+            var countryButton = flagsGroup.GetByRole(AriaRole.Button, new()
+            {
+                Name = "Switch between country questions"
+            });
+
+            await countryButton.ClickAsync();
         }
 
         [Then("the switch mode is country to flag")]
         public async Task ThenTheSwitchModeIsCountryToFlag()
         {
-            //check if the "Country → Flag" button (chosen practice mode) is pressed (aria-pressed = true)
-            var countryToFlagButton = _hooks.Page.GetByRole(AriaRole.Button, new()
+            //find the flags direction group
+            var flagsGroup = _hooks.Page.GetByRole(AriaRole.Group, new()
             {
-                Name = "Country → Flag"
+                Name = "Choose flags practice direction"
             });
 
+            //find the Country button inside the flags group
+            var countryToFlagButton = flagsGroup.GetByRole(AriaRole.Button, new()
+            {
+                Name = "Switch between country questions"
+            });
+
+            //check that the Country button is pressed
             await Assertions.Expect(countryToFlagButton)
                 .ToHaveAttributeAsync("aria-pressed", "true");
         }
@@ -191,21 +224,35 @@ namespace Travely.Tests.StepDefinitions
         [When("I click the flag to country button")]
         public async Task WhenIClickTheFlagToCountryButton()
         {
-            await _hooks.Page.GetByRole(AriaRole.Button, new()
+            var flagsGroup = _hooks.Page.GetByRole(AriaRole.Group, new()
             {
-                Name = "Flag → Country"
-            }).ClickAsync();
+                Name = "Choose flags practice direction"
+            });
+
+            var flagToCountryButton = flagsGroup.GetByRole(AriaRole.Button, new()
+            {
+                Name = "Switch between flag questions"
+            });
+
+            await flagToCountryButton.ClickAsync();
         }
 
         [Then("the switch mode is flag to country")]
         public async Task ThenTheSwitchModeIsFlagToCountry()
         {
-            //check if the "Flag → Country" button (chosen practice mode) is pressed (aria-pressed = true)
-            var flagToCountryButton = _hooks.Page.GetByRole(AriaRole.Button, new()
+            //find the flags direction group
+            var flagsGroup = _hooks.Page.GetByRole(AriaRole.Group, new()
             {
-                Name = "Flag → Country"
+                Name = "Choose flags practice direction"
             });
 
+            //find the Flag button inside the flags group
+            var flagToCountryButton = flagsGroup.GetByRole(AriaRole.Button, new()
+            {
+                Name = "Switch between flag questions"
+            });
+
+            //check that the Flag button is pressed
             await Assertions.Expect(flagToCountryButton)
                 .ToHaveAttributeAsync("aria-pressed", "true");
         }
@@ -242,9 +289,10 @@ namespace Travely.Tests.StepDefinitions
         [Then("I should get the correct answer")]
         public async Task ThenIShouldGetTheCorrectAnswer()
         {
-            var feedback = _hooks.Page.Locator(".practice-question__feedback");
+            var correctAnswer = _hooks.Page
+                .Locator(".practice-question__answer[data-correct='true']");
 
-            await Assertions.Expect(feedback).ToBeVisibleAsync();
+            await Assertions.Expect(correctAnswer).ToBeVisibleAsync();
         }
 
         [When("I click the next question button")]
