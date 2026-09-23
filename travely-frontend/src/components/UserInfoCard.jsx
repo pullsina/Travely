@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ChangePasswordForm from "./ChangePasswordForm";
-import "./ChangePasswordForm.css";
+// import "./ChangePasswordForm.css";
 import "./UserInfoCard.css";
 
 function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
@@ -50,79 +50,84 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
   }
 
   return (
-    <section className="user-info-card" aria-labelledby="user-info-card-title">
-      {/* Header with title and close button */}
+    <section className="user-info-card" aria-label="user-info-card">
+      {/* Upper part with title and close button */}
       <div
-        className={`user-info-card__header${
-          isEditing ? " user-info-card__header--editing" : ""
+        className={`user-info-card__title${
+          isEditing ? " user-info-card__title--editing" : ""
         }`}
       >
-        <div
-          className="user-info-card__header__title"
-          aria-labelledby="user-info-card-title"
+        <h2
+          className="user-info-card__title-title"
+          aria-label="Title of user info card"
+          id="user-info-card-title"
         >
-          <h2 className="user-info-card__title" id="user-info-card-title">
-            User Details
-          </h2>
-        </div>
-        <div className="user-info-card__header__actions">
-          <button
-            className="user-info-card__actions__close-button"
-            type="button"
-            onClick={onClose}
-            aria-label="Close user info card"
-            title="Close"
-          >
-            <span aria-hidden="true" />
-          </button>
-        </div>
+          User details
+        </h2>
+        <button
+          className="user-info-card__close-button"
+          type="button"
+          onClick={onClose}
+          aria-label="Button to close user info card"
+          title="Close"
+        >
+          <span aria-hidden="true" />
+        </button>
+        {/* </div> */}
       </div>
       {!isEditing ? (
         <>
           {/* Card main content */}
           <div className="user-info-card__main">
-            <p className="user-info-card__main__info">
-              <strong>Username:</strong> {username || "No username available"}
-            </p>
-            <p className="user-info-card__main__info">
-              <strong>E-mail:</strong> {email || "No email available"}
-            </p>
+            <label
+              className="user-info-card__main__label"
+              htmlFor="username-input"
+            >
+              Username:
+              <p className="user-info-card__main__info">
+                {username || "No username available"}
+              </p>
+            </label>
+            <label
+              className="user-info-card__main__label"
+              htmlFor="email-input"
+            >
+              E-mail:
+              <p className="user-info-card__main__info">
+                {email || "No email available"}
+              </p>
+            </label>
           </div>
-          {/* Footer with action buttons to be implemented... */}
+          {/* Buttons for actions */}
           <div
             className="user-info-card__actions"
             aria-labelledby="user-info-card-actions"
           >
-            {/* Buttons for actions */}
-            <div className="user-info-card__actions__button">
+            <div className="user-info-card__edit-button">
               <button
-                className="primary-button user-info-card__change-info-button"
+                className="primary-button user-info-card__edit-button"
                 type="button"
-                aria-labelledby="user-info-card-change-info-button"
+                aria-label="Button to edit user info card"
                 onClick={() => setIsEditing(true)}
               >
-                Change Info
+                Edit
               </button>
-              {/* <p className="user-info-card__footer__text-small">
-            To be implemented!
-          </p> */}
             </div>
-            <div className="user-info-card__actions__button">
+            <div className="user-info-card__delete-button">
               <button
-                className="primary-button user-info-card__delete-profile-button"
+                className="primary-button user-info-card__delete-button"
                 type="button"
-                aria-labelledby="user-info-card-delete-profile-button"
+                aria-label="Button to delete user information"
                 onClick={handleDelete}
               >
-                Delete Profile
+                Delete profile
               </button>
-              {/* <p className="user-info-card__footer__text-small">
-                To be implemented!
-              </p> */}
             </div>
-            <div className="user-info-card__actions__button">
+            <div className="user-info-card__change-password-button">
               <button
                 className="primary-button user-info-card__change-password-button"
+                type="button"
+                aria-label="Button to change user password"
                 onClick={handleShowChangePasswordForm}
               >
                 Change Password
@@ -144,6 +149,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
               type="text"
               value={usernameInput}
               onChange={(event) => setUsernameInput(event.target.value)}
+              aria-label="Input for editing user name"
             />
           </label>
 
@@ -154,6 +160,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
               type="email"
               value={emailInput}
               onChange={(event) => setEmailInput(event.target.value)}
+              aria-label="Input for editing user email"
             />
           </label>
 
@@ -164,6 +171,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
               className="primary-button"
               type="button"
               onClick={handleSave}
+              aria-label="Button to save user info"
             >
               Save
             </button>
@@ -172,6 +180,7 @@ function UserInfoCard({ userInfo, onClose, onUpdate, onDelete }) {
               className="primary-button"
               type="button"
               onClick={handleCancel}
+              aria-label="Button to cancel editing user info"
             >
               Cancel
             </button>
